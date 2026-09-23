@@ -75,128 +75,68 @@
     }
   },
   "2026-09-21": {
-    "trend": "volatile",
     "fii": "selling",
-    "options": "resistance",
-    "predictions": {
-      "tomorrow": {
-        "probability": 70,
-        "direction": "DOWN",
-        "expected_move": "-1.5%",
-        "strategy": "Buy Put Options"
-      },
-      "next_week": {
-        "probability": 80,
-        "direction": "DOWN",
-        "expected_move": "-2.2%",
-        "strategy": "Buy Put Options"
-      },
-      "next_month": {
-        "probability": 85,
-        "direction": "DOWN",
-        "expected_move": "-3.8%",
-        "strategy": "Buy Put Options"
-      }
+    "signals": {
+      "close": 23414.3,
+      "ema20_signal": "bearish",
+      "ema200_signal": "bearish",
+      "rsi_value": 36.89,
+      "rsi_signal": "neutral",
+      "macd_signal": "bearish",
+      "supertrend_signal": "bearish",
+      "analogue_match": "Similar to 09 Jan 2019 (Next day went DOWN)"
     }
   },
   "2026-09-18": {
-    "trend": "flat",
     "fii": "selling",
-    "options": "resistance",
-    "predictions": {
-      "tomorrow": {
-        "probability": 67,
-        "direction": "DOWN",
-        "expected_move": "-1.5%",
-        "strategy": "Buy Put Options"
-      },
-      "next_week": {
-        "probability": 76,
-        "direction": "DOWN",
-        "expected_move": "-2.2%",
-        "strategy": "Buy Put Options"
-      },
-      "next_month": {
-        "probability": 85,
-        "direction": "DOWN",
-        "expected_move": "-3.8%",
-        "strategy": "Buy Put Options"
-      }
+    "signals": {
+      "close": 23346.4,
+      "ema20_signal": "bearish",
+      "ema200_signal": "bearish",
+      "rsi_value": 33.66,
+      "rsi_signal": "neutral",
+      "macd_signal": "bearish",
+      "supertrend_signal": "bearish",
+      "analogue_match": "Similar to 16 Jan 2025 (Next day went DOWN)"
     }
   },
   "2026-09-17": {
-    "trend": "volatile",
     "fii": "neutral",
-    "options": "resistance",
-    "predictions": {
-      "tomorrow": {
-        "probability": 60,
-        "direction": "DOWN",
-        "expected_move": "-0.5%",
-        "strategy": "Sell on rise"
-      },
-      "next_week": {
-        "probability": 65,
-        "direction": "DOWN",
-        "expected_move": "-2.2%",
-        "strategy": "Buy Put Options"
-      },
-      "next_month": {
-        "probability": 75,
-        "direction": "DOWN",
-        "expected_move": "-3.8%",
-        "strategy": "Buy Put Options"
-      }
+    "signals": {
+      "close": 23270.6,
+      "ema20_signal": "bearish",
+      "ema200_signal": "bearish",
+      "rsi_value": 29.95,
+      "rsi_signal": "oversold",
+      "macd_signal": "bearish",
+      "supertrend_signal": "bearish",
+      "analogue_match": "Similar to 07 Jan 2019 (Next day went UP)"
     }
   },
   "2026-09-16": {
-    "trend": "flat",
     "fii": "buying",
-    "options": "balanced",
-    "predictions": {
-      "tomorrow": {
-        "probability": 60,
-        "direction": "UP",
-        "expected_move": "+0.4%",
-        "strategy": "Wait for a dip, then Buy"
-      },
-      "next_week": {
-        "probability": 65,
-        "direction": "UP",
-        "expected_move": "+1.8%",
-        "strategy": "Buy Call Options"
-      },
-      "next_month": {
-        "probability": 75,
-        "direction": "UP",
-        "expected_move": "+3.0%",
-        "strategy": "Buy Call Options"
-      }
+    "signals": {
+      "close": 23217.6,
+      "ema20_signal": "bearish",
+      "ema200_signal": "bearish",
+      "rsi_value": 27.31,
+      "rsi_signal": "oversold",
+      "macd_signal": "bearish",
+      "supertrend_signal": "bearish",
+      "analogue_match": "Similar to 02 Apr 2025 (Next day went DOWN)"
     }
   },
   "2026-09-15": {
-    "trend": "down_strong",
     "fii": "buying",
-    "options": "support",
-    "predictions": {
-      "tomorrow": {
-        "probability": 60,
-        "direction": "UP",
-        "expected_move": "+0.4%",
-        "strategy": "Wait for a dip, then Buy"
-      },
-      "next_week": {
-        "probability": 65,
-        "direction": "UP",
-        "expected_move": "+1.8%",
-        "strategy": "Buy Call Options"
-      },
-      "next_month": {
-        "probability": 75,
-        "direction": "UP",
-        "expected_move": "+3.0%",
-        "strategy": "Buy Call Options"
-      }
+    "signals": {
+      "close": 23118.6,
+      "ema20_signal": "bearish",
+      "ema200_signal": "bearish",
+      "rsi_value": 22.23,
+      "rsi_signal": "oversold",
+      "macd_signal": "bearish",
+      "supertrend_signal": "bearish",
+      "analogue_match": "Similar to 22 Oct 2024 (Next day went DOWN)"
     }
   },
   "2026-09-14": {
