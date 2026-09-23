@@ -1,0 +1,114 @@
+{
+  "symbols": {
+    "nifty": "^NSEI",
+    "bank_nifty": "^NSEBANK",
+    "india_vix": "^INDIAVIX",
+    "us_markets": ["^GSPC", "^IXIC", "^DJI"],
+    "global": ["^TNX", "DX-Y.NYB", "INR=X", "CL=F", "GC=F"]
+  },
+  "data": {
+    "start_date": "2004-01-01"
+  },
+  "indicators": {
+    "ma_periods": [20, 50, 200],
+    "ema_periods": [20],
+    "rsi_period": 14,
+    "macd": { "fast": 12, "slow": 26, "signal": 9 },
+    "atr_period": 14,
+    "vol_windows": [10, 20],
+    "return_windows": [1, 5, 20, 252]
+  },
+  "analogues": {
+    "k": 100,
+    "k_min": 50,
+    "k_max": 500,
+    "standardize_lookback": 750,
+    "features": [
+      "ret_1d", "ret_5d", "ret_20d",
+      "rsi_14",
+      "atr_pct", "gap_pct", "range_pct",
+      "vol_20d",
+      "dist_sma20", "dist_sma50", "dist_sma200",
+      "macd_hist_pct"
+    ],
+    "weights": {
+      "ret_1d": 1.0, "ret_5d": 0.8, "ret_20d": 0.6,
+      "rsi_14": 1.0,
+      "atr_pct": 1.26, "gap_pct": 1.44, "range_pct": 0.5,
+      "vol_20d": 0.9,
+      "dist_sma20": 0.8, "dist_sma50": 0.7, "dist_sma200": 0.6,
+      "macd_hist_pct": 0.8
+    }
+  },
+  "sentiment": {
+    "bull_threshold": 0.55,
+    "bear_threshold": 0.45
+  },
+  "backtest": {
+    "window_years": 2
+  },
+  "tune": {
+    "selected": "base features / k=100 / lookback=750 / gap-heavy weights",
+    "gate_results": {
+      "overall_edge_pp": 7.16,
+      "first_half_edge_pp": 6.35,
+      "second_half_edge_pp": 7.97,
+      "weak_days_edge_pp": 20.45,
+      "corr": 0.073
+    }
+  },
+  "paths": {
+    "historical_dir": "data/historical",
+    "daily_dir": "data/daily",
+    "options_dir": "data/options",
+    "reports_dir": "reports",
+    "daily_reports_subdir": "daily",
+    "backtest_reports_subdir": "backtest",
+    "intraday_archive_dir": "data/intraday",
+    "intraday_reports_subdir": "intraday"
+  },
+  "report": {
+    "title": "Nifty Analyst - Daily Research Report",
+    "timezone": "Asia/Kolkata"
+  },
+  "intraday": {
+    "base_timeframe": "5m",
+    "timeframes_minutes": [5, 15, 30, 60],
+    "bars_per_day_5m": 75,
+    "session": { "open": "09:15", "close": "15:30", "tz": "Asia/Kolkata" },
+    "horizon_bars": [6, 30],
+    "primary_target": "rest_of_session",
+    "k": 100,
+    "standardize_lookback": 500,
+    "yfinance_depth_days": 60,
+    "daily_vol_lookback": 90,
+    "kite": {
+      "config": "config/kite.ini",
+      "index_token": 256265,
+      "backfill_start": "2015-01-09"
+    },
+    "features": [
+      "bar_no", "time_in_session", "cum_ret_since_open", "dist_from_open", "dist_vwap",
+      "gap_pct", "ret_1bar", "ret_6bar", "atr_pct", "vol_14", "rsi_14",
+      "daily_vol_z", "daily_ret_prev"
+    ],
+    "weights": {
+      "bar_no": 0.3, "time_in_session": 0.3,
+      "cum_ret_since_open": 1.0, "dist_from_open": 0.7, "dist_vwap": 1.0,
+      "gap_pct": 0.9, "ret_1bar": 0.7, "ret_6bar": 0.8,
+      "atr_pct": 0.8, "vol_14": 0.9, "rsi_14": 1.6,
+      "daily_vol_z": 0.6, "daily_ret_prev": 0.5
+    },
+    "tune": {
+      "date": "2026-09-22",
+      "tf": 5,
+      "winner": "k=100, lookback=500, rsi_heavy weights, no_calendar features",
+      "gate": {
+        "bars": 4209, "hit_rate_pct": 62.0, "base_rest_up_pct": 54.6,
+        "edge_pp": 7.41, "corr": 0.323, "mae_pct": 0.225,
+        "first_half_edge_pp": 6.70, "second_half_edge_pp": 8.12
+      },
+      "note": "Calendar features (dow_monday/days_to_month_end/expiry_zone) and the daily-context features HURT the 5m gate (each trades ~5-7pp of edge); they are excluded from the active feature set. Full feature list kept in analysis/intraday.py / tune_intraday.py FEATURE_SETS."
+    }
+  }
+}

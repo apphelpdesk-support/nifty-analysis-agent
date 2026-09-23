@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.pyc
+.streamlit/
+
+# generated artifacts
+data/historical/*.csv
+data/daily/*.csv
+data/options/*.csv
+data/intraday/**/*.csv
+reports/daily/*.html
+reports/daily/*.pdf
+reports/backtest/*.html
+reports/backtest/*.pdf
+reports/backtest/*.csv
+reports/intraday/*.html
+
+# credentials
+config/kite.ini
