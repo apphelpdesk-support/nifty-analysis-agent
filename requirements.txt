@@ -9,3 +9,5 @@ plotly>=5.20
 # free yfinance collector
 kiteconnect>=5.0
 nselib>=2.5.1
+
+pandas_ta>=0.3.14b0
