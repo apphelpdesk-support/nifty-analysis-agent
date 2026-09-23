@@ -82,6 +82,8 @@ def main():
             "close": round(close, 2),
             "ema20_signal": "bullish" if close > ema20 else "bearish",
             "ema200_signal": "bullish" if close > ema200 else "bearish",
+            "ema20_diff_pct": round(((close - ema20) / ema20) * 100, 2),
+            "ema200_diff_pct": round(((close - ema200) / ema200) * 100, 2),
             "rsi_value": round(rsi, 2),
             "rsi_signal": "overbought" if rsi > 70 else ("oversold" if rsi < 30 else "neutral"),
             "macd_signal": "bullish" if macd > macd_signal else "bearish",
