@@ -8,3 +8,4 @@ plotly>=5.20
 # running scripts/backfill_intraday.py; only needed if you skip the 60-day
 # free yfinance collector
 kiteconnect>=5.0
+nselib>=2.5.1
