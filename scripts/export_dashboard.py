@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import pandas_ta as ta
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
 import yfinance as yf
 
 try:
@@ -18,6 +18,34 @@ def main():
 
     nifty = yf.Ticker("^NSEI")
     df = nifty.history(period="10y")
+
+    # --- NEW: Fetch missing recent dates from NSE directly if yfinance is lagging ---
+    if NSELIB_AVAILABLE and not df.empty:
+        last_date = df.index[-1].date()
+        today = datetime.now().date()
+        if today > last_date:
+            from_str = (last_date + timedelta(days=1)).strftime("%d-%m-%Y")
+            to_str = today.strftime("%d-%m-%Y")
+            try:
+                ns = capital_market.index_data(index="Nifty 50", from_date=from_str, to_date=to_str)
+                if not ns.empty:
+                    ns['Date'] = pd.to_datetime(ns['TIMESTAMP'], format='%d-%b-%Y')
+                    ns = ns.set_index('Date')
+                    ns.index = ns.index.tz_localize('Asia/Kolkata')
+                    
+                    ns['Open'] = pd.to_numeric(ns['OPEN_INDEX_VAL'])
+                    ns['High'] = pd.to_numeric(ns['HIGH_INDEX_VAL'])
+                    ns['Low'] = pd.to_numeric(ns['LOW_INDEX_VAL'])
+                    ns['Close'] = pd.to_numeric(ns['CLOSE_INDEX_VAL'])
+                    
+                    ns = ns[['Open', 'High', 'Low', 'Close']]
+                    ns = ns[~ns.index.isin(df.index)]
+                    if not ns.empty:
+                        df = pd.concat([df, ns]).sort_index()
+                        print(f"Appended {len(ns)} missing days from nselib.")
+            except Exception as e:
+                print("Fallback nselib fetch failed:", e)
+
     df["Return"] = df["Close"].pct_change()
     
     df.ta.ema(length=20, append=True)
@@ -63,10 +91,6 @@ def main():
         idx_long = df.index.get_loc(date_obj)
         if idx_long >= 15:
             current_returns = returns_arr[idx_long-4:idx_long+1]
-            
-            # The available history array should stop at idx_long - 6
-            # So the last window ends at idx_long - 6.
-            # window_shape=5 means it covers 5 days.
             search_space = returns_arr[:idx_long - 5]
             if len(search_space) >= 5:
                 hist_windows = np.lib.stride_tricks.sliding_window_view(search_space, window_shape=5)
