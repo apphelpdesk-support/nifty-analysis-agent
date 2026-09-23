@@ -10,4 +10,4 @@ plotly>=5.20
 kiteconnect>=5.0
 nselib>=2.5.1
 
-pandas_ta>=0.3.14b0
+pandas-ta>=0.3.14b0
