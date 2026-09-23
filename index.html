@@ -226,11 +226,15 @@
             } else {
                 // 200 EMA
                 const e200 = data.signals.ema200_signal;
-                document.getElementById('val-ema200').innerHTML = 'Price is <span class="font-bold text-'+(e200=='bullish'?'green':'red')+'-600">' + (e200=='bullish'?'Above':'Below') + '</span>';
+                const diff200 = data.signals.ema200_diff_pct;
+                let diff200Text = diff200 !== undefined ? ` <span class="text-xs text-gray-500 font-bold">(${diff200 > 0 ? '+' : ''}${diff200}% from EMA)</span>` : '';
+                document.getElementById('val-ema200').innerHTML = 'Price is <span class="font-bold text-'+(e200=='bullish'?'green':'red')+'-600">' + (e200=='bullish'?'Above':'Below') + '</span>' + diff200Text;
                 
                 // 20 EMA
                 const e20 = data.signals.ema20_signal;
-                document.getElementById('val-ema20').innerHTML = 'Price is <span class="font-bold text-'+(e20=='bullish'?'green':'red')+'-600">' + (e20=='bullish'?'Above':'Below') + '</span>';
+                const diff20 = data.signals.ema20_diff_pct;
+                let diff20Text = diff20 !== undefined ? ` <span class="text-xs text-gray-500 font-bold">(${diff20 > 0 ? '+' : ''}${diff20}% from EMA)</span>` : '';
+                document.getElementById('val-ema20').innerHTML = 'Price is <span class="font-bold text-'+(e20=='bullish'?'green':'red')+'-600">' + (e20=='bullish'?'Above':'Below') + '</span>' + diff20Text;
                 
                 // Supertrend
                 const st = data.signals.supertrend_signal;
