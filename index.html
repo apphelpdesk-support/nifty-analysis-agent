@@ -268,16 +268,24 @@
 
         function calculateScore() {
             const date = document.getElementById('date-picker').value;
-            if(!dashboardData[date]) return 0;
+            if(!dashboardData[date]) return {score: 0, isReversal: false};
             const data = dashboardData[date];
             
             let score = 0;
+            let isReversal = false;
             
             if(document.getElementById('chk-fii').checked) {
                 if(data.fii === 'buying') score += 4;
                 if(data.fii === 'selling') score -= 4;
             }
             if(data.signals) {
+                // Historical Analogue Match Score (+4 or -4 implicit weight)
+                if(data.signals.analogue_match && data.signals.analogue_match.includes('UP')) {
+                    score += 4;
+                } else if(data.signals.analogue_match && data.signals.analogue_match.includes('DOWN')) {
+                    score -= 4;
+                }
+
                 if(document.getElementById('chk-ema200').checked) {
                     if(data.signals.ema200_signal === 'bullish') score += 3;
                     else score -= 3;
@@ -291,9 +299,18 @@
                     else score -= 3;
                 }
                 if(document.getElementById('chk-rsi').checked) {
-                    // Contrarian indicator (if overbought, bearish signal)
-                    if(data.signals.rsi_signal === 'overbought') score -= 3;
-                    else if(data.signals.rsi_signal === 'oversold') score += 3;
+                    const rsi = data.signals.rsi_value;
+                    if(rsi < 35) {
+                        score += 4; // heavily oversold
+                        isReversal = (score < 0);
+                    } else if(rsi < 45) {
+                        score += 2; 
+                    } else if(rsi > 70) {
+                        score -= 4; // overbought
+                        isReversal = (score > 0);
+                    } else if(rsi > 60) {
+                        score -= 2;
+                    }
                 }
                 if(document.getElementById('chk-macd').checked) {
                     if(data.signals.macd_signal === 'bullish') score += 2;
@@ -301,11 +318,13 @@
                 }
             }
             
-            return score;
+            return {score: score, isReversal: isReversal};
         }
 
         function renderPrediction() {
-            const base_score = calculateScore();
+            const scoreData = calculateScore();
+            const base_score = scoreData.score;
+            const isReversal = scoreData.isReversal;
             
             const tf_mod = {"tomorrow": 1.0, "next_week": 1.5, "next_month": 2.5}[currentTab];
             const adj_score = base_score * tf_mod;
@@ -337,6 +356,13 @@
                 } else {
                     dir = "DOWN"; exp_move = "-" + (1.5 * tf_mod).toFixed(1) + "%"; strategy = "Strong bearish conviction. Buy Put Options / Short Sell."; color = "red";
                 }
+            }
+            
+            if (isReversal) {
+                dir = "CAUTION";
+                exp_move = "Mean Reversion";
+                strategy = "Trend is exhausted. High probability of a sharp bounce/reversal. Do NOT trend-follow here.";
+                color = "orange";
             }
             
             // Animation Update
