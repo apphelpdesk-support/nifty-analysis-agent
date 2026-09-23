@@ -75,18 +75,18 @@
     }
   },
   "2026-09-21": {
-    "trend": "down_strong",
+    "trend": "volatile",
     "fii": "selling",
     "options": "resistance",
     "predictions": {
       "tomorrow": {
-        "probability": 75,
+        "probability": 70,
         "direction": "DOWN",
         "expected_move": "-1.5%",
         "strategy": "Buy Put Options"
       },
       "next_week": {
-        "probability": 85,
+        "probability": 80,
         "direction": "DOWN",
         "expected_move": "-2.2%",
         "strategy": "Buy Put Options"
@@ -100,18 +100,18 @@
     }
   },
   "2026-09-18": {
-    "trend": "down_strong",
+    "trend": "flat",
     "fii": "selling",
     "options": "resistance",
     "predictions": {
       "tomorrow": {
-        "probability": 75,
+        "probability": 67,
         "direction": "DOWN",
         "expected_move": "-1.5%",
         "strategy": "Buy Put Options"
       },
       "next_week": {
-        "probability": 85,
+        "probability": 76,
         "direction": "DOWN",
         "expected_move": "-2.2%",
         "strategy": "Buy Put Options"
@@ -125,24 +125,24 @@
     }
   },
   "2026-09-17": {
-    "trend": "flat",
+    "trend": "volatile",
     "fii": "neutral",
     "options": "resistance",
     "predictions": {
       "tomorrow": {
-        "probability": 57,
+        "probability": 60,
         "direction": "DOWN",
         "expected_move": "-0.5%",
         "strategy": "Sell on rise"
       },
       "next_week": {
-        "probability": 61,
+        "probability": 65,
         "direction": "DOWN",
-        "expected_move": "-0.8%",
-        "strategy": "Sell on rise"
+        "expected_move": "-2.2%",
+        "strategy": "Buy Put Options"
       },
       "next_month": {
-        "probability": 68,
+        "probability": 75,
         "direction": "DOWN",
         "expected_move": "-3.8%",
         "strategy": "Buy Put Options"
@@ -150,24 +150,24 @@
     }
   },
   "2026-09-16": {
-    "trend": "up_strong",
+    "trend": "flat",
     "fii": "buying",
     "options": "balanced",
     "predictions": {
       "tomorrow": {
-        "probability": 67,
+        "probability": 60,
         "direction": "UP",
-        "expected_move": "+1.2%",
-        "strategy": "Buy Call Options"
+        "expected_move": "+0.4%",
+        "strategy": "Wait for a dip, then Buy"
       },
       "next_week": {
-        "probability": 76,
+        "probability": 65,
         "direction": "UP",
         "expected_move": "+1.8%",
         "strategy": "Buy Call Options"
       },
       "next_month": {
-        "probability": 85,
+        "probability": 75,
         "direction": "UP",
         "expected_move": "+3.0%",
         "strategy": "Buy Call Options"
