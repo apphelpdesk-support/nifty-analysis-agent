@@ -187,7 +187,7 @@
                 const select = document.getElementById('date-picker');
                 select.innerHTML = ''; 
                 
-                const dates = Object.keys(dashboardData).sort().reverse();
+                const dates = Object.keys(dashboardData).filter(d => dashboardData[d].signals).sort().reverse();
                 
                 dates.forEach((date, i) => {
                     const opt = document.createElement('option');
