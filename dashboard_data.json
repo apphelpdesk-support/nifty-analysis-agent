@@ -1,0 +1,552 @@
+{
+  "2026-09-24": {
+    "trend": "volatile",
+    "fii": "neutral",
+    "options": "resistance",
+    "predictions": {
+      "tomorrow": {
+        "probability": 60,
+        "direction": "DOWN",
+        "expected_move": "-0.5%",
+        "strategy": "Sell on rise"
+      },
+      "next_week": {
+        "probability": 65,
+        "direction": "DOWN",
+        "expected_move": "-2.2%",
+        "strategy": "Buy Put Options"
+      },
+      "next_month": {
+        "probability": 75,
+        "direction": "DOWN",
+        "expected_move": "-3.8%",
+        "strategy": "Buy Put Options"
+      }
+    }
+  },
+  "2026-09-23": {
+    "trend": "volatile",
+    "fii": "neutral",
+    "options": "resistance",
+    "predictions": {
+      "tomorrow": {
+        "probability": 60,
+        "direction": "DOWN",
+        "expected_move": "-0.5%",
+        "strategy": "Sell on rise"
+      },
+      "next_week": {
+        "probability": 65,
+        "direction": "DOWN",
+        "expected_move": "-2.2%",
+        "strategy": "Buy Put Options"
+      },
+      "next_month": {
+        "probability": 75,
+        "direction": "DOWN",
+        "expected_move": "-3.8%",
+        "strategy": "Buy Put Options"
+      }
+    }
+  },
+  "2026-09-22": {
+    "trend": "flat",
+    "fii": "neutral",
+    "options": "resistance",
+    "predictions": {
+      "tomorrow": {
+        "probability": 57,
+        "direction": "DOWN",
+        "expected_move": "-0.5%",
+        "strategy": "Sell on rise"
+      },
+      "next_week": {
+        "probability": 61,
+        "direction": "DOWN",
+        "expected_move": "-0.8%",
+        "strategy": "Sell on rise"
+      },
+      "next_month": {
+        "probability": 68,
+        "direction": "DOWN",
+        "expected_move": "-3.8%",
+        "strategy": "Buy Put Options"
+      }
+    }
+  },
+  "2026-09-21": {
+    "trend": "down_strong",
+    "fii": "selling",
+    "options": "resistance",
+    "predictions": {
+      "tomorrow": {
+        "probability": 75,
+        "direction": "DOWN",
+        "expected_move": "-1.5%",
+        "strategy": "Buy Put Options"
+      },
+      "next_week": {
+        "probability": 85,
+        "direction": "DOWN",
+        "expected_move": "-2.2%",
+        "strategy": "Buy Put Options"
+      },
+      "next_month": {
+        "probability": 85,
+        "direction": "DOWN",
+        "expected_move": "-3.8%",
+        "strategy": "Buy Put Options"
+      }
+    }
+  },
+  "2026-09-18": {
+    "trend": "down_strong",
+    "fii": "selling",
+    "options": "resistance",
+    "predictions": {
+      "tomorrow": {
+        "probability": 75,
+        "direction": "DOWN",
+        "expected_move": "-1.5%",
+        "strategy": "Buy Put Options"
+      },
+      "next_week": {
+        "probability": 85,
+        "direction": "DOWN",
+        "expected_move": "-2.2%",
+        "strategy": "Buy Put Options"
+      },
+      "next_month": {
+        "probability": 85,
+        "direction": "DOWN",
+        "expected_move": "-3.8%",
+        "strategy": "Buy Put Options"
+      }
+    }
+  },
+  "2026-09-17": {
+    "trend": "flat",
+    "fii": "neutral",
+    "options": "resistance",
+    "predictions": {
+      "tomorrow": {
+        "probability": 57,
+        "direction": "DOWN",
+        "expected_move": "-0.5%",
+        "strategy": "Sell on rise"
+      },
+      "next_week": {
+        "probability": 61,
+        "direction": "DOWN",
+        "expected_move": "-0.8%",
+        "strategy": "Sell on rise"
+      },
+      "next_month": {
+        "probability": 68,
+        "direction": "DOWN",
+        "expected_move": "-3.8%",
+        "strategy": "Buy Put Options"
+      }
+    }
+  },
+  "2026-09-16": {
+    "trend": "up_strong",
+    "fii": "buying",
+    "options": "balanced",
+    "predictions": {
+      "tomorrow": {
+        "probability": 67,
+        "direction": "UP",
+        "expected_move": "+1.2%",
+        "strategy": "Buy Call Options"
+      },
+      "next_week": {
+        "probability": 76,
+        "direction": "UP",
+        "expected_move": "+1.8%",
+        "strategy": "Buy Call Options"
+      },
+      "next_month": {
+        "probability": 85,
+        "direction": "UP",
+        "expected_move": "+3.0%",
+        "strategy": "Buy Call Options"
+      }
+    }
+  },
+  "2026-09-15": {
+    "trend": "down_strong",
+    "fii": "buying",
+    "options": "support",
+    "predictions": {
+      "tomorrow": {
+        "probability": 60,
+        "direction": "UP",
+        "expected_move": "+0.4%",
+        "strategy": "Wait for a dip, then Buy"
+      },
+      "next_week": {
+        "probability": 65,
+        "direction": "UP",
+        "expected_move": "+1.8%",
+        "strategy": "Buy Call Options"
+      },
+      "next_month": {
+        "probability": 75,
+        "direction": "UP",
+        "expected_move": "+3.0%",
+        "strategy": "Buy Call Options"
+      }
+    }
+  },
+  "2026-09-14": {
+    "trend": "down_strong",
+    "fii": "buying",
+    "options": "support",
+    "predictions": {
+      "tomorrow": {
+        "probability": 60,
+        "direction": "UP",
+        "expected_move": "+0.4%",
+        "strategy": "Wait for a dip, then Buy"
+      },
+      "next_week": {
+        "probability": 65,
+        "direction": "UP",
+        "expected_move": "+1.8%",
+        "strategy": "Buy Call Options"
+      },
+      "next_month": {
+        "probability": 75,
+        "direction": "UP",
+        "expected_move": "+3.0%",
+        "strategy": "Buy Call Options"
+      }
+    }
+  },
+  "2026-09-11": {
+    "trend": "flat",
+    "fii": "selling",
+    "options": "support",
+    "predictions": {
+      "tomorrow": {
+        "probability": 52,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      },
+      "next_week": {
+        "probability": 53,
+        "direction": "DOWN",
+        "expected_move": "-0.8%",
+        "strategy": "Sell on rise"
+      },
+      "next_month": {
+        "probability": 56,
+        "direction": "DOWN",
+        "expected_move": "-1.2%",
+        "strategy": "Sell on rise"
+      }
+    }
+  },
+  "2026-09-10": {
+    "trend": "up_strong",
+    "fii": "neutral",
+    "options": "resistance",
+    "predictions": {
+      "tomorrow": {
+        "probability": 50,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      },
+      "next_week": {
+        "probability": 50,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      },
+      "next_month": {
+        "probability": 50,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      }
+    }
+  },
+  "2026-09-09": {
+    "trend": "flat",
+    "fii": "neutral",
+    "options": "balanced",
+    "predictions": {
+      "tomorrow": {
+        "probability": 50,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      },
+      "next_week": {
+        "probability": 50,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      },
+      "next_month": {
+        "probability": 50,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      }
+    }
+  },
+  "2026-09-08": {
+    "trend": "volatile",
+    "fii": "neutral",
+    "options": "resistance",
+    "predictions": {
+      "tomorrow": {
+        "probability": 60,
+        "direction": "DOWN",
+        "expected_move": "-0.5%",
+        "strategy": "Sell on rise"
+      },
+      "next_week": {
+        "probability": 65,
+        "direction": "DOWN",
+        "expected_move": "-2.2%",
+        "strategy": "Buy Put Options"
+      },
+      "next_month": {
+        "probability": 75,
+        "direction": "DOWN",
+        "expected_move": "-3.8%",
+        "strategy": "Buy Put Options"
+      }
+    }
+  },
+  "2026-09-07": {
+    "trend": "up_strong",
+    "fii": "buying",
+    "options": "support",
+    "predictions": {
+      "tomorrow": {
+        "probability": 75,
+        "direction": "UP",
+        "expected_move": "+1.2%",
+        "strategy": "Buy Call Options"
+      },
+      "next_week": {
+        "probability": 85,
+        "direction": "UP",
+        "expected_move": "+1.8%",
+        "strategy": "Buy Call Options"
+      },
+      "next_month": {
+        "probability": 85,
+        "direction": "UP",
+        "expected_move": "+3.0%",
+        "strategy": "Buy Call Options"
+      }
+    }
+  },
+  "2026-09-04": {
+    "trend": "flat",
+    "fii": "neutral",
+    "options": "balanced",
+    "predictions": {
+      "tomorrow": {
+        "probability": 50,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      },
+      "next_week": {
+        "probability": 50,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      },
+      "next_month": {
+        "probability": 50,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      }
+    }
+  },
+  "2026-09-03": {
+    "trend": "up_strong",
+    "fii": "neutral",
+    "options": "balanced",
+    "predictions": {
+      "tomorrow": {
+        "probability": 57,
+        "direction": "UP",
+        "expected_move": "+0.4%",
+        "strategy": "Wait for a dip, then Buy"
+      },
+      "next_week": {
+        "probability": 61,
+        "direction": "UP",
+        "expected_move": "+0.6%",
+        "strategy": "Wait for a dip, then Buy"
+      },
+      "next_month": {
+        "probability": 68,
+        "direction": "UP",
+        "expected_move": "+3.0%",
+        "strategy": "Buy Call Options"
+      }
+    }
+  },
+  "2026-09-02": {
+    "trend": "up_strong",
+    "fii": "selling",
+    "options": "support",
+    "predictions": {
+      "tomorrow": {
+        "probability": 55,
+        "direction": "UP",
+        "expected_move": "+0.4%",
+        "strategy": "Wait for a dip, then Buy"
+      },
+      "next_week": {
+        "probability": 57,
+        "direction": "UP",
+        "expected_move": "+0.6%",
+        "strategy": "Wait for a dip, then Buy"
+      },
+      "next_month": {
+        "probability": 62,
+        "direction": "UP",
+        "expected_move": "+3.0%",
+        "strategy": "Buy Call Options"
+      }
+    }
+  },
+  "2026-09-01": {
+    "trend": "down_strong",
+    "fii": "neutral",
+    "options": "balanced",
+    "predictions": {
+      "tomorrow": {
+        "probability": 57,
+        "direction": "DOWN",
+        "expected_move": "-0.5%",
+        "strategy": "Sell on rise"
+      },
+      "next_week": {
+        "probability": 61,
+        "direction": "DOWN",
+        "expected_move": "-0.8%",
+        "strategy": "Sell on rise"
+      },
+      "next_month": {
+        "probability": 68,
+        "direction": "DOWN",
+        "expected_move": "-3.8%",
+        "strategy": "Buy Put Options"
+      }
+    }
+  },
+  "2026-08-31": {
+    "trend": "flat",
+    "fii": "neutral",
+    "options": "balanced",
+    "predictions": {
+      "tomorrow": {
+        "probability": 50,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      },
+      "next_week": {
+        "probability": 50,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      },
+      "next_month": {
+        "probability": 50,
+        "direction": "FLAT",
+        "expected_move": "~0.0%",
+        "strategy": "Wait & Watch"
+      }
+    }
+  },
+  "2026-08-28": {
+    "trend": "volatile",
+    "fii": "neutral",
+    "options": "resistance",
+    "predictions": {
+      "tomorrow": {
+        "probability": 60,
+        "direction": "DOWN",
+        "expected_move": "-0.5%",
+        "strategy": "Sell on rise"
+      },
+      "next_week": {
+        "probability": 65,
+        "direction": "DOWN",
+        "expected_move": "-2.2%",
+        "strategy": "Buy Put Options"
+      },
+      "next_month": {
+        "probability": 75,
+        "direction": "DOWN",
+        "expected_move": "-3.8%",
+        "strategy": "Buy Put Options"
+      }
+    }
+  },
+  "2026-08-27": {
+    "trend": "up_strong",
+    "fii": "neutral",
+    "options": "support",
+    "predictions": {
+      "tomorrow": {
+        "probability": 65,
+        "direction": "UP",
+        "expected_move": "+1.2%",
+        "strategy": "Buy Call Options"
+      },
+      "next_week": {
+        "probability": 72,
+        "direction": "UP",
+        "expected_move": "+1.8%",
+        "strategy": "Buy Call Options"
+      },
+      "next_month": {
+        "probability": 85,
+        "direction": "UP",
+        "expected_move": "+3.0%",
+        "strategy": "Buy Call Options"
+      }
+    }
+  },
+  "2026-08-26": {
+    "trend": "down_strong",
+    "fii": "buying",
+    "options": "resistance",
+    "predictions": {
+      "tomorrow": {
+        "probability": 55,
+        "direction": "DOWN",
+        "expected_move": "-0.5%",
+        "strategy": "Sell on rise"
+      },
+      "next_week": {
+        "probability": 57,
+        "direction": "DOWN",
+        "expected_move": "-0.8%",
+        "strategy": "Sell on rise"
+      },
+      "next_month": {
+        "probability": 62,
+        "direction": "DOWN",
+        "expected_move": "-3.8%",
+        "strategy": "Buy Put Options"
+      }
+    }
+  }
+}

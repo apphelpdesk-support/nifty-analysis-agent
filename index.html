@@ -23,9 +23,13 @@
             }
         }
     </script>
+    <style>
+        .tab-btn { padding: 0.75rem 1.5rem; font-weight: 600; color: #6b7280; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .tab-btn:hover { color: #374151; }
+        .tab-btn.active { color: #0d9488; border-bottom-color: #0d9488; }
+    </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
-    <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-10">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -33,87 +37,88 @@
                     <i class="fa-solid fa-chart-line text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-gray-900">Market Prediction Simulator</h1>
-                    <p class="text-xs text-gray-500">Play with scenarios to find the best strategy for tomorrow</p>
+                    <h1 class="text-xl font-bold text-gray-900">Market Prediction Dashboard</h1>
+                    <p class="text-xs text-gray-500">Automated daily predictions powered by GitHub Actions</p>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="flex-grow max-w-6xl mx-auto px-4 py-8 w-full grid grid-cols-1 md:grid-cols-12 gap-8">
         
         <!-- Controls Sidebar -->
         <div class="md:col-span-4 space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-brand-500"></i> Set the Scene
-                </h2>
-                <p class="text-sm text-gray-500 mb-6">Change the options below to match today's market, and see what usually happens the next day.</p>
                 
-                <!-- Input 1 -->
+                <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+                    <i class="fa-regular fa-calendar text-brand-500"></i> Select Date
+                </h2>
+                <select id="date-picker" class="w-full bg-gray-50 border border-gray-200 text-gray-900 font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow cursor-pointer mb-6" onchange="loadDateData()">
+                    <option value="">Loading live data...</option>
+                </select>
+
+                <h2 class="text-lg font-bold mb-4 flex items-center gap-2 pt-4 border-t">
+                    <i class="fa-solid fa-chart-pie text-brand-500"></i> Market Conditions
+                </h2>
+                <p class="text-xs text-gray-500 mb-4">The exact conditions that were present on the selected date.</p>
+                
                 <div class="mb-5">
-                    <label class="block text-sm font-semibold mb-2 text-gray-700">1. Recent Market Trend</label>
-                    <select id="trend" class="w-full bg-gray-50 border border-gray-200 text-gray-700 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow cursor-pointer" onchange="calculatePrediction()">
-                        <option value="up_strong">?? Going Up Strongly (2+ days)</option>
-                        <option value="down_strong">?? Falling Hard (2+ days)</option>
+                    <label class="block text-sm font-semibold mb-2 text-gray-700">Trend</label>
+                    <select id="trend" disabled class="w-full bg-gray-100 border border-gray-200 text-gray-600 py-2 px-3 rounded-lg opacity-80">
+                        <option value="up_strong">?? Going Up Strongly</option>
+                        <option value="down_strong">?? Falling Hard</option>
                         <option value="flat">?? Sideways / Flat</option>
                         <option value="volatile">?? Very Choppy / Volatile</option>
                     </select>
                 </div>
 
-                <!-- Input 2 -->
                 <div class="mb-5">
-                    <label class="block text-sm font-semibold mb-2 text-gray-700">2. Big Investors (FIIs) are...</label>
-                    <select id="fii" class="w-full bg-gray-50 border border-gray-200 text-gray-700 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow cursor-pointer" onchange="calculatePrediction()">
+                    <label class="block text-sm font-semibold mb-2 text-gray-700">FII Activity</label>
+                    <select id="fii" disabled class="w-full bg-gray-100 border border-gray-200 text-gray-600 py-2 px-3 rounded-lg opacity-80">
                         <option value="buying">?? Buying heavily</option>
                         <option value="selling">????? Selling heavily</option>
                         <option value="neutral">????? Doing nothing</option>
                     </select>
                 </div>
 
-                <!-- Input 3 -->
                 <div class="mb-5">
-                    <label class="block text-sm font-semibold mb-2 text-gray-700">3. Options Data (Where are the bets?)</label>
-                    <select id="options" class="w-full bg-gray-50 border border-gray-200 text-gray-700 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow cursor-pointer" onchange="calculatePrediction()">
-                        <option value="resistance">?? Heavy Resistance (People expect market to fall)</option>
-                        <option value="support">??? Heavy Support (People expect market to rise)</option>
+                    <label class="block text-sm font-semibold mb-2 text-gray-700">Options Data</label>
+                    <select id="options" disabled class="w-full bg-gray-100 border border-gray-200 text-gray-600 py-2 px-3 rounded-lg opacity-80">
+                        <option value="resistance">?? Heavy Resistance</option>
+                        <option value="support">??? Heavy Support</option>
                         <option value="balanced">?? Balanced</option>
                     </select>
                 </div>
-                
-                <button onclick="calculatePrediction()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 mt-4">
-                    <i class="fa-solid fa-bolt"></i> Run Prediction
-                </button>
             </div>
         </div>
 
         <!-- Results Area -->
         <div class="md:col-span-8">
             <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 h-full flex flex-col">
-                <div class="flex items-center gap-3 mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900">Tomorrow's Prediction</h2>
-                    <span id="badge-status" class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full uppercase tracking-wider">Simulated</span>
+                
+                <div class="flex items-center gap-3 mb-4">
+                    <h2 class="text-2xl font-bold text-gray-900">Prediction Engine</h2>
+                    <span id="badge-status" class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full uppercase tracking-wider">Live Automated</span>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex border-b border-gray-200 mb-8 overflow-x-auto">
+                    <button class="tab-btn active whitespace-nowrap" id="tab-tomorrow" onclick="selectTab('tomorrow')">1 Day (Tomorrow)</button>
+                    <button class="tab-btn whitespace-nowrap" id="tab-next_week" onclick="selectTab('next_week')">1 Week (Next Week)</button>
+                    <button class="tab-btn whitespace-nowrap" id="tab-next_month" onclick="selectTab('next_month')">1 Month (Next Month)</button>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                    <!-- Stat Card 1 -->
                     <div class="bg-gray-50 rounded-xl p-5 border border-gray-100">
-                        <div class="text-gray-500 text-sm mb-1 font-medium">Historical Probability</div>
-                        <div class="text-3xl font-black text-gray-900 flex items-baseline gap-1" id="res-prob">
-                            --%
-                        </div>
+                        <div class="text-gray-500 text-sm mb-1 font-medium">Probability of Target</div>
+                        <div class="text-3xl font-black text-gray-900 flex items-baseline gap-1" id="res-prob">--%</div>
                     </div>
-                    <!-- Stat Card 2 -->
                     <div class="bg-gray-50 rounded-xl p-5 border border-gray-100">
                         <div class="text-gray-500 text-sm mb-1 font-medium">Expected Move</div>
-                        <div class="text-3xl font-black text-gray-900" id="res-move">
-                            --
-                        </div>
+                        <div class="text-3xl font-black text-gray-900" id="res-move">--</div>
                     </div>
-                    <!-- Stat Card 3 -->
                     <div class="bg-gray-50 rounded-xl p-5 border border-gray-100">
-                        <div class="text-gray-500 text-sm mb-1 font-medium">Market Mood</div>
+                        <div class="text-gray-500 text-sm mb-1 font-medium">Target Direction</div>
                         <div class="text-xl font-bold flex items-center gap-2 mt-1" id="res-mood">
                             <i class="fa-solid fa-spinner fa-spin text-gray-400"></i> --
                         </div>
@@ -122,101 +127,105 @@
 
                 <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 mb-6">
                     <h3 class="font-bold text-blue-900 mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-lightbulb text-blue-500"></i> Best Strategy for Tomorrow
+                        <i class="fa-solid fa-lightbulb text-blue-500"></i> Recommended Strategy
                     </h3>
                     <p class="text-blue-800 text-lg leading-relaxed" id="res-strategy">
-                        Select options on the left to see the best strategy.
+                        Loading strategy...
                     </p>
                 </div>
 
-                <div class="mt-auto">
-                    <h4 class="font-semibold text-gray-700 mb-3 border-b pb-2">How to understand this:</h4>
-                    <p class="text-gray-600 text-sm leading-relaxed" id="res-explanation">
-                        The stock market often repeats itself. This dashboard looks at what happened in the past when similar conditions existed. For example, if big investors are buying and the trend is up, historically the market tends to gap up the next morning.
-                    </p>
-                </div>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t py-6 mt-auto">
-        <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
-            <p>Nifty Analyst &copy; 2026. This is a historical simulator and not financial advice.</p>
-        </div>
-    </footer>
-
     <script>
-        function calculatePrediction() {
-            const trend = document.getElementById('trend').value;
-            const fii = document.getElementById('fii').value;
-            const options = document.getElementById('options').value;
-            
-            let score = 0;
-            
-            if (trend === 'up_strong') score += 3;
-            else if (trend === 'down_strong') score -= 3;
-            else if (trend === 'volatile') score -= 1;
-            
-            if (fii === 'buying') score += 4;
-            else if (fii === 'selling') score -= 4;
-            
-            if (options === 'support') score += 3;
-            else if (options === 'resistance') score -= 3;
+        let dashboardData = {};
+        let currentTab = 'tomorrow';
 
+        async function fetchLiveJSON() {
+            try {
+                // Add timestamp to prevent aggressive caching by GitHub Pages
+                const res = await fetch('dashboard_data.json?t=' + new Date().getTime());
+                dashboardData = await res.json();
+                
+                const select = document.getElementById('date-picker');
+                select.innerHTML = ''; // clear
+                
+                const dates = Object.keys(dashboardData).sort().reverse();
+                
+                dates.forEach((date, i) => {
+                    const opt = document.createElement('option');
+                    opt.value = date;
+                    let label = new Date(date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
+                    if (i === 0) label = "Most Recent: " + label;
+                    opt.innerText = label;
+                    select.appendChild(opt);
+                });
+
+                if (dates.length > 0) {
+                    loadDateData();
+                }
+            } catch(e) {
+                console.error(e);
+                document.getElementById('date-picker').innerHTML = '<option>Error loading automated data. Check GitHub Action.</option>';
+            }
+        }
+
+        function loadDateData() {
+            const date = document.getElementById('date-picker').value;
+            if(!dashboardData[date]) return;
+            
+            const data = dashboardData[date];
+            document.getElementById('trend').value = data.trend;
+            document.getElementById('fii').value = data.fii;
+            document.getElementById('options').value = data.options;
+            
+            renderPrediction();
+        }
+
+        function selectTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            currentTab = tab;
+            renderPrediction();
+        }
+
+        function renderPrediction() {
+            const date = document.getElementById('date-picker').value;
+            if(!dashboardData[date]) return;
+            
+            const pred = dashboardData[date].predictions[currentTab];
+            
             const probEl = document.getElementById('res-prob');
             const moveEl = document.getElementById('res-move');
             const moodEl = document.getElementById('res-mood');
             const strategyEl = document.getElementById('res-strategy');
-            const expEl = document.getElementById('res-explanation');
             
             [probEl, moveEl, moodEl, strategyEl].forEach(el => {
                 el.classList.add('opacity-50');
-                setTimeout(() => el.classList.remove('opacity-50'), 300);
+                setTimeout(() => el.classList.remove('opacity-50'), 200);
             });
 
             setTimeout(() => {
-                if (score >= 5) {
-                    let prob = Math.floor(Math.random() * (85 - 70) + 70);
-                    probEl.innerHTML = '<span class="text-green-600">' + prob + '%</span> <span class="text-sm font-normal text-gray-500">UP</span>';
-                    moveEl.innerHTML = '<span class="text-green-600">+1.2%</span>';
-                    moodEl.innerHTML = '<i class="fa-solid fa-arrow-trend-up text-green-500"></i> <span class="text-green-700">Highly Bullish</span>';
-                    strategyEl.innerHTML = '<strong>Buy Call Options (CE)</strong> or buy stocks directly. The market has massive upward momentum and big investors are supporting it. It is dangerous to bet against the market right now.';
-                    expEl.innerHTML = 'When the trend is strong and big money is buying, historically the market opens higher the next day. Any small dips in the morning are usually bought up quickly by large institutions.';
-                } else if (score > 1 && score < 5) {
-                    let prob = Math.floor(Math.random() * (65 - 55) + 55);
-                    probEl.innerHTML = '<span class="text-green-500">' + prob + '%</span> <span class="text-sm font-normal text-gray-500">UP</span>';
-                    moveEl.innerHTML = '<span class="text-green-500">+0.4%</span>';
-                    moodEl.innerHTML = '<i class="fa-solid fa-arrow-up-right-dots text-green-500"></i> <span class="text-green-600">Mildly Bullish</span>';
-                    strategyEl.innerHTML = '<strong>Wait for a dip, then Buy</strong>. The overall mood is positive, but it might not shoot up immediately. Selling Put Options (writing Puts) is a safe strategy here to collect premium while the market slowly grinds higher.';
-                    expEl.innerHTML = 'The data shows a slight advantage to buyers. However, because not all signals are aligned, the market might be slow. It is better to wait for a small fall during the day to buy, rather than buying exactly at opening.';
-                } else if (score <= 1 && score >= -1) {
-                    let prob = Math.floor(Math.random() * (55 - 45) + 45);
-                    probEl.innerHTML = '<span class="text-gray-600">' + prob + '%</span> <span class="text-sm font-normal text-gray-400">FLAT</span>';
-                    moveEl.innerHTML = '<span class="text-gray-500">~0.0%</span>';
-                    moodEl.innerHTML = '<i class="fa-solid fa-arrows-left-right text-gray-500"></i> <span class="text-gray-700">Neutral / Choppy</span>';
-                    strategyEl.innerHTML = '<strong>Do Nothing (Wait & Watch)</strong> or use range-bound strategies like Iron Condors. The market has no clear direction and is likely to bounce up and down in a tight range, killing option buyers premiums.';
-                    expEl.innerHTML = 'Mixed signals mean the market is confused. Big investors are not committing, or the technical trend contradicts the data. Historically, these days are "traps" for beginners who try to guess the direction. Staying out is the best strategy.';
-                } else if (score < -1 && score > -5) {
-                    let prob = Math.floor(Math.random() * (65 - 55) + 55);
-                    probEl.innerHTML = '<span class="text-red-500">' + prob + '%</span> <span class="text-sm font-normal text-gray-500">DOWN</span>';
-                    moveEl.innerHTML = '<span class="text-red-500">-0.5%</span>';
-                    moodEl.innerHTML = '<i class="fa-solid fa-arrow-down-right-dots text-red-500"></i> <span class="text-red-600">Mildly Bearish</span>';
-                    strategyEl.innerHTML = '<strong>Sell on rise (Sell Calls)</strong>. The market is feeling heavy. Instead of buying immediately, wait for the market to bounce up a little bit during the day, and then take a short trade (buy Put options) when it hits resistance.';
-                    expEl.innerHTML = 'There is weakness in the market. While a massive crash is not predicted, the path of least resistance is downwards. Sellers are likely to step in every time the market tries to go up.';
-                } else {
-                    let prob = Math.floor(Math.random() * (85 - 70) + 70);
-                    probEl.innerHTML = '<span class="text-red-600">' + prob + '%</span> <span class="text-sm font-normal text-gray-500">DOWN</span>';
-                    moveEl.innerHTML = '<span class="text-red-600">-1.5%</span>';
-                    moodEl.innerHTML = '<i class="fa-solid fa-arrow-trend-down text-red-500"></i> <span class="text-red-700">Highly Bearish</span>';
-                    strategyEl.innerHTML = '<strong>Buy Put Options (PE)</strong> or stay completely in cash. The market is facing intense selling pressure and big institutions are dumping stocks. Do not try to catch a falling knife by buying the dip.';
-                    expEl.innerHTML = 'All indicators are deeply negative. Historically, when these conditions align, panic selling can occur. The safest bet is to play for the downside or completely avoid buying until the dust settles in a few days.';
-                }
-            }, 300);
+                let color = "gray";
+                if(pred.direction === 'UP') color = "green";
+                if(pred.direction === 'DOWN') color = "red";
+                
+                probEl.innerHTML = '<span class="text-'+color+'-600">' + pred.probability + '%</span> <span class="text-sm font-normal text-gray-500">'+pred.direction+'</span>';
+                moveEl.innerHTML = '<span class="text-'+color+'-600">' + pred.expected_move + '</span>';
+                
+                let icon = "fa-arrows-left-right";
+                if(pred.direction === 'UP') icon = "fa-arrow-trend-up";
+                if(pred.direction === 'DOWN') icon = "fa-arrow-trend-down";
+                
+                moodEl.innerHTML = '<i class="fa-solid '+icon+' text-'+color+'-500"></i> <span class="text-'+color+'-700">' + pred.direction + '</span>';
+                
+                strategyEl.innerHTML = '<strong>' + pred.strategy + '</strong> based on the historical pattern for this exact setup over this time frame.';
+            }, 200);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            calculatePrediction();
+            fetchLiveJSON();
         });
     </script>
 </body>
