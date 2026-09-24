@@ -95,11 +95,11 @@ def main():
         # Calculate Support and Resistance from Option Chain (Max OI)
         pe_data = []
         ce_data = []
-        for data in oc['records']['data']:
-            if 'PE' in data:
-                pe_data.append(data['PE'])
-            if 'CE' in data:
-                ce_data.append(data['CE'])
+        for item in oc['records']['data']:
+            if 'PE' in item:
+                pe_data.append(item['PE'])
+            if 'CE' in item:
+                ce_data.append(item['CE'])
 
         # Find Support (Max Put OI below current price)
         puts_below = [x for x in pe_data if x['strikePrice'] < current_price]
