@@ -15,7 +15,7 @@
     }
   },
   "2017-07-19": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 9899.6,
       "ema20_signal": "bullish",
@@ -45,7 +45,7 @@
     }
   },
   "2017-07-21": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 9915.25,
       "ema20_signal": "bullish",
@@ -60,7 +60,7 @@
     }
   },
   "2017-07-24": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 9966.4,
       "ema20_signal": "bullish",
@@ -90,7 +90,7 @@
     }
   },
   "2017-07-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10020.65,
       "ema20_signal": "bullish",
@@ -135,7 +135,7 @@
     }
   },
   "2017-07-31": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10077.1,
       "ema20_signal": "bullish",
@@ -150,7 +150,7 @@
     }
   },
   "2017-08-01": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10114.65,
       "ema20_signal": "bullish",
@@ -240,7 +240,7 @@
     }
   },
   "2017-08-09": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 9908.05,
       "ema20_signal": "bearish",
@@ -255,7 +255,7 @@
     }
   },
   "2017-08-10": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 9820.25,
       "ema20_signal": "bearish",
@@ -300,7 +300,7 @@
     }
   },
   "2017-08-16": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 9897.3,
       "ema20_signal": "bearish",
@@ -330,7 +330,7 @@
     }
   },
   "2017-08-18": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 9837.4,
       "ema20_signal": "bearish",
@@ -375,7 +375,7 @@
     }
   },
   "2017-08-23": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 9852.5,
       "ema20_signal": "bearish",
@@ -420,7 +420,7 @@
     }
   },
   "2017-08-29": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 9796.05,
       "ema20_signal": "bearish",
@@ -450,7 +450,7 @@
     }
   },
   "2017-08-31": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 9917.9,
       "ema20_signal": "bullish",
@@ -465,7 +465,7 @@
     }
   },
   "2017-09-01": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 9974.4,
       "ema20_signal": "bullish",
@@ -495,7 +495,7 @@
     }
   },
   "2017-09-05": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 9952.2,
       "ema20_signal": "bullish",
@@ -555,7 +555,7 @@
     }
   },
   "2017-09-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10006.05,
       "ema20_signal": "bullish",
@@ -690,7 +690,7 @@
     }
   },
   "2017-09-22": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 9964.4,
       "ema20_signal": "bearish",
@@ -795,7 +795,7 @@
     }
   },
   "2017-10-04": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 9914.9,
       "ema20_signal": "bearish",
@@ -825,7 +825,7 @@
     }
   },
   "2017-10-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 9979.7,
       "ema20_signal": "bullish",
@@ -855,7 +855,7 @@
     }
   },
   "2017-10-10": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10016.95,
       "ema20_signal": "bullish",
@@ -885,7 +885,7 @@
     }
   },
   "2017-10-12": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10096.4,
       "ema20_signal": "bullish",
@@ -900,7 +900,7 @@
     }
   },
   "2017-10-13": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10167.45,
       "ema20_signal": "bullish",
@@ -915,7 +915,7 @@
     }
   },
   "2017-10-16": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10230.85,
       "ema20_signal": "bullish",
@@ -975,7 +975,7 @@
     }
   },
   "2017-10-23": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10184.85,
       "ema20_signal": "bullish",
@@ -1050,7 +1050,7 @@
     }
   },
   "2017-10-30": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10363.65,
       "ema20_signal": "bullish",
@@ -1245,7 +1245,7 @@
     }
   },
   "2017-11-16": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10214.75,
       "ema20_signal": "bearish",
@@ -1335,7 +1335,7 @@
     }
   },
   "2017-11-24": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10389.7,
       "ema20_signal": "bullish",
@@ -1395,7 +1395,7 @@
     }
   },
   "2017-11-30": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 10226.55,
       "ema20_signal": "bearish",
@@ -1455,7 +1455,7 @@
     }
   },
   "2017-12-06": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 10044.1,
       "ema20_signal": "bearish",
@@ -1470,7 +1470,7 @@
     }
   },
   "2017-12-07": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10166.7,
       "ema20_signal": "bearish",
@@ -1485,7 +1485,7 @@
     }
   },
   "2017-12-08": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10265.65,
       "ema20_signal": "bullish",
@@ -1545,7 +1545,7 @@
     }
   },
   "2017-12-14": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10252.1,
       "ema20_signal": "bullish",
@@ -1590,7 +1590,7 @@
     }
   },
   "2017-12-19": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10463.2,
       "ema20_signal": "bullish",
@@ -1635,7 +1635,7 @@
     }
   },
   "2017-12-22": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10493.0,
       "ema20_signal": "bullish",
@@ -1650,7 +1650,7 @@
     }
   },
   "2017-12-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10531.5,
       "ema20_signal": "bullish",
@@ -1740,7 +1740,7 @@
     }
   },
   "2018-01-04": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10504.8,
       "ema20_signal": "bullish",
@@ -1755,7 +1755,7 @@
     }
   },
   "2018-01-05": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10558.85,
       "ema20_signal": "bullish",
@@ -1770,7 +1770,7 @@
     }
   },
   "2018-01-08": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10623.6,
       "ema20_signal": "bullish",
@@ -1845,7 +1845,7 @@
     }
   },
   "2018-01-15": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10741.55,
       "ema20_signal": "bullish",
@@ -1935,7 +1935,7 @@
     }
   },
   "2018-01-23": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11083.7,
       "ema20_signal": "bullish",
@@ -2100,7 +2100,7 @@
     }
   },
   "2018-02-08": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10576.85,
       "ema20_signal": "bearish",
@@ -2160,7 +2160,7 @@
     }
   },
   "2018-02-15": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10545.5,
       "ema20_signal": "bearish",
@@ -2250,7 +2250,7 @@
     }
   },
   "2018-02-23": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10491.05,
       "ema20_signal": "bearish",
@@ -2265,7 +2265,7 @@
     }
   },
   "2018-02-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10582.6,
       "ema20_signal": "bullish",
@@ -2325,7 +2325,7 @@
     }
   },
   "2018-03-05": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 10358.85,
       "ema20_signal": "bearish",
@@ -2355,7 +2355,7 @@
     }
   },
   "2018-03-07": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 10154.2,
       "ema20_signal": "bearish",
@@ -2580,7 +2580,7 @@
     }
   },
   "2018-03-28": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 10113.7,
       "ema20_signal": "bearish",
@@ -2595,7 +2595,7 @@
     }
   },
   "2018-04-02": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10211.8,
       "ema20_signal": "bearish",
@@ -2790,7 +2790,7 @@
     }
   },
   "2018-04-19": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10565.3,
       "ema20_signal": "bullish",
@@ -2865,7 +2865,7 @@
     }
   },
   "2018-04-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10617.8,
       "ema20_signal": "bullish",
@@ -2880,7 +2880,7 @@
     }
   },
   "2018-04-27": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10692.3,
       "ema20_signal": "bullish",
@@ -2955,7 +2955,7 @@
     }
   },
   "2018-05-07": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10715.5,
       "ema20_signal": "bullish",
@@ -3015,7 +3015,7 @@
     }
   },
   "2018-05-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10806.5,
       "ema20_signal": "bullish",
@@ -3150,7 +3150,7 @@
     }
   },
   "2018-05-24": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10513.85,
       "ema20_signal": "bearish",
@@ -3165,7 +3165,7 @@
     }
   },
   "2018-05-25": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10605.15,
       "ema20_signal": "bearish",
@@ -3300,7 +3300,7 @@
     }
   },
   "2018-06-07": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10768.35,
       "ema20_signal": "bullish",
@@ -3345,7 +3345,7 @@
     }
   },
   "2018-06-12": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10842.85,
       "ema20_signal": "bullish",
@@ -3375,7 +3375,7 @@
     }
   },
   "2018-06-14": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 10808.05,
       "ema20_signal": "bullish",
@@ -3435,7 +3435,7 @@
     }
   },
   "2018-06-20": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10772.05,
       "ema20_signal": "bullish",
@@ -3540,7 +3540,7 @@
     }
   },
   "2018-06-29": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10714.3,
       "ema20_signal": "bearish",
@@ -3795,7 +3795,7 @@
     }
   },
   "2018-07-24": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11134.3,
       "ema20_signal": "bullish",
@@ -3855,7 +3855,7 @@
     }
   },
   "2018-07-30": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11319.55,
       "ema20_signal": "bullish",
@@ -3900,7 +3900,7 @@
     }
   },
   "2018-08-02": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11244.7,
       "ema20_signal": "bullish",
@@ -3960,7 +3960,7 @@
     }
   },
   "2018-08-08": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11450.0,
       "ema20_signal": "bullish",
@@ -4020,7 +4020,7 @@
     }
   },
   "2018-08-14": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11435.1,
       "ema20_signal": "bullish",
@@ -4035,7 +4035,7 @@
     }
   },
   "2018-08-16": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11385.05,
       "ema20_signal": "bullish",
@@ -4065,7 +4065,7 @@
     }
   },
   "2018-08-20": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11551.75,
       "ema20_signal": "bullish",
@@ -4140,7 +4140,7 @@
     }
   },
   "2018-08-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11738.5,
       "ema20_signal": "bullish",
@@ -4245,7 +4245,7 @@
     }
   },
   "2018-09-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11536.9,
       "ema20_signal": "bullish",
@@ -4260,7 +4260,7 @@
     }
   },
   "2018-09-07": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11589.1,
       "ema20_signal": "bullish",
@@ -4275,7 +4275,7 @@
     }
   },
   "2018-09-10": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11438.1,
       "ema20_signal": "bearish",
@@ -4485,7 +4485,7 @@
     }
   },
   "2018-10-03": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 10858.25,
       "ema20_signal": "bearish",
@@ -4560,7 +4560,7 @@
     }
   },
   "2018-10-10": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10460.1,
       "ema20_signal": "bearish",
@@ -4620,7 +4620,7 @@
     }
   },
   "2018-10-16": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10584.75,
       "ema20_signal": "bearish",
@@ -4935,7 +4935,7 @@
     }
   },
   "2018-11-16": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10682.2,
       "ema20_signal": "bullish",
@@ -4965,7 +4965,7 @@
     }
   },
   "2018-11-20": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 10656.2,
       "ema20_signal": "bullish",
@@ -5010,7 +5010,7 @@
     }
   },
   "2018-11-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10628.6,
       "ema20_signal": "bullish",
@@ -5040,7 +5040,7 @@
     }
   },
   "2018-11-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10728.85,
       "ema20_signal": "bullish",
@@ -5190,7 +5190,7 @@
     }
   },
   "2018-12-12": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10737.6,
       "ema20_signal": "bullish",
@@ -5265,7 +5265,7 @@
     }
   },
   "2018-12-19": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10967.3,
       "ema20_signal": "bullish",
@@ -5355,7 +5355,7 @@
     }
   },
   "2018-12-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10859.9,
       "ema20_signal": "bullish",
@@ -5415,7 +5415,7 @@
     }
   },
   "2019-01-04": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10727.35,
       "ema20_signal": "bearish",
@@ -5520,7 +5520,7 @@
     }
   },
   "2019-01-15": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10886.8,
       "ema20_signal": "bullish",
@@ -5700,7 +5700,7 @@
     }
   },
   "2019-01-31": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10830.95,
       "ema20_signal": "bullish",
@@ -5715,7 +5715,7 @@
     }
   },
   "2019-02-01": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10893.65,
       "ema20_signal": "bullish",
@@ -5760,7 +5760,7 @@
     }
   },
   "2019-02-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11062.45,
       "ema20_signal": "bullish",
@@ -5940,7 +5940,7 @@
     }
   },
   "2019-02-25": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10880.1,
       "ema20_signal": "bullish",
@@ -6030,7 +6030,7 @@
     }
   },
   "2019-03-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11053.0,
       "ema20_signal": "bullish",
@@ -6060,7 +6060,7 @@
     }
   },
   "2019-03-08": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11035.4,
       "ema20_signal": "bullish",
@@ -6075,7 +6075,7 @@
     }
   },
   "2019-03-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11168.05,
       "ema20_signal": "bullish",
@@ -6105,7 +6105,7 @@
     }
   },
   "2019-03-13": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11341.7,
       "ema20_signal": "bullish",
@@ -6135,7 +6135,7 @@
     }
   },
   "2019-03-15": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11426.85,
       "ema20_signal": "bullish",
@@ -6165,7 +6165,7 @@
     }
   },
   "2019-03-19": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11532.4,
       "ema20_signal": "bullish",
@@ -6225,7 +6225,7 @@
     }
   },
   "2019-03-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11483.25,
       "ema20_signal": "bullish",
@@ -6255,7 +6255,7 @@
     }
   },
   "2019-03-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11570.0,
       "ema20_signal": "bullish",
@@ -6285,7 +6285,7 @@
     }
   },
   "2019-04-02": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11713.2,
       "ema20_signal": "bullish",
@@ -6330,7 +6330,7 @@
     }
   },
   "2019-04-05": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11665.95,
       "ema20_signal": "bullish",
@@ -6375,7 +6375,7 @@
     }
   },
   "2019-04-10": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11584.3,
       "ema20_signal": "bullish",
@@ -6420,7 +6420,7 @@
     }
   },
   "2019-04-15": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11690.35,
       "ema20_signal": "bullish",
@@ -6435,7 +6435,7 @@
     }
   },
   "2019-04-16": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11787.15,
       "ema20_signal": "bullish",
@@ -6465,7 +6465,7 @@
     }
   },
   "2019-04-22": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11594.45,
       "ema20_signal": "bullish",
@@ -6495,7 +6495,7 @@
     }
   },
   "2019-04-24": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11726.15,
       "ema20_signal": "bullish",
@@ -6525,7 +6525,7 @@
     }
   },
   "2019-04-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11754.65,
       "ema20_signal": "bullish",
@@ -6555,7 +6555,7 @@
     }
   },
   "2019-05-02": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11724.75,
       "ema20_signal": "bullish",
@@ -6615,7 +6615,7 @@
     }
   },
   "2019-05-08": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11359.45,
       "ema20_signal": "bearish",
@@ -6630,7 +6630,7 @@
     }
   },
   "2019-05-09": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11301.8,
       "ema20_signal": "bearish",
@@ -6660,7 +6660,7 @@
     }
   },
   "2019-05-13": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11148.2,
       "ema20_signal": "bearish",
@@ -6705,7 +6705,7 @@
     }
   },
   "2019-05-16": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11257.1,
       "ema20_signal": "bearish",
@@ -6765,7 +6765,7 @@
     }
   },
   "2019-05-22": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11737.9,
       "ema20_signal": "bullish",
@@ -6840,7 +6840,7 @@
     }
   },
   "2019-05-29": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11861.1,
       "ema20_signal": "bullish",
@@ -6885,7 +6885,7 @@
     }
   },
   "2019-06-03": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12088.55,
       "ema20_signal": "bullish",
@@ -6900,7 +6900,7 @@
     }
   },
   "2019-06-04": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 12021.65,
       "ema20_signal": "bullish",
@@ -6930,7 +6930,7 @@
     }
   },
   "2019-06-07": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11870.65,
       "ema20_signal": "bullish",
@@ -6960,7 +6960,7 @@
     }
   },
   "2019-06-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11965.6,
       "ema20_signal": "bullish",
@@ -7185,7 +7185,7 @@
     }
   },
   "2019-07-02": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11910.3,
       "ema20_signal": "bullish",
@@ -7245,7 +7245,7 @@
     }
   },
   "2019-07-08": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11558.6,
       "ema20_signal": "bearish",
@@ -7275,7 +7275,7 @@
     }
   },
   "2019-07-10": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11498.9,
       "ema20_signal": "bearish",
@@ -7395,7 +7395,7 @@
     }
   },
   "2019-07-22": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11346.2,
       "ema20_signal": "bearish",
@@ -7800,7 +7800,7 @@
     }
   },
   "2019-08-30": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11023.25,
       "ema20_signal": "bearish",
@@ -7860,7 +7860,7 @@
     }
   },
   "2019-09-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10946.2,
       "ema20_signal": "bearish",
@@ -7890,7 +7890,7 @@
     }
   },
   "2019-09-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11035.7,
       "ema20_signal": "bullish",
@@ -7995,7 +7995,7 @@
     }
   },
   "2019-09-20": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11274.2,
       "ema20_signal": "bullish",
@@ -8040,7 +8040,7 @@
     }
   },
   "2019-09-25": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11440.2,
       "ema20_signal": "bullish",
@@ -8055,7 +8055,7 @@
     }
   },
   "2019-09-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11571.2,
       "ema20_signal": "bullish",
@@ -8085,7 +8085,7 @@
     }
   },
   "2019-09-30": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11474.45,
       "ema20_signal": "bullish",
@@ -8115,7 +8115,7 @@
     }
   },
   "2019-10-03": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11314.0,
       "ema20_signal": "bullish",
@@ -8160,7 +8160,7 @@
     }
   },
   "2019-10-09": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11313.3,
       "ema20_signal": "bullish",
@@ -8175,7 +8175,7 @@
     }
   },
   "2019-10-10": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11234.55,
       "ema20_signal": "bearish",
@@ -8190,7 +8190,7 @@
     }
   },
   "2019-10-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11305.05,
       "ema20_signal": "bullish",
@@ -8205,7 +8205,7 @@
     }
   },
   "2019-10-14": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11341.15,
       "ema20_signal": "bullish",
@@ -8220,7 +8220,7 @@
     }
   },
   "2019-10-15": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11428.3,
       "ema20_signal": "bullish",
@@ -8400,7 +8400,7 @@
     }
   },
   "2019-11-04": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11941.3,
       "ema20_signal": "bullish",
@@ -8460,7 +8460,7 @@
     }
   },
   "2019-11-08": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11908.15,
       "ema20_signal": "bullish",
@@ -8505,7 +8505,7 @@
     }
   },
   "2019-11-14": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11872.1,
       "ema20_signal": "bullish",
@@ -8550,7 +8550,7 @@
     }
   },
   "2019-11-19": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11940.1,
       "ema20_signal": "bullish",
@@ -8640,7 +8640,7 @@
     }
   },
   "2019-11-27": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12100.7,
       "ema20_signal": "bullish",
@@ -8655,7 +8655,7 @@
     }
   },
   "2019-11-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12151.15,
       "ema20_signal": "bullish",
@@ -8805,7 +8805,7 @@
     }
   },
   "2019-12-12": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11971.8,
       "ema20_signal": "bullish",
@@ -8850,7 +8850,7 @@
     }
   },
   "2019-12-17": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12165.0,
       "ema20_signal": "bullish",
@@ -8865,7 +8865,7 @@
     }
   },
   "2019-12-18": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12221.65,
       "ema20_signal": "bullish",
@@ -8955,7 +8955,7 @@
     }
   },
   "2019-12-27": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12245.8,
       "ema20_signal": "bullish",
@@ -9030,7 +9030,7 @@
     }
   },
   "2020-01-03": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 12226.65,
       "ema20_signal": "bullish",
@@ -9120,7 +9120,7 @@
     }
   },
   "2020-01-13": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12329.55,
       "ema20_signal": "bullish",
@@ -9210,7 +9210,7 @@
     }
   },
   "2020-01-21": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 12169.85,
       "ema20_signal": "bearish",
@@ -9375,7 +9375,7 @@
     }
   },
   "2020-02-05": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12089.15,
       "ema20_signal": "bearish",
@@ -9390,7 +9390,7 @@
     }
   },
   "2020-02-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12137.95,
       "ema20_signal": "bullish",
@@ -9450,7 +9450,7 @@
     }
   },
   "2020-02-12": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12201.2,
       "ema20_signal": "bullish",
@@ -9825,7 +9825,7 @@
     }
   },
   "2020-03-20": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 8745.45,
       "ema20_signal": "bearish",
@@ -9945,7 +9945,7 @@
     }
   },
   "2020-04-01": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 8253.8,
       "ema20_signal": "bearish",
@@ -10185,7 +10185,7 @@
     }
   },
   "2020-04-29": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 9553.35,
       "ema20_signal": "bullish",
@@ -10245,7 +10245,7 @@
     }
   },
   "2020-05-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 9270.9,
       "ema20_signal": "bullish",
@@ -10260,7 +10260,7 @@
     }
   },
   "2020-05-07": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 9199.05,
       "ema20_signal": "bearish",
@@ -10605,7 +10605,7 @@
     }
   },
   "2020-06-10": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10116.15,
       "ema20_signal": "bullish",
@@ -10620,7 +10620,7 @@
     }
   },
   "2020-06-11": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 9902.0,
       "ema20_signal": "bullish",
@@ -10710,7 +10710,7 @@
     }
   },
   "2020-06-19": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10244.4,
       "ema20_signal": "bullish",
@@ -10740,7 +10740,7 @@
     }
   },
   "2020-06-23": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10471.0,
       "ema20_signal": "bullish",
@@ -10830,7 +10830,7 @@
     }
   },
   "2020-07-01": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 10430.05,
       "ema20_signal": "bullish",
@@ -11115,7 +11115,7 @@
     }
   },
   "2020-07-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11300.55,
       "ema20_signal": "bullish",
@@ -11130,7 +11130,7 @@
     }
   },
   "2020-07-29": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 11202.85,
       "ema20_signal": "bullish",
@@ -11400,7 +11400,7 @@
     }
   },
   "2020-08-24": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11466.45,
       "ema20_signal": "bullish",
@@ -11430,7 +11430,7 @@
     }
   },
   "2020-08-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11549.6,
       "ema20_signal": "bullish",
@@ -11460,7 +11460,7 @@
     }
   },
   "2020-08-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11647.6,
       "ema20_signal": "bullish",
@@ -11805,7 +11805,7 @@
     }
   },
   "2020-09-30": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11247.55,
       "ema20_signal": "bearish",
@@ -12075,7 +12075,7 @@
     }
   },
   "2020-10-27": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 11889.4,
       "ema20_signal": "bullish",
@@ -12195,7 +12195,7 @@
     }
   },
   "2020-11-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12263.55,
       "ema20_signal": "bullish",
@@ -12240,7 +12240,7 @@
     }
   },
   "2020-11-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12749.15,
       "ema20_signal": "bullish",
@@ -12255,7 +12255,7 @@
     }
   },
   "2020-11-12": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 12690.8,
       "ema20_signal": "bullish",
@@ -12330,7 +12330,7 @@
     }
   },
   "2020-11-20": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12859.05,
       "ema20_signal": "bullish",
@@ -12390,7 +12390,7 @@
     }
   },
   "2020-11-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 12987.0,
       "ema20_signal": "bullish",
@@ -12465,7 +12465,7 @@
     }
   },
   "2020-12-04": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 13258.55,
       "ema20_signal": "bullish",
@@ -12525,7 +12525,7 @@
     }
   },
   "2020-12-10": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 13478.3,
       "ema20_signal": "bullish",
@@ -12540,7 +12540,7 @@
     }
   },
   "2020-12-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 13513.85,
       "ema20_signal": "bullish",
@@ -12600,7 +12600,7 @@
     }
   },
   "2020-12-17": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 13740.7,
       "ema20_signal": "bullish",
@@ -12645,7 +12645,7 @@
     }
   },
   "2020-12-22": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 13466.3,
       "ema20_signal": "bullish",
@@ -12705,7 +12705,7 @@
     }
   },
   "2020-12-29": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 13932.6,
       "ema20_signal": "bullish",
@@ -12720,7 +12720,7 @@
     }
   },
   "2020-12-30": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 13981.95,
       "ema20_signal": "bullish",
@@ -13230,7 +13230,7 @@
     }
   },
   "2021-02-17": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 15208.9,
       "ema20_signal": "bullish",
@@ -13260,7 +13260,7 @@
     }
   },
   "2021-02-19": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 14981.75,
       "ema20_signal": "bullish",
@@ -13575,7 +13575,7 @@
     }
   },
   "2021-03-23": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 14814.75,
       "ema20_signal": "bearish",
@@ -13650,7 +13650,7 @@
     }
   },
   "2021-03-31": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 14690.7,
       "ema20_signal": "bearish",
@@ -13680,7 +13680,7 @@
     }
   },
   "2021-04-05": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 14637.8,
       "ema20_signal": "bearish",
@@ -13710,7 +13710,7 @@
     }
   },
   "2021-04-07": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 14819.05,
       "ema20_signal": "bullish",
@@ -13770,7 +13770,7 @@
     }
   },
   "2021-04-13": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 14504.8,
       "ema20_signal": "bearish",
@@ -13905,7 +13905,7 @@
     }
   },
   "2021-04-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 14864.55,
       "ema20_signal": "bullish",
@@ -13995,7 +13995,7 @@
     }
   },
   "2021-05-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 14724.8,
       "ema20_signal": "bullish",
@@ -14055,7 +14055,7 @@
     }
   },
   "2021-05-12": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 14696.5,
       "ema20_signal": "bullish",
@@ -14115,7 +14115,7 @@
     }
   },
   "2021-05-19": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 15030.15,
       "ema20_signal": "bullish",
@@ -14190,7 +14190,7 @@
     }
   },
   "2021-05-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 15301.45,
       "ema20_signal": "bullish",
@@ -14310,7 +14310,7 @@
     }
   },
   "2021-06-07": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 15751.65,
       "ema20_signal": "bullish",
@@ -14355,7 +14355,7 @@
     }
   },
   "2021-06-10": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 15737.75,
       "ema20_signal": "bullish",
@@ -14370,7 +14370,7 @@
     }
   },
   "2021-06-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 15799.35,
       "ema20_signal": "bullish",
@@ -14400,7 +14400,7 @@
     }
   },
   "2021-06-15": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 15869.25,
       "ema20_signal": "bullish",
@@ -14505,7 +14505,7 @@
     }
   },
   "2021-06-24": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 15790.45,
       "ema20_signal": "bullish",
@@ -14520,7 +14520,7 @@
     }
   },
   "2021-06-25": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 15860.35,
       "ema20_signal": "bullish",
@@ -14595,7 +14595,7 @@
     }
   },
   "2021-07-02": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 15722.2,
       "ema20_signal": "bullish",
@@ -14655,7 +14655,7 @@
     }
   },
   "2021-07-08": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 15727.9,
       "ema20_signal": "bullish",
@@ -14775,7 +14775,7 @@
     }
   },
   "2021-07-20": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 15632.1,
       "ema20_signal": "bearish",
@@ -14865,7 +14865,7 @@
     }
   },
   "2021-07-29": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 15778.45,
       "ema20_signal": "bullish",
@@ -14925,7 +14925,7 @@
     }
   },
   "2021-08-04": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 16258.8,
       "ema20_signal": "bullish",
@@ -14940,7 +14940,7 @@
     }
   },
   "2021-08-05": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 16294.6,
       "ema20_signal": "bullish",
@@ -15120,7 +15120,7 @@
     }
   },
   "2021-08-24": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 16624.6,
       "ema20_signal": "bullish",
@@ -15240,7 +15240,7 @@
     }
   },
   "2021-09-03": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17323.6,
       "ema20_signal": "bullish",
@@ -15405,7 +15405,7 @@
     }
   },
   "2021-09-21": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17562.0,
       "ema20_signal": "bullish",
@@ -15765,7 +15765,7 @@
     }
   },
   "2021-10-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18268.4,
       "ema20_signal": "bullish",
@@ -15930,7 +15930,7 @@
     }
   },
   "2021-11-11": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17873.6,
       "ema20_signal": "bearish",
@@ -15990,7 +15990,7 @@
     }
   },
   "2021-11-17": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17898.65,
       "ema20_signal": "bearish",
@@ -16455,7 +16455,7 @@
     }
   },
   "2021-12-31": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17354.05,
       "ema20_signal": "bullish",
@@ -16470,7 +16470,7 @@
     }
   },
   "2022-01-03": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17625.7,
       "ema20_signal": "bullish",
@@ -16485,7 +16485,7 @@
     }
   },
   "2022-01-04": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17805.25,
       "ema20_signal": "bullish",
@@ -16530,7 +16530,7 @@
     }
   },
   "2022-01-07": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17812.7,
       "ema20_signal": "bullish",
@@ -16590,7 +16590,7 @@
     }
   },
   "2022-01-13": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18257.8,
       "ema20_signal": "bullish",
@@ -16695,7 +16695,7 @@
     }
   },
   "2022-01-24": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17149.1,
       "ema20_signal": "bearish",
@@ -16830,7 +16830,7 @@
     }
   },
   "2022-02-07": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17213.6,
       "ema20_signal": "bearish",
@@ -17325,7 +17325,7 @@
     }
   },
   "2022-03-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17222.0,
       "ema20_signal": "bullish",
@@ -17460,7 +17460,7 @@
     }
   },
   "2022-04-08": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17784.35,
       "ema20_signal": "bullish",
@@ -17475,7 +17475,7 @@
     }
   },
   "2022-04-11": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17674.95,
       "ema20_signal": "bullish",
@@ -17745,7 +17745,7 @@
     }
   },
   "2022-05-10": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 16240.05,
       "ema20_signal": "bearish",
@@ -18180,7 +18180,7 @@
     }
   },
   "2022-06-20": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 15350.15,
       "ema20_signal": "bearish",
@@ -18225,7 +18225,7 @@
     }
   },
   "2022-06-23": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 15556.65,
       "ema20_signal": "bearish",
@@ -18540,7 +18540,7 @@
     }
   },
   "2022-07-22": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 16719.45,
       "ema20_signal": "bullish",
@@ -18555,7 +18555,7 @@
     }
   },
   "2022-07-25": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 16631.0,
       "ema20_signal": "bullish",
@@ -18780,7 +18780,7 @@
     }
   },
   "2022-08-17": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17944.25,
       "ema20_signal": "bullish",
@@ -19035,7 +19035,7 @@
     }
   },
   "2022-09-12": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17936.35,
       "ema20_signal": "bullish",
@@ -19140,7 +19140,7 @@
     }
   },
   "2022-09-21": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17718.35,
       "ema20_signal": "bullish",
@@ -19170,7 +19170,7 @@
     }
   },
   "2022-09-23": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17327.35,
       "ema20_signal": "bearish",
@@ -19350,7 +19350,7 @@
     }
   },
   "2022-10-12": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17123.6,
       "ema20_signal": "bearish",
@@ -19365,7 +19365,7 @@
     }
   },
   "2022-10-13": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17014.35,
       "ema20_signal": "bearish",
@@ -19680,7 +19680,7 @@
     }
   },
   "2022-11-15": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18403.4,
       "ema20_signal": "bullish",
@@ -19710,7 +19710,7 @@
     }
   },
   "2022-11-17": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 18343.9,
       "ema20_signal": "bullish",
@@ -19740,7 +19740,7 @@
     }
   },
   "2022-11-21": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 18159.95,
       "ema20_signal": "bullish",
@@ -19785,7 +19785,7 @@
     }
   },
   "2022-11-24": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18484.1,
       "ema20_signal": "bullish",
@@ -19875,7 +19875,7 @@
     }
   },
   "2022-12-02": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 18696.1,
       "ema20_signal": "bullish",
@@ -20010,7 +20010,7 @@
     }
   },
   "2022-12-15": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 18414.9,
       "ema20_signal": "bearish",
@@ -20355,7 +20355,7 @@
     }
   },
   "2023-01-17": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18053.3,
       "ema20_signal": "bearish",
@@ -20385,7 +20385,7 @@
     }
   },
   "2023-01-19": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 18107.85,
       "ema20_signal": "bullish",
@@ -20550,7 +20550,7 @@
     }
   },
   "2023-02-06": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17764.6,
       "ema20_signal": "bearish",
@@ -20580,7 +20580,7 @@
     }
   },
   "2023-02-08": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17871.7,
       "ema20_signal": "bullish",
@@ -20640,7 +20640,7 @@
     }
   },
   "2023-02-14": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17929.85,
       "ema20_signal": "bullish",
@@ -20685,7 +20685,7 @@
     }
   },
   "2023-02-17": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17944.2,
       "ema20_signal": "bullish",
@@ -20775,7 +20775,7 @@
     }
   },
   "2023-02-27": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17392.7,
       "ema20_signal": "bearish",
@@ -20805,7 +20805,7 @@
     }
   },
   "2023-03-01": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17450.9,
       "ema20_signal": "bearish",
@@ -20820,7 +20820,7 @@
     }
   },
   "2023-03-02": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17321.9,
       "ema20_signal": "bearish",
@@ -20985,7 +20985,7 @@
     }
   },
   "2023-03-20": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 16988.4,
       "ema20_signal": "bearish",
@@ -21030,7 +21030,7 @@
     }
   },
   "2023-03-23": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 17076.9,
       "ema20_signal": "bearish",
@@ -21060,7 +21060,7 @@
     }
   },
   "2023-03-27": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 16985.7,
       "ema20_signal": "bearish",
@@ -21090,7 +21090,7 @@
     }
   },
   "2023-03-29": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17080.7,
       "ema20_signal": "bearish",
@@ -21195,7 +21195,7 @@
     }
   },
   "2023-04-12": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 17812.4,
       "ema20_signal": "bullish",
@@ -21360,7 +21360,7 @@
     }
   },
   "2023-04-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18065.0,
       "ema20_signal": "bullish",
@@ -21375,7 +21375,7 @@
     }
   },
   "2023-05-02": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18147.65,
       "ema20_signal": "bullish",
@@ -21390,7 +21390,7 @@
     }
   },
   "2023-05-03": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 18089.85,
       "ema20_signal": "bullish",
@@ -21435,7 +21435,7 @@
     }
   },
   "2023-05-08": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18264.4,
       "ema20_signal": "bullish",
@@ -21465,7 +21465,7 @@
     }
   },
   "2023-05-10": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18315.1,
       "ema20_signal": "bullish",
@@ -21570,7 +21570,7 @@
     }
   },
   "2023-05-19": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18203.4,
       "ema20_signal": "bullish",
@@ -21615,7 +21615,7 @@
     }
   },
   "2023-05-24": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 18285.4,
       "ema20_signal": "bullish",
@@ -21645,7 +21645,7 @@
     }
   },
   "2023-05-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18499.35,
       "ema20_signal": "bullish",
@@ -21690,7 +21690,7 @@
     }
   },
   "2023-05-31": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 18534.4,
       "ema20_signal": "bullish",
@@ -21765,7 +21765,7 @@
     }
   },
   "2023-06-07": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18726.4,
       "ema20_signal": "bullish",
@@ -21810,7 +21810,7 @@
     }
   },
   "2023-06-12": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18601.5,
       "ema20_signal": "bullish",
@@ -21825,7 +21825,7 @@
     }
   },
   "2023-06-13": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18716.15,
       "ema20_signal": "bullish",
@@ -21840,7 +21840,7 @@
     }
   },
   "2023-06-14": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18755.9,
       "ema20_signal": "bullish",
@@ -21870,7 +21870,7 @@
     }
   },
   "2023-06-16": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18826.0,
       "ema20_signal": "bullish",
@@ -21915,7 +21915,7 @@
     }
   },
   "2023-06-21": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18856.85,
       "ema20_signal": "bullish",
@@ -21945,7 +21945,7 @@
     }
   },
   "2023-06-23": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 18665.5,
       "ema20_signal": "bullish",
@@ -21975,7 +21975,7 @@
     }
   },
   "2023-06-27": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 18817.4,
       "ema20_signal": "bullish",
@@ -22020,7 +22020,7 @@
     }
   },
   "2023-07-03": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19322.55,
       "ema20_signal": "bullish",
@@ -22080,7 +22080,7 @@
     }
   },
   "2023-07-07": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 19331.8,
       "ema20_signal": "bullish",
@@ -22110,7 +22110,7 @@
     }
   },
   "2023-07-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19439.4,
       "ema20_signal": "bullish",
@@ -22170,7 +22170,7 @@
     }
   },
   "2023-07-17": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19711.45,
       "ema20_signal": "bullish",
@@ -22200,7 +22200,7 @@
     }
   },
   "2023-07-19": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19833.15,
       "ema20_signal": "bullish",
@@ -22275,7 +22275,7 @@
     }
   },
   "2023-07-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19778.3,
       "ema20_signal": "bullish",
@@ -22350,7 +22350,7 @@
     }
   },
   "2023-08-02": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 19526.55,
       "ema20_signal": "bearish",
@@ -22365,7 +22365,7 @@
     }
   },
   "2023-08-03": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 19381.65,
       "ema20_signal": "bearish",
@@ -22395,7 +22395,7 @@
     }
   },
   "2023-08-07": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19597.3,
       "ema20_signal": "bullish",
@@ -22560,7 +22560,7 @@
     }
   },
   "2023-08-23": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19444.0,
       "ema20_signal": "bearish",
@@ -22605,7 +22605,7 @@
     }
   },
   "2023-08-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19306.05,
       "ema20_signal": "bearish",
@@ -22695,7 +22695,7 @@
     }
   },
   "2023-09-05": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19574.9,
       "ema20_signal": "bullish",
@@ -22740,7 +22740,7 @@
     }
   },
   "2023-09-08": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19819.95,
       "ema20_signal": "bullish",
@@ -22755,7 +22755,7 @@
     }
   },
   "2023-09-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19996.35,
       "ema20_signal": "bullish",
@@ -22815,7 +22815,7 @@
     }
   },
   "2023-09-15": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 20192.35,
       "ema20_signal": "bullish",
@@ -22830,7 +22830,7 @@
     }
   },
   "2023-09-18": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 20133.3,
       "ema20_signal": "bullish",
@@ -22860,7 +22860,7 @@
     }
   },
   "2023-09-21": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 19742.35,
       "ema20_signal": "bearish",
@@ -22950,7 +22950,7 @@
     }
   },
   "2023-09-29": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19638.3,
       "ema20_signal": "bearish",
@@ -23010,7 +23010,7 @@
     }
   },
   "2023-10-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19653.5,
       "ema20_signal": "bearish",
@@ -23040,7 +23040,7 @@
     }
   },
   "2023-10-10": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19689.85,
       "ema20_signal": "bullish",
@@ -23055,7 +23055,7 @@
     }
   },
   "2023-10-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19811.35,
       "ema20_signal": "bullish",
@@ -23220,7 +23220,7 @@
     }
   },
   "2023-10-27": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19047.25,
       "ema20_signal": "bearish",
@@ -23460,7 +23460,7 @@
     }
   },
   "2023-11-21": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19783.4,
       "ema20_signal": "bullish",
@@ -23520,7 +23520,7 @@
     }
   },
   "2023-11-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 19889.7,
       "ema20_signal": "bullish",
@@ -23565,7 +23565,7 @@
     }
   },
   "2023-12-01": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 20267.9,
       "ema20_signal": "bullish",
@@ -23640,7 +23640,7 @@
     }
   },
   "2023-12-08": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 20969.4,
       "ema20_signal": "bullish",
@@ -23790,7 +23790,7 @@
     }
   },
   "2023-12-22": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 21349.4,
       "ema20_signal": "bullish",
@@ -23820,7 +23820,7 @@
     }
   },
   "2023-12-27": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 21654.75,
       "ema20_signal": "bullish",
@@ -23835,7 +23835,7 @@
     }
   },
   "2023-12-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 21778.7,
       "ema20_signal": "bullish",
@@ -23850,7 +23850,7 @@
     }
   },
   "2023-12-29": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 21731.4,
       "ema20_signal": "bullish",
@@ -23925,7 +23925,7 @@
     }
   },
   "2024-01-05": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 21710.8,
       "ema20_signal": "bullish",
@@ -24135,7 +24135,7 @@
     }
   },
   "2024-01-29": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 21737.6,
       "ema20_signal": "bullish",
@@ -24225,7 +24225,7 @@
     }
   },
   "2024-02-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 21929.4,
       "ema20_signal": "bullish",
@@ -24300,7 +24300,7 @@
     }
   },
   "2024-02-13": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 21743.25,
       "ema20_signal": "bullish",
@@ -24330,7 +24330,7 @@
     }
   },
   "2024-02-15": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 21910.75,
       "ema20_signal": "bullish",
@@ -24360,7 +24360,7 @@
     }
   },
   "2024-02-19": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 22122.25,
       "ema20_signal": "bullish",
@@ -24435,7 +24435,7 @@
     }
   },
   "2024-02-26": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 22122.05,
       "ema20_signal": "bullish",
@@ -24495,7 +24495,7 @@
     }
   },
   "2024-03-01": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 22338.75,
       "ema20_signal": "bullish",
@@ -24510,7 +24510,7 @@
     }
   },
   "2024-03-04": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 22405.6,
       "ema20_signal": "bullish",
@@ -24525,7 +24525,7 @@
     }
   },
   "2024-03-05": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 22356.3,
       "ema20_signal": "bullish",
@@ -24630,7 +24630,7 @@
     }
   },
   "2024-03-15": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 22023.35,
       "ema20_signal": "bearish",
@@ -24735,7 +24735,7 @@
     }
   },
   "2024-03-27": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 22123.65,
       "ema20_signal": "bullish",
@@ -24750,7 +24750,7 @@
     }
   },
   "2024-03-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 22326.9,
       "ema20_signal": "bullish",
@@ -24840,7 +24840,7 @@
     }
   },
   "2024-04-08": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 22666.3,
       "ema20_signal": "bullish",
@@ -24870,7 +24870,7 @@
     }
   },
   "2024-04-10": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 22753.8,
       "ema20_signal": "bullish",
@@ -24885,7 +24885,7 @@
     }
   },
   "2024-04-12": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 22519.4,
       "ema20_signal": "bullish",
@@ -25035,7 +25035,7 @@
     }
   },
   "2024-04-29": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 22643.4,
       "ema20_signal": "bullish",
@@ -25140,7 +25140,7 @@
     }
   },
   "2024-05-09": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 21957.5,
       "ema20_signal": "bearish",
@@ -25155,7 +25155,7 @@
     }
   },
   "2024-05-10": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 22055.2,
       "ema20_signal": "bearish",
@@ -25260,7 +25260,7 @@
     }
   },
   "2024-05-22": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 22597.8,
       "ema20_signal": "bullish",
@@ -25350,7 +25350,7 @@
     }
   },
   "2024-05-30": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 22488.65,
       "ema20_signal": "bearish",
@@ -25395,7 +25395,7 @@
     }
   },
   "2024-06-04": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 21884.5,
       "ema20_signal": "bearish",
@@ -25515,7 +25515,7 @@
     }
   },
   "2024-06-14": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23465.6,
       "ema20_signal": "bullish",
@@ -25605,7 +25605,7 @@
     }
   },
   "2024-06-25": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23721.3,
       "ema20_signal": "bullish",
@@ -25800,7 +25800,7 @@
     }
   },
   "2024-07-12": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24502.15,
       "ema20_signal": "bullish",
@@ -26070,7 +26070,7 @@
     }
   },
   "2024-08-08": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24117.0,
       "ema20_signal": "bearish",
@@ -26175,7 +26175,7 @@
     }
   },
   "2024-08-20": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24698.85,
       "ema20_signal": "bullish",
@@ -26235,7 +26235,7 @@
     }
   },
   "2024-08-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25010.6,
       "ema20_signal": "bullish",
@@ -26370,7 +26370,7 @@
     }
   },
   "2024-09-06": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24852.15,
       "ema20_signal": "bearish",
@@ -26400,7 +26400,7 @@
     }
   },
   "2024-09-10": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25041.1,
       "ema20_signal": "bullish",
@@ -26535,7 +26535,7 @@
     }
   },
   "2024-09-23": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25939.05,
       "ema20_signal": "bullish",
@@ -26655,7 +26655,7 @@
     }
   },
   "2024-10-04": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 25014.6,
       "ema20_signal": "bearish",
@@ -26745,7 +26745,7 @@
     }
   },
   "2024-10-14": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25127.95,
       "ema20_signal": "bearish",
@@ -26775,7 +26775,7 @@
     }
   },
   "2024-10-16": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24971.3,
       "ema20_signal": "bearish",
@@ -26895,7 +26895,7 @@
     }
   },
   "2024-10-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24339.15,
       "ema20_signal": "bearish",
@@ -26925,7 +26925,7 @@
     }
   },
   "2024-10-30": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24340.85,
       "ema20_signal": "bearish",
@@ -27000,7 +27000,7 @@
     }
   },
   "2024-11-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24484.05,
       "ema20_signal": "bearish",
@@ -27075,7 +27075,7 @@
     }
   },
   "2024-11-13": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23559.05,
       "ema20_signal": "bearish",
@@ -27150,7 +27150,7 @@
     }
   },
   "2024-11-22": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23907.25,
       "ema20_signal": "bearish",
@@ -27255,7 +27255,7 @@
     }
   },
   "2024-12-03": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24457.15,
       "ema20_signal": "bullish",
@@ -27285,7 +27285,7 @@
     }
   },
   "2024-12-05": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24708.4,
       "ema20_signal": "bullish",
@@ -27315,7 +27315,7 @@
     }
   },
   "2024-12-09": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24619.0,
       "ema20_signal": "bullish",
@@ -27360,7 +27360,7 @@
     }
   },
   "2024-12-12": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24548.7,
       "ema20_signal": "bullish",
@@ -27405,7 +27405,7 @@
     }
   },
   "2024-12-17": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24336.0,
       "ema20_signal": "bearish",
@@ -27420,7 +27420,7 @@
     }
   },
   "2024-12-18": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24198.85,
       "ema20_signal": "bearish",
@@ -27510,7 +27510,7 @@
     }
   },
   "2024-12-27": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23813.4,
       "ema20_signal": "bearish",
@@ -27570,7 +27570,7 @@
     }
   },
   "2025-01-02": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24188.65,
       "ema20_signal": "bullish",
@@ -27615,7 +27615,7 @@
     }
   },
   "2025-01-07": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23707.9,
       "ema20_signal": "bearish",
@@ -27690,7 +27690,7 @@
     }
   },
   "2025-01-14": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23176.05,
       "ema20_signal": "bearish",
@@ -27750,7 +27750,7 @@
     }
   },
   "2025-01-20": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23344.75,
       "ema20_signal": "bearish",
@@ -27780,7 +27780,7 @@
     }
   },
   "2025-01-22": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23155.35,
       "ema20_signal": "bearish",
@@ -27855,7 +27855,7 @@
     }
   },
   "2025-01-29": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23163.1,
       "ema20_signal": "bearish",
@@ -27885,7 +27885,7 @@
     }
   },
   "2025-01-31": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23508.4,
       "ema20_signal": "bullish",
@@ -28125,7 +28125,7 @@
     }
   },
   "2025-02-21": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 22795.9,
       "ema20_signal": "bearish",
@@ -28365,7 +28365,7 @@
     }
   },
   "2025-03-19": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 22907.6,
       "ema20_signal": "bullish",
@@ -28530,7 +28530,7 @@
     }
   },
   "2025-04-04": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 22904.45,
       "ema20_signal": "bearish",
@@ -28575,7 +28575,7 @@
     }
   },
   "2025-04-09": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 22399.15,
       "ema20_signal": "bearish",
@@ -28695,7 +28695,7 @@
     }
   },
   "2025-04-24": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24246.7,
       "ema20_signal": "bullish",
@@ -28785,7 +28785,7 @@
     }
   },
   "2025-05-05": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24461.15,
       "ema20_signal": "bullish",
@@ -28875,7 +28875,7 @@
     }
   },
   "2025-05-13": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24578.35,
       "ema20_signal": "bullish",
@@ -28965,7 +28965,7 @@
     }
   },
   "2025-05-21": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24813.45,
       "ema20_signal": "bullish",
@@ -28980,7 +28980,7 @@
     }
   },
   "2025-05-22": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24609.7,
       "ema20_signal": "bullish",
@@ -29010,7 +29010,7 @@
     }
   },
   "2025-05-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25001.15,
       "ema20_signal": "bullish",
@@ -29025,7 +29025,7 @@
     }
   },
   "2025-05-27": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24826.2,
       "ema20_signal": "bullish",
@@ -29055,7 +29055,7 @@
     }
   },
   "2025-05-29": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24833.6,
       "ema20_signal": "bullish",
@@ -29130,7 +29130,7 @@
     }
   },
   "2025-06-05": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24750.9,
       "ema20_signal": "bullish",
@@ -29520,7 +29520,7 @@
     }
   },
   "2025-07-11": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 25149.85,
       "ema20_signal": "bearish",
@@ -29640,7 +29640,7 @@
     }
   },
   "2025-07-23": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25219.9,
       "ema20_signal": "bullish",
@@ -29670,7 +29670,7 @@
     }
   },
   "2025-07-25": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24837.0,
       "ema20_signal": "bearish",
@@ -29685,7 +29685,7 @@
     }
   },
   "2025-07-28": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24680.9,
       "ema20_signal": "bearish",
@@ -29820,7 +29820,7 @@
     }
   },
   "2025-08-08": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24363.3,
       "ema20_signal": "bearish",
@@ -29970,7 +29970,7 @@
     }
   },
   "2025-08-25": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24967.75,
       "ema20_signal": "bullish",
@@ -29985,7 +29985,7 @@
     }
   },
   "2025-08-26": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24712.05,
       "ema20_signal": "bearish",
@@ -30060,7 +30060,7 @@
     }
   },
   "2025-09-03": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24715.05,
       "ema20_signal": "bearish",
@@ -30120,7 +30120,7 @@
     }
   },
   "2025-09-09": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24868.6,
       "ema20_signal": "bullish",
@@ -30165,7 +30165,7 @@
     }
   },
   "2025-09-12": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25114.0,
       "ema20_signal": "bullish",
@@ -30255,7 +30255,7 @@
     }
   },
   "2025-09-22": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 25202.35,
       "ema20_signal": "bullish",
@@ -30285,7 +30285,7 @@
     }
   },
   "2025-09-24": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 25056.9,
       "ema20_signal": "bullish",
@@ -30315,7 +30315,7 @@
     }
   },
   "2025-09-26": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24654.7,
       "ema20_signal": "bearish",
@@ -30510,7 +30510,7 @@
     }
   },
   "2025-10-16": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25585.3,
       "ema20_signal": "bullish",
@@ -30600,7 +30600,7 @@
     }
   },
   "2025-10-27": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25966.05,
       "ema20_signal": "bullish",
@@ -30630,7 +30630,7 @@
     }
   },
   "2025-10-29": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 26053.9,
       "ema20_signal": "bullish",
@@ -30645,7 +30645,7 @@
     }
   },
   "2025-10-30": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 25877.85,
       "ema20_signal": "bullish",
@@ -30750,7 +30750,7 @@
     }
   },
   "2025-11-11": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25694.95,
       "ema20_signal": "bullish",
@@ -30855,7 +30855,7 @@
     }
   },
   "2025-11-20": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 26192.15,
       "ema20_signal": "bullish",
@@ -30870,7 +30870,7 @@
     }
   },
   "2025-11-21": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 26068.15,
       "ema20_signal": "bullish",
@@ -30975,7 +30975,7 @@
     }
   },
   "2025-12-02": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 26032.2,
       "ema20_signal": "bullish",
@@ -31050,7 +31050,7 @@
     }
   },
   "2025-12-09": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 25839.65,
       "ema20_signal": "bearish",
@@ -31095,7 +31095,7 @@
     }
   },
   "2025-12-12": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 26046.95,
       "ema20_signal": "bullish",
@@ -31125,7 +31125,7 @@
     }
   },
   "2025-12-16": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 25860.1,
       "ema20_signal": "bearish",
@@ -31170,7 +31170,7 @@
     }
   },
   "2025-12-19": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25966.4,
       "ema20_signal": "bullish",
@@ -31185,7 +31185,7 @@
     }
   },
   "2025-12-22": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 26172.4,
       "ema20_signal": "bullish",
@@ -31335,7 +31335,7 @@
     }
   },
   "2026-01-06": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 26178.7,
       "ema20_signal": "bullish",
@@ -31455,7 +31455,7 @@
     }
   },
   "2026-01-19": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 25585.5,
       "ema20_signal": "bearish",
@@ -31545,7 +31545,7 @@
     }
   },
   "2026-01-28": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25342.75,
       "ema20_signal": "bearish",
@@ -31680,7 +31680,7 @@
     }
   },
   "2026-02-10": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 25935.15,
       "ema20_signal": "bullish",
@@ -31710,7 +31710,7 @@
     }
   },
   "2026-02-12": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 25807.2,
       "ema20_signal": "bullish",
@@ -31830,7 +31830,7 @@
     }
   },
   "2026-02-24": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 25424.65,
       "ema20_signal": "bearish",
@@ -32040,7 +32040,7 @@
     }
   },
   "2026-03-17": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23581.15,
       "ema20_signal": "bearish",
@@ -32055,7 +32055,7 @@
     }
   },
   "2026-03-18": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23777.8,
       "ema20_signal": "bearish",
@@ -32205,7 +32205,7 @@
     }
   },
   "2026-04-06": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 22968.25,
       "ema20_signal": "bearish",
@@ -32250,7 +32250,7 @@
     }
   },
   "2026-04-09": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23775.1,
       "ema20_signal": "bullish",
@@ -32400,7 +32400,7 @@
     }
   },
   "2026-04-24": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23897.95,
       "ema20_signal": "bearish",
@@ -32415,7 +32415,7 @@
     }
   },
   "2026-04-27": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24092.7,
       "ema20_signal": "bullish",
@@ -32430,7 +32430,7 @@
     }
   },
   "2026-04-28": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23995.7,
       "ema20_signal": "bullish",
@@ -32475,7 +32475,7 @@
     }
   },
   "2026-05-04": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24119.3,
       "ema20_signal": "bullish",
@@ -32490,7 +32490,7 @@
     }
   },
   "2026-05-05": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24032.8,
       "ema20_signal": "bullish",
@@ -32535,7 +32535,7 @@
     }
   },
   "2026-05-08": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24176.15,
       "ema20_signal": "bullish",
@@ -32565,7 +32565,7 @@
     }
   },
   "2026-05-12": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23379.55,
       "ema20_signal": "bearish",
@@ -32790,7 +32790,7 @@
     }
   },
   "2026-06-03": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23405.6,
       "ema20_signal": "bearish",
@@ -32925,7 +32925,7 @@
     }
   },
   "2026-06-16": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23989.15,
       "ema20_signal": "bullish",
@@ -32940,7 +32940,7 @@
     }
   },
   "2026-06-17": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24085.7,
       "ema20_signal": "bullish",
@@ -33090,7 +33090,7 @@
     }
   },
   "2026-07-02": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24175.7,
       "ema20_signal": "bullish",
@@ -33165,7 +33165,7 @@
     }
   },
   "2026-07-09": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23962.8,
       "ema20_signal": "bearish",
@@ -33255,7 +33255,7 @@
     }
   },
   "2026-07-17": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24334.3,
       "ema20_signal": "bullish",
@@ -33300,7 +33300,7 @@
     }
   },
   "2026-07-22": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23996.25,
       "ema20_signal": "bearish",
@@ -33315,7 +33315,7 @@
     }
   },
   "2026-07-23": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23869.6,
       "ema20_signal": "bearish",
@@ -33405,7 +33405,7 @@
     }
   },
   "2026-07-31": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24383.6,
       "ema20_signal": "bullish",
@@ -33435,7 +33435,7 @@
     }
   },
   "2026-08-04": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24614.9,
       "ema20_signal": "bullish",
@@ -33525,7 +33525,7 @@
     }
   },
   "2026-08-12": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24435.95,
       "ema20_signal": "bullish",
@@ -33540,7 +33540,7 @@
     }
   },
   "2026-08-13": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24395.85,
       "ema20_signal": "bullish",
@@ -33555,7 +33555,7 @@
     }
   },
   "2026-08-14": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24366.0,
       "ema20_signal": "bullish",
@@ -33570,7 +33570,7 @@
     }
   },
   "2026-08-17": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24287.65,
       "ema20_signal": "bearish",
@@ -33585,7 +33585,7 @@
     }
   },
   "2026-08-18": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24154.9,
       "ema20_signal": "bearish",
@@ -33615,7 +33615,7 @@
     }
   },
   "2026-08-20": {
-    "fii": "buying",
+    "fii": "selling",
     "signals": {
       "close": 24231.85,
       "ema20_signal": "bearish",
@@ -33630,7 +33630,7 @@
     }
   },
   "2026-08-21": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24252.0,
       "ema20_signal": "bearish",
@@ -33645,7 +33645,7 @@
     }
   },
   "2026-08-24": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24219.05,
       "ema20_signal": "bearish",
@@ -33660,7 +33660,7 @@
     }
   },
   "2026-08-25": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24334.55,
       "ema20_signal": "bullish",
@@ -33675,7 +33675,7 @@
     }
   },
   "2026-08-26": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24207.75,
       "ema20_signal": "bearish",
@@ -33705,7 +33705,7 @@
     }
   },
   "2026-08-28": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24175.65,
       "ema20_signal": "bearish",
@@ -33720,7 +33720,7 @@
     }
   },
   "2026-08-31": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 24080.4,
       "ema20_signal": "bearish",
@@ -33735,7 +33735,7 @@
     }
   },
   "2026-09-01": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 24055.8,
       "ema20_signal": "bearish",
@@ -33750,7 +33750,7 @@
     }
   },
   "2026-09-02": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23914.45,
       "ema20_signal": "bearish",
@@ -33765,7 +33765,7 @@
     }
   },
   "2026-09-03": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23873.45,
       "ema20_signal": "bearish",
@@ -33780,7 +33780,7 @@
     }
   },
   "2026-09-04": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23897.7,
       "ema20_signal": "bearish",
@@ -33855,7 +33855,7 @@
     }
   },
   "2026-09-11": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23398.1,
       "ema20_signal": "bearish",
@@ -33870,7 +33870,7 @@
     }
   },
   "2026-09-15": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23118.6,
       "ema20_signal": "bearish",
@@ -33885,7 +33885,7 @@
     }
   },
   "2026-09-16": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23217.6,
       "ema20_signal": "bearish",
@@ -33900,7 +33900,7 @@
     }
   },
   "2026-09-17": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23270.6,
       "ema20_signal": "bearish",
@@ -33915,7 +33915,7 @@
     }
   },
   "2026-09-18": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23346.4,
       "ema20_signal": "bearish",
@@ -33930,7 +33930,7 @@
     }
   },
   "2026-09-21": {
-    "fii": "neutral",
+    "fii": "selling",
     "signals": {
       "close": 23414.3,
       "ema20_signal": "bearish",
@@ -33945,7 +33945,7 @@
     }
   },
   "2026-09-23": {
-    "fii": "neutral",
+    "fii": "buying",
     "signals": {
       "close": 23446.8,
       "ema20_signal": "bearish",
@@ -33962,12 +33962,12 @@
   "2026-09-24": {
     "fii": "neutral",
     "signals": {
-      "close": 23228.3,
+      "close": 23222.45,
       "ema20_signal": "bearish",
       "ema200_signal": "bearish",
-      "ema20_diff_pct": -1.57,
-      "ema200_diff_pct": -4.18,
-      "rsi_value": 32.65,
+      "ema20_diff_pct": -1.59,
+      "ema200_diff_pct": -4.2,
+      "rsi_value": 32.52,
       "rsi_signal": "neutral",
       "macd_signal": "bearish",
       "supertrend_signal": "bearish",
