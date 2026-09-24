@@ -6,7 +6,8 @@ import numpy as np
 from datetime import datetime, timedelta
 import yfinance
 import requests
-import re as yf
+import re
+import yfinance as yf
 
 try:
     from nselib import capital_market
