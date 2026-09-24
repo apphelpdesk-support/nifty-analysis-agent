@@ -66,12 +66,16 @@ def main():
     mc_fii_dict = {}
     try:
         url = "https://www.moneycontrol.com/stocks/marketstats/fii_dii_activity/index.php"
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        response = requests.get(url, headers=headers)
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
+        response = requests.get(url, headers=headers, timeout=10)
+        print(f"Moneycontrol FII fetch status: {response.status_code}")
         matches = re.findall(r'\{"date":"([^"]+)".*?"fiiCM":"([^"]+)"', response.text)
+        if not matches:
+            print("No matches found in FII data!")
         for d, val in matches:
             mc_fii_dict[d] = float(val.replace(',', ''))
-    except:
+    except Exception as e:
+        print(f"Moneycontrol FII fetch failed: {e}")
         pass
 
     fii_df = None
