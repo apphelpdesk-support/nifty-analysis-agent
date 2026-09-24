@@ -22,32 +22,36 @@ def main():
     nifty = yf.Ticker("^NSEI")
     df = nifty.history(period="10y")
 
-    # --- NEW: Fetch missing recent dates from NSE directly if yfinance is lagging ---
-    if NSELIB_AVAILABLE and not df.empty:
-        last_date = df.index[-1].date()
-        today = datetime.now().date()
-        if today > last_date:
-            from_str = (last_date + timedelta(days=1)).strftime("%d-%m-%Y")
-            to_str = today.strftime("%d-%m-%Y")
-            try:
-                ns = capital_market.index_data(index="Nifty 50", from_date=from_str, to_date=to_str)
-                if not ns.empty:
-                    ns['Date'] = pd.to_datetime(ns['TIMESTAMP'], format='%d-%b-%Y')
-                    ns = ns.set_index('Date')
-                    ns.index = ns.index.tz_localize('Asia/Kolkata')
-                    
-                    ns['Open'] = pd.to_numeric(ns['OPEN_INDEX_VAL'])
-                    ns['High'] = pd.to_numeric(ns['HIGH_INDEX_VAL'])
-                    ns['Low'] = pd.to_numeric(ns['LOW_INDEX_VAL'])
-                    ns['Close'] = pd.to_numeric(ns['CLOSE_INDEX_VAL'])
-                    
-                    ns = ns[['Open', 'High', 'Low', 'Close']]
-                    ns = ns[~ns.index.isin(df.index)]
-                    if not ns.empty:
-                        df = pd.concat([df, ns]).sort_index()
-                        print(f"Appended {len(ns)} missing days from nselib.")
-            except Exception as e:
-                print("Fallback nselib fetch failed:", e)
+    # --- NEW: Fetch missing recent dates using jugaad-data (more reliable) ---
+    try:
+        from jugaad_data.nse import index_df
+        from datetime import datetime, timedelta
+        import pandas as pd
+        
+        to_date = datetime.now().date()
+        from_date = to_date - timedelta(days=30)
+        ns = index_df(symbol="NIFTY 50", from_date=from_date, to_date=to_date)
+        
+        if not ns.empty:
+            ns['Date'] = pd.to_datetime(ns['HistoricalDate'])
+            ns = ns.set_index('Date')
+            ns = ns.sort_index()
+            ns.index = ns.index.tz_localize('Asia/Kolkata')
+            
+            ns['Open'] = pd.to_numeric(ns['OPEN'])
+            ns['High'] = pd.to_numeric(ns['HIGH'])
+            ns['Low'] = pd.to_numeric(ns['LOW'])
+            ns['Close'] = pd.to_numeric(ns['CLOSE'])
+            ns = ns[['Open', 'High', 'Low', 'Close']]
+            
+            # Find which dates from ns are missing in df
+            missing = ns[~ns.index.isin(df.index)]
+            if not missing.empty:
+                df = pd.concat([df, missing]).sort_index()
+                print(f"Appended {len(missing)} missing days from jugaad_data.")
+    except Exception as e:
+        print("Fallback jugaad_data fetch failed:", e)
+
 
     df["Return"] = df["Close"].pct_change()
     
