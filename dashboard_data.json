@@ -61178,7 +61178,8 @@
       "rsi_signal": "neutral",
       "macd_signal": "bearish",
       "supertrend_signal": "bearish",
-      "analogue_match": "Similar to 30 Sep 2016 (Next day went UP)"
+      "analogue_match": "Similar to 30 Sep 2016 (Next day went UP)",
+      "india_vix": 12.69
     }
   }
 }
