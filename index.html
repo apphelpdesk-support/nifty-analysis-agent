@@ -347,6 +347,24 @@
                             <div class="text-xs text-gray-500 mt-1" id="val-macd">Loading...</div>
                         </div>
                     </label>
+                    
+                    <!-- Fast EMA 5/9 -->
+                    <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                        <input type="checkbox" id="chk-ema59" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="renderPrediction()">
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-indigo-700">Intraday Edge: 5/9 EMA</div>
+                            <div class="text-xs text-gray-500 mt-1" id="val-ema59">Loading...</div>
+                        </div>
+                    </label>
+
+                    <!-- StochRSI -->
+                    <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                        <input type="checkbox" id="chk-stochrsi" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="renderPrediction()">
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-indigo-700">Intraday Edge: StochRSI</div>
+                            <div class="text-xs text-gray-500 mt-1" id="val-stochrsi">Loading...</div>
+                        </div>
+                    </label>
                 </div>
             </div>
         </div>
@@ -534,6 +552,22 @@
                 // MACD
                 const macd = data.signals.macd_signal;
                 document.getElementById('val-macd').innerHTML = 'Signal is <span class="font-bold text-'+(macd=='bullish'?'green':'red')+'-600">' + (macd=='bullish'?'Bullish':'Bearish') + '</span>';
+                
+                // Fast EMA 5/9
+                const ema59 = data.signals.ema5_signal;
+                if (ema59) {
+                    document.getElementById('val-ema59').innerHTML = 'Crossover is <span class="font-bold text-'+(ema59=='bullish'?'green':'red')+'-600">' + (ema59=='bullish'?'Bullish':'Bearish') + '</span>';
+                }
+
+                // StochRSI
+                const stochrsi_k = data.signals.stochrsi_k;
+                const stochrsi_sig = data.signals.stochrsi_signal;
+                if (stochrsi_sig) {
+                    let stoch_text = stochrsi_k + ' (' + stochrsi_sig + ')';
+                    if(stochrsi_sig == 'overbought' || stochrsi_sig == 'bearish crossover') stoch_text = stochrsi_k + ' <span class="text-red-600 font-bold">(' + stochrsi_sig + ')</span>';
+                    else if(stochrsi_sig == 'oversold' || stochrsi_sig == 'bullish crossover') stoch_text = stochrsi_k + ' <span class="text-green-600 font-bold">(' + stochrsi_sig + ')</span>';
+                    document.getElementById('val-stochrsi').innerHTML = stoch_text;
+                }
                 
                 // Support and Resistance Pivots (Next Day Targets)
             const r1Element = document.getElementById('res-r1').parentElement;

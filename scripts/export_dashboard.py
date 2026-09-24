@@ -57,7 +57,10 @@ def main():
     
     df.ta.ema(length=20, append=True)
     df.ta.ema(length=200, append=True)
+    df.ta.ema(length=5, append=True)
+    df.ta.ema(length=9, append=True)
     df.ta.rsi(length=14, append=True)
+    df.ta.stochrsi(length=14, rsi_length=14, k=3, d=3, append=True)
     df.ta.macd(fast=12, slow=26, signal=9, append=True)
     df.ta.supertrend(length=7, multiplier=3.0, append=True)
     
@@ -132,7 +135,11 @@ def main():
         close = float(row["Close"])
         ema20 = float(row.get("EMA_20", close))
         ema200 = float(row.get("EMA_200", close))
+        ema5 = float(row.get("EMA_5", close))
+        ema9 = float(row.get("EMA_9", close))
         rsi = float(row.get("RSI_14", 50))
+        stochrsi_k = float(row.get("STOCHRSIk_14_14_3_3", 50))
+        stochrsi_d = float(row.get("STOCHRSId_14_14_3_3", 50))
         macd = float(row.get("MACD_12_26_9", 0))
         macd_signal = float(row.get("MACDs_12_26_9", 0))
         st_dir = row.get("SUPERTd_7_3.0", 0)
@@ -177,7 +184,11 @@ def main():
             "ema200_signal": "bullish" if close > ema200 else "bearish",
             "ema20_diff_pct": round(((close - ema20) / ema20) * 100, 2),
             "ema200_diff_pct": round(((close - ema200) / ema200) * 100, 2),
+            "ema5_signal": "bullish" if ema5 > ema9 else "bearish",
             "rsi_value": round(rsi, 2),
+            "stochrsi_k": round(stochrsi_k, 2),
+            "stochrsi_d": round(stochrsi_d, 2),
+            "stochrsi_signal": "overbought" if stochrsi_k > 80 else ("oversold" if stochrsi_k < 20 else ("bullish crossover" if stochrsi_k > stochrsi_d else "bearish crossover")),
             "rsi_signal": "overbought" if rsi > 70 else ("oversold" if rsi < 30 else "neutral"),
             "macd_signal": "bullish" if macd > macd_signal else "bearish",
             "supertrend_signal": "bullish" if st_dir == 1 else "bearish"
