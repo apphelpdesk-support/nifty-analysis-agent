@@ -112,31 +112,6 @@ def main():
         
 
         
-        signals = {
-
-        
-            "close": round(close, 2),
-
-        
-            "high": round(high_val, 2),
-
-        
-            "low": round(low_val, 2),
-        "options_support": options_support,
-        "options_resistance": options_resistance,
-
-        
-            "ema20_signal": "bullish" if close > ema20 else "bearish",
-            "ema200_signal": "bullish" if close > ema200 else "bearish",
-            "ema20_diff_pct": round(((close - ema20) / ema20) * 100, 2),
-            "ema200_diff_pct": round(((close - ema200) / ema200) * 100, 2),
-            "rsi_value": round(rsi, 2),
-            "rsi_signal": "overbought" if rsi > 70 else ("oversold" if rsi < 30 else "neutral"),
-            "macd_signal": "bullish" if macd > macd_signal else "bearish",
-            "supertrend_signal": "bullish" if st_dir == 1 else "bearish"
-        }
-
-        
         # Fetch Options Data for Support and Resistance
         options_support = None
         options_resistance = None
@@ -171,6 +146,31 @@ def main():
         except Exception as e:
             print(f"Option Chain fetch failed: {e}")
             pass
+        signals = {
+
+        
+            "close": round(close, 2),
+
+        
+            "high": round(high_val, 2),
+
+        
+            "low": round(low_val, 2),
+        "options_support": options_support,
+        "options_resistance": options_resistance,
+
+        
+            "ema20_signal": "bullish" if close > ema20 else "bearish",
+            "ema200_signal": "bullish" if close > ema200 else "bearish",
+            "ema20_diff_pct": round(((close - ema20) / ema20) * 100, 2),
+            "ema200_diff_pct": round(((close - ema200) / ema200) * 100, 2),
+            "rsi_value": round(rsi, 2),
+            "rsi_signal": "overbought" if rsi > 70 else ("oversold" if rsi < 30 else "neutral"),
+            "macd_signal": "bullish" if macd > macd_signal else "bearish",
+            "supertrend_signal": "bullish" if st_dir == 1 else "bearish"
+        }
+
+        
 
 
         idx_long = df.index.get_loc(date_obj)
