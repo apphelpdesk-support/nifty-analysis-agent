@@ -176,6 +176,7 @@ def main():
 
         
             "low": round(low_val, 2),
+            "daily_return_pct": round(row.get("Return", 0) * 100, 2),
         "options_support": options_support,
         "options_resistance": options_resistance,
 

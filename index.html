@@ -287,6 +287,7 @@
                 </h2>
                 <input type="date" id="date-picker" class="w-full bg-gray-50 border border-gray-200 text-gray-900 font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow cursor-pointer" onchange="loadDateData()">
                 <div id="date-error" class="text-sm font-semibold text-red-500 mt-1 mb-5 hidden">Market Closed / No Data for this date</div>
+                <div id="date-return" class="text-sm font-medium mt-1 mb-4 hidden px-3 py-2 rounded border"></div>
 
                 <h2 class="text-lg font-bold mb-2 flex items-center gap-2 pt-4 border-t">
                     <i class="fa-solid fa-sliders text-brand-500"></i> Indicator Toggles
@@ -502,9 +503,11 @@
         function loadDateData() {
             const date = document.getElementById('date-picker').value;
             const errEl = document.getElementById('date-error');
+            const retEl = document.getElementById('date-return');
             if(!dashboardData[date]) {
                 errEl.innerText = "Market Closed or No Data Available for " + date;
                 errEl.classList.remove('hidden');
+                retEl.classList.add('hidden');
                 document.getElementById('res-tomorrow').innerHTML = "N/A";
                 document.getElementById('res-week').innerHTML = "N/A";
                 document.getElementById('res-month').innerHTML = "N/A";
@@ -518,6 +521,7 @@
             
             if (!data.signals) {
                 const msg = "<span class='text-gray-400 italic'>Not available for legacy dates</span>";
+                retEl.classList.add('hidden');
                 document.getElementById('val-ema200').innerHTML = msg;
                 document.getElementById('val-ema20').innerHTML = msg;
                 document.getElementById('val-supertrend').innerHTML = msg;
@@ -525,6 +529,17 @@
                 document.getElementById('val-macd').innerHTML = msg;
                 document.getElementById('res-analogue').innerHTML = msg;
             } else {
+                if (data.signals.daily_return_pct !== undefined && data.signals.close !== undefined) {
+                    const ret = data.signals.daily_return_pct;
+                    const c = data.signals.close;
+                    retEl.innerHTML = `Market closed at <strong>${c}</strong> (<span class="font-bold ${ret > 0 ? 'text-green-600' : (ret < 0 ? 'text-red-600' : 'text-gray-600')}">${ret > 0 ? '+' : ''}${ret}%</span>)`;
+                    retEl.classList.remove('hidden');
+                    retEl.classList.add(ret > 0 ? 'bg-green-50' : (ret < 0 ? 'bg-red-50' : 'bg-gray-50'));
+                    retEl.classList.add(ret > 0 ? 'border-green-200' : (ret < 0 ? 'border-red-200' : 'border-gray-200'));
+                } else {
+                    retEl.classList.add('hidden');
+                }
+
                 // 200 EMA
                 const e200 = data.signals.ema200_signal;
                 const diff200 = data.signals.ema200_diff_pct;
