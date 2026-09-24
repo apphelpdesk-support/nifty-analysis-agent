@@ -434,6 +434,21 @@
 
                 <!-- Support and Resistance -->
                 <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-6 mb-6">
+                
+                    <!-- Breakout vs Reversal Guide -->
+                    <div class="bg-gray-900 border border-gray-700 rounded-xl p-5 mb-5 text-white shadow-md relative overflow-hidden hidden" id="breakout-box">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500" id="breakout-bar"></div>
+                        <h3 class="font-bold text-gray-300 mb-2 flex items-center gap-2 text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-map-location-dot text-cyan-400"></i> Support / Resistance Action Plan
+                        </h3>
+                        <p class="text-gray-200 text-sm leading-relaxed mb-3">
+                            When price touches Support (<span id="guide-sup" class="font-bold text-green-400">--</span>) or Resistance (<span id="guide-res" class="font-bold text-red-400">--</span>):
+                        </p>
+                        <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
+                            <p id="val-breakout" class="text-md font-bold">Evaluating momentum...</p>
+                            <p id="val-breakout-desc" class="text-xs text-gray-400 mt-1"></p>
+                        </div>
+                    </div>
                     <h3 class="font-bold text-indigo-900 mb-2 flex items-center gap-2">
                         <i class="fa-solid fa-arrows-up-down text-indigo-500"></i> Next Day Targets
                     </h3>
@@ -618,6 +633,46 @@
                     document.getElementById('val-deltaoi').innerHTML = deltaoi == 'bullish' ? '<span class="text-green-600 font-bold">Bullish</span>' : '<span class="text-red-600 font-bold">Bearish</span>';
                 } else {
                     document.getElementById('val-deltaoi').innerHTML = '<span class="text-gray-400">N/A</span>';
+                }
+                
+                // Breakout Guide
+                if (data.signals) {
+                    const oi = data.signals.options_momentum;
+                    const stoch = data.signals.stochrsi_signal;
+                    const bBox = document.getElementById('breakout-box');
+                    const bBar = document.getElementById('breakout-bar');
+                    const bVal = document.getElementById('val-breakout');
+                    const bDesc = document.getElementById('val-breakout-desc');
+                    
+                    if (document.getElementById('res-s1').innerText != "N/A" && oi && stoch) {
+                        bBox.classList.remove('hidden');
+                        document.getElementById('guide-sup').innerText = document.getElementById('res-s1').innerText;
+                        document.getElementById('guide-res').innerText = document.getElementById('res-r1').innerText;
+                        
+                        if (oi === 'bullish' && stoch === 'bullish crossover') {
+                            bBar.className = "absolute top-0 left-0 w-1 h-full bg-green-500";
+                            bVal.innerHTML = "<span class='text-green-400'>CONTINUATION (UPSIDE BREAKOUT)</span>";
+                            bDesc.innerText = "Momentum and Option writers are completely aligned for a pump. If price hits Resistance, expect it to break through easily. Do not short Resistance.";
+                        } else if (oi === 'bullish' && (stoch === 'overbought' || stoch === 'bearish crossover')) {
+                            bBar.className = "absolute top-0 left-0 w-1 h-full bg-orange-500";
+                            bVal.innerHTML = "<span class='text-orange-400'>REVERSAL (UPSIDE FAKEOUT)</span>";
+                            bDesc.innerText = "Trend is bullish but momentum is exhausted. If price hits Resistance, expect a fakeout trap. High probability of rejection. Consider shorting Resistance.";
+                        } else if (oi === 'bearish' && stoch === 'bearish crossover') {
+                            bBar.className = "absolute top-0 left-0 w-1 h-full bg-red-500";
+                            bVal.innerHTML = "<span class='text-red-400'>CONTINUATION (DOWNSIDE BREAKDOWN)</span>";
+                            bDesc.innerText = "Momentum and Option writers are completely aligned for a dump. If price hits Support, expect it to shatter easily. Do not buy Support.";
+                        } else if (oi === 'bearish' && (stoch === 'oversold' || stoch === 'bullish crossover')) {
+                            bBar.className = "absolute top-0 left-0 w-1 h-full bg-orange-500";
+                            bVal.innerHTML = "<span class='text-orange-400'>REVERSAL (DOWNSIDE FAKEOUT)</span>";
+                            bDesc.innerText = "Trend is bearish but momentum is exhausted. If price hits Support, expect a fakeout trap. High probability of bounce. Consider buying Support.";
+                        } else {
+                            bBar.className = "absolute top-0 left-0 w-1 h-full bg-gray-500";
+                            bVal.innerHTML = "<span class='text-gray-400'>NEUTRAL (WAIT FOR 15-MIN CLOSE)</span>";
+                            bDesc.innerText = "Indicators are mixed. Wait for a full 15-minute candle to close above Resistance or below Support to confirm a breakout before entering.";
+                        }
+                    } else {
+                        bBox.classList.add('hidden');
+                    }
                 }
                 
                 // India VIX
