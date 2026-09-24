@@ -366,6 +366,15 @@
                             <div class="text-xs text-gray-500 mt-1" id="val-stochrsi">Loading...</div>
                         </div>
                     </label>
+
+                    <!-- Delta OI -->
+                    <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                        <input type="checkbox" id="chk-deltaoi" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="renderPrediction()">
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-indigo-700">Intraday Edge: Delta OI</div>
+                            <div class="text-xs text-gray-500 mt-1" id="val-deltaoi">Loading...</div>
+                        </div>
+                    </label>
                 </div>
             </div>
         </div>
@@ -713,6 +722,11 @@
                     } else if (st_sig === 'overbought' || st_sig === 'bearish crossover') {
                         score -= 4;
                     }
+                }
+                
+                if(document.getElementById('chk-deltaoi') && document.getElementById('chk-deltaoi').checked) {
+                    if(data.signals.options_momentum === 'bullish') score += 5;
+                    else if(data.signals.options_momentum === 'bearish') score -= 5;
                 }
                 if(document.getElementById('chk-ema200').checked) {
                     if(data.signals.ema200_signal === 'bullish') score += 3;
