@@ -357,9 +357,12 @@
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
                         <input type="checkbox" id="chk-ema59" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="renderPrediction()">
                         <div class="flex-1">
-                            <div class="font-bold text-sm text-indigo-700 group">
+                            <div class="font-bold text-sm text-indigo-700 group relative">
                                 Intraday Edge: 5/9 EMA
-                                <i class="fa-solid fa-circle-question text-indigo-300 ml-1 cursor-help" title="5-period and 9-period Exponential Moving Averages. A highly sensitive crossover system used for scalping and detecting early intraday trend reversals."></i>
+                                <i class="fa-solid fa-circle-question text-indigo-300 ml-1 cursor-help" onclick="event.preventDefault();"></i>
+                                <div class="absolute left-0 bottom-full mb-2 hidden group-hover:block w-48 p-2 bg-gray-800 text-white text-xs rounded shadow-lg z-50 pointer-events-none">
+                                    5-period and 9-period Exponential Moving Averages. A highly sensitive crossover system used for scalping and detecting early intraday trend reversals.
+                                </div>
                             </div>
                             <div class="text-[11px] text-gray-500 leading-tight mt-0.5 mb-1">Fast 5 & 9 period EMA crossover to catch early trend shifts.</div>
                             <div class="text-xs text-gray-500 mt-1" id="val-ema59">Loading...</div>
