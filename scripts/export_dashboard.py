@@ -94,8 +94,38 @@ def main():
         macd_signal = float(row.get("MACDs_12_26_9", 0))
         st_dir = row.get("SUPERTd_7_3.0", 0)
         
+        import math
+
+        
+        high_val = float(row.get("High", close))
+
+        
+        if math.isnan(high_val): high_val = close
+
+        
+        low_val = float(row.get("Low", close))
+
+        
+        if math.isnan(low_val): low_val = close
+
+        
+        
+
+        
         signals = {
+
+        
             "close": round(close, 2),
+
+        
+            "high": round(high_val, 2),
+
+        
+            "low": round(low_val, 2),
+        "options_support": options_support,
+        "options_resistance": options_resistance,
+
+        
             "ema20_signal": "bullish" if close > ema20 else "bearish",
             "ema200_signal": "bullish" if close > ema200 else "bearish",
             "ema20_diff_pct": round(((close - ema20) / ema20) * 100, 2),
@@ -105,6 +135,43 @@ def main():
             "macd_signal": "bullish" if macd > macd_signal else "bearish",
             "supertrend_signal": "bullish" if st_dir == 1 else "bearish"
         }
+
+        
+# Fetch Options Data for Support and Resistance
+options_support = None
+options_resistance = None
+try:
+    from jugaad_data.nse import NSELive
+    n = NSELive()
+    oc = n.index_option_chain("NIFTY")
+    
+    # Get current price
+    current_price = oc['records']['underlyingValue']
+    
+    # Calculate Support and Resistance from Option Chain (Max OI)
+    pe_data = []
+    ce_data = []
+    for data in oc['records']['data']:
+        if 'PE' in data:
+            pe_data.append(data['PE'])
+        if 'CE' in data:
+            ce_data.append(data['CE'])
+            
+    # Find Support (Max Put OI below current price)
+    puts_below = [x for x in pe_data if x['strikePrice'] < current_price]
+    if puts_below:
+        max_put = max(puts_below, key=lambda x: x['openInterest'])
+        options_support = max_put['strikePrice']
+        
+    # Find Resistance (Max Call OI above current price)
+    calls_above = [x for x in ce_data if x['strikePrice'] > current_price]
+    if calls_above:
+        max_call = max(calls_above, key=lambda x: x['openInterest'])
+        options_resistance = max_call['strikePrice']
+except Exception as e:
+    print(f"Option Chain fetch failed: {e}")
+    pass
+
 
         idx_long = df.index.get_loc(date_obj)
         if idx_long >= 15:
@@ -141,8 +208,8 @@ def main():
                     open_price = row["Open"]
                     gap_pct = ((open_price - prev_close) / prev_close) * 100
                     change_pct = ((close - open_price) / open_price) * 100
-                    if gap_pct > 0.15 and change_pct > 0: fii = "buying"
-                    elif gap_pct < -0.15 and change_pct < 0: fii = "selling"
+                    if gap_pct > 0.15 and change_pct > -0.2: fii = "buying"
+                    elif gap_pct < -0.15 and change_pct < 0.2: fii = "selling"
             except:
                 pass
 
