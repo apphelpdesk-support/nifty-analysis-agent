@@ -595,6 +595,7 @@
             // Clean up old descriptions if any
             if(document.getElementById('desc-r1')) document.getElementById('desc-r1').remove();
             if(document.getElementById('desc-s1')) document.getElementById('desc-s1').remove();
+            if(document.getElementById('desc-pain')) document.getElementById('desc-pain').remove();
 
             if (data.signals.options_resistance && data.signals.options_support) {
                 document.getElementById('res-r1').innerText = data.signals.options_resistance;
@@ -611,6 +612,18 @@
                 descS.className = 'block text-xs text-gray-500 mt-2 border-t pt-1';
                 descS.innerText = "Max put writers (Buyers)";
                 s1Element.appendChild(descS);
+                
+                if (data.signals.options_max_pain) {
+                    document.getElementById('res-pain').innerText = data.signals.options_max_pain;
+                    let descP = document.createElement('span');
+                    descP.id = 'desc-pain';
+                    descP.className = 'block text-xs text-gray-500 mt-2 border-t pt-1';
+                    descP.innerText = "Expiry Magnet";
+                    if(document.getElementById('desc-pain')) document.getElementById('desc-pain').remove();
+                    document.getElementById('res-pain').parentElement.appendChild(descP);
+                } else {
+                    document.getElementById('res-pain').innerText = "N/A";
+                }
             } else if (data.signals.high && data.signals.low) {
                 const high = data.signals.high;
                 const low = data.signals.low;
