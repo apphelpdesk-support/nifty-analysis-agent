@@ -592,6 +592,14 @@
                     document.getElementById('val-stochrsi').innerHTML = stoch_text;
                 }
                 
+                // Delta OI
+                const deltaoi = data.signals.options_momentum;
+                if (deltaoi) {
+                    document.getElementById('val-deltaoi').innerHTML = deltaoi == 'bullish' ? '<span class="text-green-600 font-bold">Bullish</span>' : '<span class="text-red-600 font-bold">Bearish</span>';
+                } else {
+                    document.getElementById('val-deltaoi').innerHTML = '<span class="text-gray-400">N/A</span>';
+                }
+                
                 // Support and Resistance Pivots (Next Day Targets)
             const r1Element = document.getElementById('res-r1').parentElement;
             const s1Element = document.getElementById('res-s1').parentElement;

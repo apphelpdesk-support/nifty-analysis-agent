@@ -121,6 +121,18 @@ def main():
             max_call = max(calls_above, key=lambda x: x['openInterest'])
             global_options_resistance = max_call['strikePrice']
 
+        # Calculate Intraday Option Momentum (Delta OI)
+        # Sum of changeinOpenInterest for strikes within +/- 500 points
+        put_delta = sum([x.get('changeinOpenInterest', 0) for x in pe_data if abs(x['strikePrice'] - current_price) <= 500])
+        call_delta = sum([x.get('changeinOpenInterest', 0) for x in ce_data if abs(x['strikePrice'] - current_price) <= 500])
+        
+        global_options_momentum = None
+        if call_delta > 0 or put_delta > 0:
+            if put_delta > call_delta:
+                global_options_momentum = "bullish"
+            else:
+                global_options_momentum = "bearish"
+
         # Calculate Max Pain
         all_strikes = sorted(list(set([x['strikePrice'] for x in pe_data + ce_data])))
         check_strikes = [s for s in all_strikes if current_price - 1000 <= s <= current_price + 1000]
@@ -185,6 +197,7 @@ def main():
         options_support = global_options_support if date_obj == trading_days[-1] else None
         options_resistance = global_options_resistance if date_obj == trading_days[-1] else None
         options_max_pain = global_options_max_pain if date_obj == trading_days[-1] else None
+        options_momentum = global_options_momentum if date_obj == trading_days[-1] else None
         signals = {
 
         
@@ -199,6 +212,7 @@ def main():
         "options_support": options_support,
         "options_resistance": options_resistance,
         "options_max_pain": options_max_pain,
+        "options_momentum": options_momentum,
 
         
             "ema20_signal": "bullish" if close > ema20 else "bearish",
