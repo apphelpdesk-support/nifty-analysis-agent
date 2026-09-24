@@ -11,3 +11,4 @@ kiteconnect>=5.0
 nselib>=2.5.1
 
 pandas_ta
+jugaad-data>=0.2.6
