@@ -43018,17 +43018,17 @@
   "2026-09-24": {
     "fii": "selling",
     "signals": {
-      "close": 23202.75,
+      "close": 23063.1,
       "high": 23281.95,
-      "low": 23196.45,
+      "low": 23046.15,
       "options_support": null,
       "options_resistance": null,
       "ema20_signal": "bearish",
       "ema200_signal": "bearish",
-      "ema20_diff_pct": -1.67,
-      "ema200_diff_pct": -4.28,
-      "rsi_value": 32.09,
-      "rsi_signal": "neutral",
+      "ema20_diff_pct": -2.2,
+      "ema200_diff_pct": -4.85,
+      "rsi_value": 29.32,
+      "rsi_signal": "oversold",
       "macd_signal": "bearish",
       "supertrend_signal": "bearish",
       "analogue_match": "Similar to 30 Sep 2016 (Next day went UP)"
