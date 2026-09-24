@@ -273,6 +273,10 @@
                     <p class="text-xs text-gray-500">Toggle indicators to build your custom prediction strategy</p>
                 </div>
             </div>
+            
+            <div id="vix-badge" class="hidden items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold border shadow-sm">
+                <i class="fa-solid fa-bolt"></i> <span id="vix-text">VIX: Loading...</span>
+            </div>
         </div>
     </header>
 
@@ -381,6 +385,13 @@
 
         <!-- Results Area -->
         <div class="md:col-span-7">
+        
+            <!-- Trade Confluence Box -->
+            <div id="confluence-box" class="hidden bg-gray-900 border border-gray-700 rounded-xl p-5 mb-6 text-white shadow-lg relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-blue-500" id="confluence-bar"></div>
+                <h3 class="font-bold text-gray-300 mb-1 text-xs uppercase tracking-wider">Trading Setup Confluence</h3>
+                <p class="text-lg font-medium" id="val-confluence">Awaiting alignment...</p>
+            </div>
             <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 h-full flex flex-col">
                 
                 <div class="flex items-center justify-between mb-4">
@@ -609,6 +620,31 @@
                     document.getElementById('val-deltaoi').innerHTML = '<span class="text-gray-400">N/A</span>';
                 }
                 
+                // India VIX
+                if (data.signals && data.signals.india_vix) {
+                    const vix = data.signals.india_vix;
+                    const badge = document.getElementById('vix-badge');
+                    if (badge) {
+                        badge.classList.remove('hidden');
+                        badge.classList.add('flex');
+                        
+                        let bgClass = 'bg-yellow-50 text-yellow-700 border-yellow-200';
+                        let icon = 'fa-solid fa-triangle-exclamation';
+                        if (vix < 12) {
+                            bgClass = 'bg-red-50 text-red-700 border-red-200';
+                            icon = 'fa-solid fa-fire-extinguisher';
+                        } else if (vix > 15) {
+                            bgClass = 'bg-green-50 text-green-700 border-green-200';
+                            icon = 'fa-solid fa-bolt';
+                        }
+                        badge.className = `flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold border shadow-sm ${bgClass}`;
+                        document.getElementById('vix-text').innerHTML = `<i class="${icon}"></i> VIX: ${vix}`;
+                    }
+                } else {
+                    const badge = document.getElementById('vix-badge');
+                    if(badge) { badge.classList.add('hidden'); badge.classList.remove('flex'); }
+                }
+                
                 // Support and Resistance Pivots (Next Day Targets)
             const r1Element = document.getElementById('res-r1').parentElement;
             const s1Element = document.getElementById('res-s1').parentElement;
@@ -833,11 +869,53 @@
                 }
                 
                 strategyEl.innerHTML = '<strong>' + strategy + '</strong>';
+                
+                // Confluence Engine
+                const dateStr = document.getElementById('date-picker').value;
+                const liveData = dashboardData[dateStr] || {};
+                const vixVal = (liveData.signals && liveData.signals.india_vix) ? liveData.signals.india_vix : 13;
+                
+                let confluenceHtml = "";
+                const confBox = document.getElementById('confluence-box');
+                const confBar = document.getElementById('confluence-bar');
+                
+                if (boxesChecked === 0) {
+                    if (confBox) confBox.classList.add('hidden');
+                } else if (confBox) {
+                    confBox.classList.remove('hidden');
+                    if (vixVal < 12) {
+                        confluenceHtml = "⚠️ <span class='text-yellow-400'>EXTREME CAUTION:</span> VIX is extremely low. Option premiums are melting. Intraday momentum will be choppy and mean-reverting. Option Buyers should sit out.";
+                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-yellow-500";
+                    } else if (vixVal >= 15 && adj_score >= 5) {
+                        confluenceHtml = "🔥 <span class='text-green-400'>A+ SETUP (LONG):</span> High Volatility + Extreme Bullish Alignment. Massive Call Option Buyer opportunity on dips to Support.";
+                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-green-500";
+                    } else if (vixVal >= 15 && adj_score <= -5) {
+                        confluenceHtml = "🔥 <span class='text-red-400'>A+ SETUP (SHORT):</span> High Volatility + Extreme Bearish Alignment. Massive Put Option Buyer opportunity on spikes to Resistance.";
+                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-red-500";
+                    } else if (isReversal && adj_score > 0) {
+                        confluenceHtml = "📈 <span class='text-blue-400'>MEAN REVERSION (BOUNCE):</span> Market is deeply oversold. Wait for Nifty to touch Major Support with high volume, then buy Calls.";
+                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-blue-500";
+                    } else if (isReversal && adj_score < 0) {
+                        confluenceHtml = "📉 <span class='text-purple-400'>MEAN REVERSION (DUMP):</span> Market is deeply overbought. Wait for Nifty to touch Major Resistance with high volume, then buy Puts.";
+                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-purple-500";
+                    } else if (adj_score > 1) {
+                        confluenceHtml = "✅ <span class='text-green-400'>STANDARD LONG:</span> Momentum is leaning Bullish. Buy Call options only on pullbacks to Pivot levels.";
+                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-green-500";
+                    } else if (adj_score < -1) {
+                        confluenceHtml = "🔻 <span class='text-red-400'>STANDARD SHORT:</span> Momentum is leaning Bearish. Buy Put options only on relief bounces to Pivot levels.";
+                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-red-500";
+                    } else {
+                        confluenceHtml = "⏸️ <span class='text-gray-400'>NO TRADE ZONE:</span> Market signals are conflicting. Wait for clear momentum or structural breakout.";
+                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-gray-500";
+                    }
+                    document.getElementById('val-confluence').innerHTML = confluenceHtml;
+                }
             }, 150);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             fetchLiveJSON();
+            setInterval(fetchLiveJSON, 60000);
         });
     
         function runPatternScanner() {

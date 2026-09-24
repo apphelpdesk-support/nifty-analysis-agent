@@ -18,6 +18,20 @@ except ImportError:
 def main():
     data_file = "dashboard_data.json"
     data = {}
+    
+    # Fetch India VIX
+    vix_value = None
+    try:
+        import yfinance as yf
+        import pandas as pd
+        vix_df = yf.download("^INDIAVIX", period="1d")
+        if not vix_df.empty:
+            if isinstance(vix_df.columns, pd.MultiIndex):
+                vix_value = round(float(vix_df["Close"]["^INDIAVIX"].iloc[-1]), 2)
+            else:
+                vix_value = round(float(vix_df["Close"].iloc[-1]), 2)
+    except Exception as e:
+        print("Failed to fetch VIX:", e)
 
     nifty = yf.Ticker("^NSEI")
     df = nifty.history(period="10y")
@@ -287,6 +301,11 @@ def main():
             except:
                 pass
 
+        
+        if vix_value is not None and date_str == df.index[-1].strftime('%Y-%m-%d'):
+            if signals is not None:
+                signals["india_vix"] = vix_value
+                
         data[date_str] = {
             "fii": fii,
             "fii_value": fii_value,
