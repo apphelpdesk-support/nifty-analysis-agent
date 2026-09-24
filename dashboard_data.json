@@ -42465,7 +42465,7 @@
     }
   },
   "2026-08-12": {
-    "fii": "selling",
+    "fii": "neutral",
     "signals": {
       "close": 24435.95,
       "high": 24473.3,
@@ -43040,7 +43040,7 @@
       "close": 23063.1,
       "high": 23281.95,
       "low": 23046.15,
-      "options_support": 23000,
+      "options_support": 22000,
       "options_resistance": 24000,
       "ema20_signal": "bearish",
       "ema200_signal": "bearish",
