@@ -646,8 +646,10 @@
                     
                     if (document.getElementById('res-s1').innerText != "N/A" && oi && stoch) {
                         bBox.classList.remove('hidden');
-                        document.getElementById('guide-sup').innerText = document.getElementById('res-s1').innerText;
-                        document.getElementById('guide-res').innerText = document.getElementById('res-r1').innerText;
+                        const pSup = data.signals.options_support || "Data Syncing...";
+                        const pRes = data.signals.options_resistance || "Data Syncing...";
+                        document.getElementById('guide-sup').innerText = pSup;
+                        document.getElementById('guide-res').innerText = pRes;
                         
                         if (oi === 'bullish' && stoch === 'bullish crossover') {
                             bBar.className = "absolute top-0 left-0 w-1 h-full bg-green-500";
