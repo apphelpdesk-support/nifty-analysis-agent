@@ -656,6 +656,19 @@
                     score -= 4;
                 }
 
+                if(document.getElementById('chk-ema59') && document.getElementById('chk-ema59').checked) {
+                    if(data.signals.ema5_signal === 'bullish') score += 4;
+                    else score -= 4;
+                }
+                if(document.getElementById('chk-stochrsi') && document.getElementById('chk-stochrsi').checked) {
+                    const st_sig = data.signals.stochrsi_signal;
+                    if(st_sig === 'oversold' || st_sig === 'bullish crossover') {
+                        score += 4;
+                        isReversal = true; // StochRSI oversold/bullish is a reversal signal
+                    } else if (st_sig === 'overbought' || st_sig === 'bearish crossover') {
+                        score -= 4;
+                    }
+                }
                 if(document.getElementById('chk-ema200').checked) {
                     if(data.signals.ema200_signal === 'bullish') score += 3;
                     else score -= 3;
