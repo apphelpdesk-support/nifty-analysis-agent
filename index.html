@@ -536,7 +536,29 @@
                 document.getElementById('val-macd').innerHTML = 'Signal is <span class="font-bold text-'+(macd=='bullish'?'green':'red')+'-600">' + (macd=='bullish'?'Bullish':'Bearish') + '</span>';
                 
                 // Support and Resistance Pivots (Next Day Targets)
-            if (data.signals.high && data.signals.low) {
+            const r1Element = document.getElementById('res-r1').parentElement;
+            const s1Element = document.getElementById('res-s1').parentElement;
+            
+            // Clean up old descriptions if any
+            if(document.getElementById('desc-r1')) document.getElementById('desc-r1').remove();
+            if(document.getElementById('desc-s1')) document.getElementById('desc-s1').remove();
+
+            if (data.signals.options_resistance && data.signals.options_support) {
+                document.getElementById('res-r1').innerText = data.signals.options_resistance;
+                document.getElementById('res-s1').innerText = data.signals.options_support;
+                
+                let descR = document.createElement('span');
+                descR.id = 'desc-r1';
+                descR.className = 'block text-xs text-gray-500 mt-2 border-t pt-1';
+                descR.innerText = "Max call writers (Sellers)";
+                r1Element.appendChild(descR);
+
+                let descS = document.createElement('span');
+                descS.id = 'desc-s1';
+                descS.className = 'block text-xs text-gray-500 mt-2 border-t pt-1';
+                descS.innerText = "Max put writers (Buyers)";
+                s1Element.appendChild(descS);
+            } else if (data.signals.high && data.signals.low) {
                 const high = data.signals.high;
                 const low = data.signals.low;
                 const close = data.signals.close;
@@ -545,6 +567,18 @@
                 const s1 = (2 * pivot) - high;
                 document.getElementById('res-r1').innerText = r1.toFixed(2);
                 document.getElementById('res-s1').innerText = s1.toFixed(2);
+                
+                let descR = document.createElement('span');
+                descR.id = 'desc-r1';
+                descR.className = 'block text-xs text-gray-500 mt-2 border-t pt-1';
+                descR.innerText = "(Calculated via Standard Pivots)";
+                r1Element.appendChild(descR);
+
+                let descS = document.createElement('span');
+                descS.id = 'desc-s1';
+                descS.className = 'block text-xs text-gray-500 mt-2 border-t pt-1';
+                descS.innerText = "(Calculated via Standard Pivots)";
+                s1Element.appendChild(descS);
             } else {
                 document.getElementById('res-r1').innerText = 'Data Syncing...';
                 document.getElementById('res-s1').innerText = 'Data Syncing...';
