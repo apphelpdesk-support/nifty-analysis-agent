@@ -81,6 +81,41 @@ def main():
         except Exception as e:
             pass
 
+    # Fetch Options Data for Support and Resistance globally (only valid for current time)
+    global_options_support = None
+    global_options_resistance = None
+    try:
+        from jugaad_data.nse import NSELive
+        n = NSELive()
+        oc = n.index_option_chain("NIFTY")
+
+        # Get current price
+        current_price = oc['records']['underlyingValue']
+
+        # Calculate Support and Resistance from Option Chain (Max OI)
+        pe_data = []
+        ce_data = []
+        for data in oc['records']['data']:
+            if 'PE' in data:
+                pe_data.append(data['PE'])
+            if 'CE' in data:
+                ce_data.append(data['CE'])
+
+        # Find Support (Max Put OI below current price)
+        puts_below = [x for x in pe_data if x['strikePrice'] < current_price]
+        if puts_below:
+            max_put = max(puts_below, key=lambda x: x['openInterest'])
+            global_options_support = max_put['strikePrice']
+
+        # Find Resistance (Max Call OI above current price)
+        calls_above = [x for x in ce_data if x['strikePrice'] > current_price]
+        if calls_above:
+            max_call = max(calls_above, key=lambda x: x['openInterest'])
+            global_options_resistance = max_call['strikePrice']
+    except Exception as e:
+        print(f"Option Chain fetch failed: {e}")
+        pass
+
     # Process all dates where we have at least 200 days of history
     trading_days = df.index[200:]
     returns_arr = df['Return'].values
@@ -116,40 +151,10 @@ def main():
         
 
         
-        # Fetch Options Data for Support and Resistance
-        options_support = None
-        options_resistance = None
-        try:
-            from jugaad_data.nse import NSELive
-            n = NSELive()
-            oc = n.index_option_chain("NIFTY")
-
-            # Get current price
-            current_price = oc['records']['underlyingValue']
-
-            # Calculate Support and Resistance from Option Chain (Max OI)
-            pe_data = []
-            ce_data = []
-            for data in oc['records']['data']:
-                if 'PE' in data:
-                    pe_data.append(data['PE'])
-                if 'CE' in data:
-                    ce_data.append(data['CE'])
-
-            # Find Support (Max Put OI below current price)
-            puts_below = [x for x in pe_data if x['strikePrice'] < current_price]
-            if puts_below:
-                max_put = max(puts_below, key=lambda x: x['openInterest'])
-                options_support = max_put['strikePrice']
-
-            # Find Resistance (Max Call OI above current price)
-            calls_above = [x for x in ce_data if x['strikePrice'] > current_price]
-            if calls_above:
-                max_call = max(calls_above, key=lambda x: x['openInterest'])
-                options_resistance = max_call['strikePrice']
-        except Exception as e:
-            print(f"Option Chain fetch failed: {e}")
-            pass
+        # For historical dates, we don't have historical option chain, so we apply the live one (or None).
+        # A more advanced script would only use this for the latest day.
+        options_support = global_options_support if date_obj == trading_days[-1] else None
+        options_resistance = global_options_resistance if date_obj == trading_days[-1] else None
         signals = {
 
         
