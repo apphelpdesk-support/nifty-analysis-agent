@@ -65,20 +65,33 @@ def main():
     df.ta.supertrend(length=7, multiplier=3.0, append=True)
     
 
-    # Fetch Moneycontrol FII data
+    # Fetch FII data
     mc_fii_dict = {}
+    try:
+        from jugaad_data.nse import NSELive
+        n = NSELive()
+        url = "https://www.nseindia.com/api/fiidiiTradeReact"
+        res = n.s.get(url, headers={"User-Agent": "Mozilla/5.0", "Accept-Language": "en-US,en;q=0.5", "Accept": "*/*"})
+        if res.status_code == 200:
+            for item in res.json():
+                if item['category'] == 'FII/FPI':
+                    # Parse date "24-Sep-2026" to "2026-09-24"
+                    dt_obj = datetime.strptime(item['date'], '%d-%b-%Y')
+                    d_str = dt_obj.strftime('%Y-%m-%d')
+                    mc_fii_dict[d_str] = float(item['netValue'])
+    except Exception as e:
+        print(f"NSE FII fetch failed: {e}")
+        pass
+
     try:
         url = "https://www.moneycontrol.com/stocks/marketstats/fii_dii_activity/index.php"
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
         response = requests.get(url, headers=headers, timeout=10)
-        print(f"Moneycontrol FII fetch status: {response.status_code}")
         matches = re.findall(r'\{"date":"([^"]+)".*?"fiiCM":"([^"]+)"', response.text)
-        if not matches:
-            print("No matches found in FII data!")
         for d, val in matches:
-            mc_fii_dict[d] = float(val.replace(',', ''))
+            if d not in mc_fii_dict:
+                mc_fii_dict[d] = float(val.replace(',', ''))
     except Exception as e:
-        print(f"Moneycontrol FII fetch failed: {e}")
         pass
 
     fii_df = None
