@@ -517,7 +517,11 @@
             const data = dashboardData[date];
             
             // FII Update
-            document.getElementById('val-fii').innerHTML = data.fii === 'buying' ? '<span class="text-green-600 font-bold">Buying</span>' : (data.fii === 'selling' ? '<span class="text-red-600 font-bold">Selling</span>' : 'Neutral');
+            let fiiText = data.fii === 'buying' ? '<span class="text-green-600 font-bold">Buying</span>' : (data.fii === 'selling' ? '<span class="text-red-600 font-bold">Selling</span>' : 'Neutral');
+            if (data.fii_value !== undefined && data.fii_value !== null) {
+                fiiText += ` <span class="text-xs text-gray-500">(${data.fii_value > 0 ? '+' : ''}${data.fii_value} Cr)</span>`;
+            }
+            document.getElementById('val-fii').innerHTML = fiiText;
             
             if (!data.signals) {
                 const msg = "<span class='text-gray-400 italic'>Not available for legacy dates</span>";

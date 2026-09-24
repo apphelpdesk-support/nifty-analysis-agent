@@ -91,6 +91,7 @@ def main():
     # Fetch Options Data for Support and Resistance globally (only valid for current time)
     global_options_support = None
     global_options_resistance = None
+    global_options_max_pain = None
     try:
         from jugaad_data.nse import NSELive
         n = NSELive()
@@ -119,6 +120,23 @@ def main():
         if calls_above:
             max_call = max(calls_above, key=lambda x: x['openInterest'])
             global_options_resistance = max_call['strikePrice']
+
+        # Calculate Max Pain
+        all_strikes = sorted(list(set([x['strikePrice'] for x in pe_data + ce_data])))
+        check_strikes = [s for s in all_strikes if current_price - 1000 <= s <= current_price + 1000]
+        
+        min_loss = float('inf')
+        for expiry_price in check_strikes:
+            total_loss = 0
+            for ce in ce_data:
+                if expiry_price > ce['strikePrice']:
+                    total_loss += (expiry_price - ce['strikePrice']) * ce['openInterest']
+            for pe in pe_data:
+                if expiry_price < pe['strikePrice']:
+                    total_loss += (pe['strikePrice'] - expiry_price) * pe['openInterest']
+            if total_loss < min_loss:
+                min_loss = total_loss
+                global_options_max_pain = expiry_price
     except Exception as e:
         print(f"Option Chain fetch failed: {e}")
         pass
@@ -166,6 +184,7 @@ def main():
         # A more advanced script would only use this for the latest day.
         options_support = global_options_support if date_obj == trading_days[-1] else None
         options_resistance = global_options_resistance if date_obj == trading_days[-1] else None
+        options_max_pain = global_options_max_pain if date_obj == trading_days[-1] else None
         signals = {
 
         
@@ -179,6 +198,7 @@ def main():
             "daily_return_pct": round(row.get("Return", 0) * 100, 2),
         "options_support": options_support,
         "options_resistance": options_resistance,
+        "options_max_pain": options_max_pain,
 
         
             "ema20_signal": "bullish" if close > ema20 else "bearish",
@@ -221,8 +241,10 @@ def main():
 
 
         # MC FII logic
+        fii_value = None
         if date_str in mc_fii_dict:
             net_val = mc_fii_dict[date_str]
+            fii_value = net_val
             if net_val > 500: fii = "buying"
             elif net_val < -500: fii = "selling"
         elif fii == "neutral":
@@ -240,6 +262,7 @@ def main():
 
         data[date_str] = {
             "fii": fii,
+            "fii_value": fii_value,
             "signals": signals
         }
         
