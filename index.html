@@ -892,10 +892,10 @@
                     } else if (vixVal >= 15 && adj_score <= -5) {
                         confluenceHtml = "🔥 <span class='text-red-400'>A+ SETUP (SHORT):</span> High Volatility + Extreme Bearish Alignment. Massive Put Option Buyer opportunity on spikes to Resistance.";
                         confBar.className = "absolute top-0 left-0 w-1 h-full bg-red-500";
-                    } else if (isReversal && adj_score > 0) {
+                    } else if (isReversal && adj_score < 0) {
                         confluenceHtml = "📈 <span class='text-blue-400'>MEAN REVERSION (BOUNCE):</span> Market is deeply oversold. Wait for Nifty to touch Major Support with high volume, then buy Calls.";
                         confBar.className = "absolute top-0 left-0 w-1 h-full bg-blue-500";
-                    } else if (isReversal && adj_score < 0) {
+                    } else if (isReversal && adj_score > 0) {
                         confluenceHtml = "📉 <span class='text-purple-400'>MEAN REVERSION (DUMP):</span> Market is deeply overbought. Wait for Nifty to touch Major Resistance with high volume, then buy Puts.";
                         confBar.className = "absolute top-0 left-0 w-1 h-full bg-purple-500";
                     } else if (adj_score > 1) {
