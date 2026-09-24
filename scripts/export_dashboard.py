@@ -4,7 +4,9 @@ import pandas as pd
 import pandas_ta as ta
 import numpy as np
 from datetime import datetime, timedelta
-import yfinance as yf
+import yfinance
+import requests
+import re as yf
 
 try:
     from nselib import capital_market
@@ -54,6 +56,19 @@ def main():
     df.ta.macd(fast=12, slow=26, signal=9, append=True)
     df.ta.supertrend(length=7, multiplier=3.0, append=True)
     
+
+    # Fetch Moneycontrol FII data
+    mc_fii_dict = {}
+    try:
+        url = "https://www.moneycontrol.com/stocks/marketstats/fii_dii_activity/index.php"
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        response = requests.get(url, headers=headers)
+        matches = re.findall(r'\{"date":"([^"]+)".*?"fiiCM":"([^"]+)"', response.text)
+        for d, val in matches:
+            mc_fii_dict[d] = float(val.replace(',', ''))
+    except:
+        pass
+
     fii_df = None
     if NSELIB_AVAILABLE:
         try:
@@ -111,28 +126,22 @@ def main():
         else:
             signals["analogue_match"] = "Not enough data"
 
-        # FII logic
-        if fii_df is not None:
-            try:
-                date_formatted = date_obj.strftime("%d-%b-%Y")
-                fii_row = fii_df[(fii_df['Date'] == date_formatted) & (fii_df['Category'].str.contains('FII', na=False))]
-                if not fii_row.empty:
-                    net_val_str = str(fii_row['Net Value'].iloc[0]).replace(',', '')
-                    net_value = float(net_val_str)
-                    if net_value > 500: fii = "buying"
-                    elif net_value < -500: fii = "selling"
-            except:
-                pass
-                
-        if fii == "neutral":
+
+        # MC FII logic
+        if date_str in mc_fii_dict:
+            net_val = mc_fii_dict[date_str]
+            if net_val > 500: fii = "buying"
+            elif net_val < -500: fii = "selling"
+        elif fii == "neutral":
+            # Fallback to tighter gap heuristic
             try:
                 if idx_long > 0:
                     prev_close = df["Close"].iloc[idx_long - 1]
                     open_price = row["Open"]
                     gap_pct = ((open_price - prev_close) / prev_close) * 100
                     change_pct = ((close - open_price) / open_price) * 100
-                    if gap_pct > 0.4 and change_pct > 0: fii = "buying"
-                    elif gap_pct < -0.4 and change_pct < 0: fii = "selling"
+                    if gap_pct > 0.15 and change_pct > 0: fii = "buying"
+                    elif gap_pct < -0.15 and change_pct < 0: fii = "selling"
             except:
                 pass
 
