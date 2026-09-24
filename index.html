@@ -426,6 +426,10 @@
                             <span class="block text-xs font-semibold text-gray-500 uppercase">Major Support</span>
                             <span class="block text-lg font-bold text-green-600" id="res-s1">Loading...</span>
                         </div>
+                        <div class="bg-white p-3 rounded-lg border border-indigo-100 shadow-sm">
+                            <span class="block text-xs font-semibold text-gray-500 uppercase">Max Pain</span>
+                            <span class="block text-lg font-bold text-orange-500" id="res-pain">Loading...</span>
+                        </div>
                     </div>
                 </div>
 
@@ -595,6 +599,7 @@
             // Clean up old descriptions if any
             if(document.getElementById('desc-r1')) document.getElementById('desc-r1').remove();
             if(document.getElementById('desc-s1')) document.getElementById('desc-s1').remove();
+            if(document.getElementById('desc-pain')) document.getElementById('desc-pain').remove();
             if(document.getElementById('desc-pain')) document.getElementById('desc-pain').remove();
 
             if (data.signals.options_resistance && data.signals.options_support) {
