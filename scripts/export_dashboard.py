@@ -108,14 +108,14 @@ def main():
             if 'CE' in item:
                 ce_data.append(item['CE'])
 
-        # Find Support (Max Put OI below current price)
-        puts_below = [x for x in pe_data if x['strikePrice'] < current_price]
+        # Find Intraday Support (Max Put OI strictly within 300 pts below current price)
+        puts_below = [x for x in pe_data if (current_price - 300) <= x['strikePrice'] < current_price]
         if puts_below:
             max_put = max(puts_below, key=lambda x: x['openInterest'])
             global_options_support = max_put['strikePrice']
 
-        # Find Resistance (Max Call OI above current price)
-        calls_above = [x for x in ce_data if x['strikePrice'] > current_price]
+        # Find Intraday Resistance (Max Call OI strictly within 300 pts above current price)
+        calls_above = [x for x in ce_data if current_price < x['strikePrice'] <= (current_price + 300)]
         if calls_above:
             max_call = max(calls_above, key=lambda x: x['openInterest'])
             global_options_resistance = max_call['strikePrice']
