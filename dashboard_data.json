@@ -60372,8 +60372,8 @@
     }
   },
   "2026-08-13": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -510.69,
     "signals": {
       "close": 24395.85,
       "high": 24431.6,
@@ -60399,8 +60399,8 @@
     }
   },
   "2026-08-14": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "buying",
+    "fii_value": 508.12,
     "signals": {
       "close": 24366.0,
       "high": 24405.2,
@@ -60426,8 +60426,8 @@
     }
   },
   "2026-08-17": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -2535.1,
     "signals": {
       "close": 24287.65,
       "high": 24360.1,
@@ -60453,8 +60453,8 @@
     }
   },
   "2026-08-18": {
-    "fii": "selling",
-    "fii_value": null,
+    "fii": "buying",
+    "fii_value": 1651.53,
     "signals": {
       "close": 24154.9,
       "high": 24269.65,
@@ -60481,7 +60481,7 @@
   },
   "2026-08-19": {
     "fii": "neutral",
-    "fii_value": null,
+    "fii_value": 407.99,
     "signals": {
       "close": 24078.3,
       "high": 24172.85,
@@ -60507,8 +60507,8 @@
     }
   },
   "2026-08-20": {
-    "fii": "buying",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -583.36,
     "signals": {
       "close": 24231.85,
       "high": 24265.15,
@@ -60534,8 +60534,8 @@
     }
   },
   "2026-08-21": {
-    "fii": "buying",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -542.71,
     "signals": {
       "close": 24252.0,
       "high": 24284.05,
@@ -60561,8 +60561,8 @@
     }
   },
   "2026-08-24": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "buying",
+    "fii_value": 1181.66,
     "signals": {
       "close": 24219.05,
       "high": 24313.0,
@@ -60588,8 +60588,8 @@
     }
   },
   "2026-08-25": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "buying",
+    "fii_value": 1593.53,
     "signals": {
       "close": 24334.55,
       "high": 24334.55,
@@ -60615,8 +60615,8 @@
     }
   },
   "2026-08-26": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "buying",
+    "fii_value": 502.63,
     "signals": {
       "close": 24207.75,
       "high": 24378.6,
@@ -60643,7 +60643,7 @@
   },
   "2026-08-27": {
     "fii": "neutral",
-    "fii_value": null,
+    "fii_value": -298.26,
     "signals": {
       "close": 24090.85,
       "high": 24297.45,
@@ -60669,8 +60669,8 @@
     }
   },
   "2026-08-28": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -5039.8,
     "signals": {
       "close": 24175.65,
       "high": 24188.3,
@@ -60697,7 +60697,7 @@
   },
   "2026-08-31": {
     "fii": "selling",
-    "fii_value": null,
+    "fii_value": -7985.88,
     "signals": {
       "close": 24080.4,
       "high": 24128.7,
@@ -60723,8 +60723,8 @@
     }
   },
   "2026-09-01": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "buying",
+    "fii_value": 1143.38,
     "signals": {
       "close": 24055.8,
       "high": 24143.15,
@@ -60750,8 +60750,8 @@
     }
   },
   "2026-09-02": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "buying",
+    "fii_value": 6688.37,
     "signals": {
       "close": 23914.45,
       "high": 23914.45,
@@ -60777,8 +60777,8 @@
     }
   },
   "2026-09-03": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -2345.87,
     "signals": {
       "close": 23873.45,
       "high": 24025.4,
@@ -60804,8 +60804,8 @@
     }
   },
   "2026-09-04": {
-    "fii": "buying",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -3111.94,
     "signals": {
       "close": 23897.7,
       "high": 24005.75,
@@ -60832,7 +60832,7 @@
   },
   "2026-09-07": {
     "fii": "neutral",
-    "fii_value": null,
+    "fii_value": 280.13,
     "signals": {
       "close": 23779.15,
       "high": 23890.0,
@@ -60858,8 +60858,8 @@
     }
   },
   "2026-09-08": {
-    "fii": "selling",
-    "fii_value": null,
+    "fii": "neutral",
+    "fii_value": -123.19,
     "signals": {
       "close": 23635.1,
       "high": 23758.95,
@@ -60886,7 +60886,7 @@
   },
   "2026-09-09": {
     "fii": "selling",
-    "fii_value": null,
+    "fii_value": -582.99,
     "signals": {
       "close": 23431.5,
       "high": 23571.55,
@@ -60913,7 +60913,7 @@
   },
   "2026-09-10": {
     "fii": "neutral",
-    "fii_value": null,
+    "fii_value": -438.24,
     "signals": {
       "close": 23477.8,
       "high": 23494.95,
@@ -60939,8 +60939,8 @@
     }
   },
   "2026-09-11": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -930.9,
     "signals": {
       "close": 23398.1,
       "high": 23448.1,
@@ -60966,8 +60966,8 @@
     }
   },
   "2026-09-15": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -2977.86,
     "signals": {
       "close": 23118.6,
       "high": 23592.85,
@@ -60993,8 +60993,8 @@
     }
   },
   "2026-09-16": {
-    "fii": "buying",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -2032.61,
     "signals": {
       "close": 23217.6,
       "high": 23284.75,
@@ -61020,8 +61020,8 @@
     }
   },
   "2026-09-17": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -3208.76,
     "signals": {
       "close": 23270.6,
       "high": 23363.55,
@@ -61048,7 +61048,7 @@
   },
   "2026-09-18": {
     "fii": "buying",
-    "fii_value": null,
+    "fii_value": 599.54,
     "signals": {
       "close": 23346.4,
       "high": 23389.15,
@@ -61074,8 +61074,8 @@
     }
   },
   "2026-09-21": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -576.2,
     "signals": {
       "close": 23414.3,
       "high": 23466.8,
@@ -61101,8 +61101,8 @@
     }
   },
   "2026-09-22": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -3809.99,
     "signals": {
       "close": 23329.0,
       "high": 23489.0,
@@ -61128,8 +61128,8 @@
     }
   },
   "2026-09-23": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "buying",
+    "fii_value": 1617.45,
     "signals": {
       "close": 23446.8,
       "high": 23466.9,
@@ -61162,10 +61162,10 @@
       "high": 23281.95,
       "low": 23046.15,
       "daily_return_pct": -1.64,
-      "options_support": 23000,
-      "options_resistance": 23200,
-      "options_max_pain": 23300,
-      "options_momentum": "bearish",
+      "options_support": null,
+      "options_resistance": null,
+      "options_max_pain": null,
+      "options_momentum": null,
       "ema20_signal": "bearish",
       "ema200_signal": "bearish",
       "ema20_diff_pct": -2.1,
@@ -61178,8 +61178,35 @@
       "rsi_signal": "neutral",
       "macd_signal": "bearish",
       "supertrend_signal": "bearish",
+      "analogue_match": "Similar to 30 Sep 2016 (Next day went UP)"
+    }
+  },
+  "2026-09-25": {
+    "fii": "neutral",
+    "fii_value": null,
+    "signals": {
+      "close": 23084.85,
+      "high": 23121.6,
+      "low": 23030.0,
+      "daily_return_pct": 0.09,
+      "options_support": 23000,
+      "options_resistance": 23200,
+      "options_max_pain": 23200,
+      "options_momentum": "bullish",
+      "ema20_signal": "bearish",
+      "ema200_signal": "bearish",
+      "ema20_diff_pct": -1.82,
+      "ema200_diff_pct": -4.68,
+      "ema5_signal": "bearish",
+      "rsi_value": 31.92,
+      "stochrsi_k": 67.7,
+      "stochrsi_d": 75.16,
+      "stochrsi_signal": "bearish crossover",
+      "rsi_signal": "neutral",
+      "macd_signal": "bearish",
+      "supertrend_signal": "bearish",
       "analogue_match": "Similar to 30 Sep 2016 (Next day went UP)",
-      "india_vix": 12.69
+      "india_vix": 12.46
     }
   }
 }
