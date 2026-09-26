@@ -22,55 +22,8 @@ st.set_page_config(page_title="Nifty Analyst Explorer", layout="wide")
 
 settings = st_mod.load_settings()
 
-def discover_instruments(settings):
-    """Scans the historical directory for all available instruments."""
-    hist_dir = st_mod.rel(settings, "historical_dir")
-    fyers_dir = Path("data/fyers_db/1D")
-    
-    instruments = ["nifty"] # Always default
-    
-    if hist_dir.exists():
-        for p in hist_dir.glob("*.csv"):
-            if p.stem not in instruments:
-                instruments.append(p.stem)
-                
-    if fyers_dir.exists():
-        for p in fyers_dir.glob("*.csv"):
-            if p.stem not in instruments:
-                instruments.append(p.stem)
-                
-    return sorted(list(set(instruments)))
 
-with st.sidebar:
-    st.header("Data Source")
-    available_instruments = discover_instruments(settings)
-    
-    # Allow user to pick an existing instrument
-    selected_instrument = st.selectbox("Select Instrument", available_instruments, index=available_instruments.index("nifty") if "nifty" in available_instruments else 0)
-    
-    # Allow user to type a new Fyers ticker to download
-    new_ticker = st.text_input("Or fetch new Fyers Ticker (e.g. NSE:RELIANCE-EQ):")
-    if new_ticker:
-        if st.button(f"Download {new_ticker}"):
-            with st.spinner(f"Downloading deep history for {new_ticker} from Fyers..."):
-                import core.data_fyers as dfy
-                dfy.build_historical_database(new_ticker, "1D", days_back=1000)
-                # Copy to historical for generic access
-                import shutil
-                fyers_db_path = dfy.get_db_path(new_ticker, "1D")
-                if fyers_db_path.exists():
-                    safe_sym = new_ticker.replace(":", "_")
-                    shutil.copy(fyers_db_path, st_mod.rel(settings, "historical_dir") / f"{safe_sym}.csv")
-                st.success(f"{new_ticker} downloaded! Please refresh the page.")
-                
-    # Auto-Sync Live Data button
-    if st.button("🔄 Sync Live Data"):
-        with st.spinner("Stitching live Fyers ticks to local DB..."):
-            import core.data_fyers as dfy
-            dfy.build_historical_database(selected_instrument if "NSE_" in selected_instrument else "NSE:NIFTY50-INDEX", "1D", days_back=5)
-            st.success("Local DB Synced with Live Market!")
-
-def render_intraday(settings, tf_label: str, selected_instrument: str):
+def render_intraday(settings, tf_label: str):
     import numpy as np
 
     import plotly.graph_objects as go  # noqa: F401
@@ -78,12 +31,12 @@ def render_intraday(settings, tf_label: str, selected_instrument: str):
 
     hours = tf_label.endswith("h")
     minutes = int(tf_label[:-1]) * (60 if hours else 1)
-    st.title(f"Nifty Analyst — intraday explorer ({tf_label}) | {selected_instrument.upper()}")
-    bars = session.archive_bars(selected_instrument, minutes, settings)
+    st.title(f"Nifty Analyst — intraday explorer ({tf_label})")
+    bars = session.archive_bars("nifty", minutes, settings)
     if bars.empty:
-        st.error(f"No intraday archive yet for {selected_instrument}. Run `python scripts/update_data.py --intraday` first.")
+        st.error("No intraday archive yet. Run `python scripts/update_data.py --intraday` first.")
         return
-    daily = data.load_series(selected_instrument, settings)
+    daily = data.load_series("nifty", settings)
     if daily.empty:
         st.error("Daily nifty series missing (run scripts/update_data.py).")
         return
@@ -157,19 +110,13 @@ def render_intraday(settings, tf_label: str, selected_instrument: str):
 tf_choice = st.sidebar.radio("Timeframe", ["Daily", "5m", "15m", "30m", "1h"], index=0)
 
 if tf_choice != "Daily":
-    render_intraday(settings, tf_choice, selected_instrument)
+    render_intraday(settings, tf_choice)
     st.stop()
 
-df = data.load_series(selected_instrument, settings)
-# Fallback to Fyers DB folder if it was fetched from the new ticker box but not copied
-if df.empty and Path(f"data/fyers_db/1D/{selected_instrument}.csv").exists():
-    df = pd.read_csv(f"data/fyers_db/1D/{selected_instrument}.csv", index_col=0, parse_dates=True)
-    
+df = data.load_series("nifty", settings)
 if df.empty:
-    st.error(f"No cached data found for {selected_instrument}. Please download it first.")
+    st.error("No cached data. Run `python scripts/update_data.py` first.")
     st.stop()
-    
-st.title(f"Nifty Analyst — {selected_instrument.upper()}")
 
 with st.sidebar:
     st.header("Controls")

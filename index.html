@@ -274,8 +274,24 @@
                 </div>
             </div>
             
-            <div id="vix-badge" class="hidden items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold border shadow-sm">
-                <i class="fa-solid fa-bolt"></i> <span id="vix-text">VIX: Loading...</span>
+            <div class="flex items-center gap-4">
+                <select id="instrument-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block p-2 font-bold" onchange="changeInstrument(this.value)">
+                    <option value="nifty">NIFTY 50</option>
+                    <option value="banknifty">BANK NIFTY</option>
+                    <option value="reliance">RELIANCE</option>
+                </select>
+                
+                <select id="timeframe-select" class="hidden bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block p-2 font-bold" onchange="changeTimeframe(this.value)">
+                    <option value="daily">1 Day</option>
+                    <option value="60">60 Mins</option>
+                    <option value="30">30 Mins</option>
+                    <option value="15">15 Mins</option>
+                    <option value="5">5 Mins</option>
+                </select>
+                
+                <div id="vix-badge" class="hidden items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold border shadow-sm">
+                    <i class="fa-solid fa-bolt"></i> <span id="vix-text">VIX: Loading...</span>
+                </div>
             </div>
         </div>
     </header>
@@ -453,11 +469,24 @@
                     <span id="badge-status" class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full tracking-wider">CUSTOM STRATEGY</span>
                 </div>
 
-                <!-- Tabs -->
-                <div class="flex border-b border-gray-200 mb-8 overflow-x-auto">
-                    <button class="tab-btn active whitespace-nowrap" id="tab-tomorrow" onclick="selectTab('tomorrow')">Tomorrow</button>
-                    <button class="tab-btn whitespace-nowrap" id="tab-next_week" onclick="selectTab('next_week')">Next Week</button>
-                    <button class="tab-btn whitespace-nowrap" id="tab-next_month" onclick="selectTab('next_month')">Next Month</button>
+                <!-- Primary Mode Tabs -->
+                <div class="flex border-b border-gray-200 mb-6 overflow-x-auto">
+                    <button class="tab-btn whitespace-nowrap active" id="tab-intraday" onclick="setMode('intraday')"><i class="fa-solid fa-bolt text-yellow-500 mr-2"></i>Live Intraday (Today)</button>
+                    <button class="tab-btn whitespace-nowrap" id="tab-historical" onclick="setMode('historical')"><i class="fa-solid fa-clock-rotate-left text-brand-500 mr-2"></i>Historical & BTST</button>
+                </div>
+                
+                <!-- BTST Sub-tabs (Only visible in Historical mode) -->
+                <div id="historical-subtabs" class="hidden flex gap-2 mb-6">
+                    <button class="px-3 py-1 text-sm rounded-full bg-brand-100 text-brand-700 font-bold" id="subtab-tomorrow" onclick="selectTab('tomorrow')">Tomorrow</button>
+                    <button class="px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200" id="subtab-next_week" onclick="selectTab('next_week')">Next Week</button>
+                    <button class="px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200" id="subtab-next_month" onclick="selectTab('next_month')">Next Month</button>
+                </div>
+                
+                <!-- Market Closed Placeholder (Only visible in Intraday mode when closed) -->
+                <div id="market-closed-warning" class="bg-gray-800 text-white p-6 rounded-xl shadow-lg mb-8 text-center hidden">
+                    <i class="fa-solid fa-moon text-4xl text-yellow-300 mb-3"></i>
+                    <h3 class="text-xl font-bold">Market is Currently Closed</h3>
+                    <p class="text-gray-300 mt-2">Live Intraday Engine is paused. The engine automatically wakes up at 9:15 AM IST.<br>Switch to the <b>Historical & BTST</b> tab to backtest past dates.</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
@@ -571,34 +600,155 @@
 
     <script>
         let dashboardData = {};
-        let currentTab = 'tomorrow';
+        let currentMode = 'intraday'; // 'intraday' or 'historical'
+        let currentTab = 'tomorrow'; // For historical BTST subtabs
+        let currentInstrument = 'nifty';
+        let currentTimeframe = '5'; // Intraday forces '5'
+        let currentResolvedDate = null;
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('tab-' + mode).classList.add('active');
+            
+            const tfSelect = document.getElementById('timeframe-select');
+            const datePickerContainer = document.getElementById('date-picker').parentElement;
+            const subtabs = document.getElementById('historical-subtabs');
+            
+            if (mode === 'intraday') {
+                // Keep timeframe visible but maybe restrict 'daily'
+                tfSelect.classList.remove('hidden');
+                datePickerContainer.classList.add('hidden');
+                subtabs.classList.add('hidden');
+                if (tfSelect.value === 'daily') {
+                    tfSelect.value = '5'; // Default to 5m if daily was selected
+                    currentTimeframe = '5';
+                }
+                checkMarketStatus();
+            } else {
+                tfSelect.classList.remove('hidden');
+                datePickerContainer.classList.remove('hidden');
+                subtabs.classList.remove('hidden');
+                document.getElementById('market-closed-warning').classList.add('hidden');
+                currentTimeframe = tfSelect.value;
+            }
+            fetchLiveJSON();
+        }
+
+        function checkMarketStatus() {
+            if (currentMode !== 'intraday') return;
+            
+            // IST timezone check
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const ist = new Date(utc + (3600000 * 5.5));
+            
+            const hours = ist.getHours();
+            const mins = ist.getMinutes();
+            const timeNum = hours * 100 + mins;
+            const day = ist.getDay();
+            
+            // Market hours: 9:15 to 15:30 IST on weekdays
+            const isWeekend = (day === 0 || day === 6);
+            const isOpen = !isWeekend && (timeNum >= 915 && timeNum <= 1530);
+            
+            if (!isOpen) {
+                document.getElementById('market-closed-warning').classList.remove('hidden');
+            } else {
+                document.getElementById('market-closed-warning').classList.add('hidden');
+            }
+        }
+
+        // Check market status every minute
+        setInterval(checkMarketStatus, 60000);
+
+        function selectTab(tab) {
+            document.getElementById('subtab-' + currentTab).classList.remove('bg-brand-100', 'text-brand-700', 'font-bold');
+            document.getElementById('subtab-' + currentTab).classList.add('bg-gray-100', 'text-gray-600');
+            
+            document.getElementById('subtab-' + tab).classList.remove('bg-gray-100', 'text-gray-600');
+            document.getElementById('subtab-' + tab).classList.add('bg-brand-100', 'text-brand-700', 'font-bold');
+            
+            currentTab = tab;
+            renderPrediction();
+        }
+
+        function changeInstrument(symbol) {
+            currentInstrument = symbol;
+            fetchLiveJSON();
+        }
+
+        function changeTimeframe(tf) {
+            if (currentMode === 'historical') {
+                currentTimeframe = tf;
+                fetchLiveJSON();
+            }
+        }
 
         async function fetchLiveJSON() {
             try {
-                const res = await fetch('dashboard_data.json?t=' + new Date().getTime());
+                let jsonFile = 'dashboard_data.json'; // Default daily fallback
+                
+                if (currentTimeframe === 'daily') {
+                    if (currentInstrument !== 'nifty') {
+                        jsonFile = `dashboard_data_${currentInstrument}.json`;
+                    }
+                } else {
+                    jsonFile = `intraday_${currentTimeframe}_${currentInstrument}.json`;
+                }
+                
+                const res = await fetch(jsonFile + '?t=' + new Date().getTime());
+                
+                if (!res.ok) {
+                    throw new Error("HTTP " + res.status);
+                }
+                
                 dashboardData = await res.json();
                 
                 const select = document.getElementById('date-picker');
                 const dates = Object.keys(dashboardData).sort().reverse();
                 
                 if (dates.length > 0) {
-                    select.value = dates[0]; // Most recent date
-                    select.min = dates[dates.length - 1]; // Oldest date
-                    select.max = dates[0]; // Newest date
+                    // Extract unique dates for the date picker (YYYY-MM-DD)
+                    const uniqueDates = [...new Set(dates.map(d => d.split('T')[0]))];
+                    
+                    const select = document.getElementById('date-picker');
+                    select.value = uniqueDates[0];
+                    select.min = uniqueDates[uniqueDates.length - 1];
+                    select.max = uniqueDates[0];
                     loadDateData();
                 }
             } catch(e) {
                 console.error(e);
-                document.getElementById('date-error').innerText = 'Error loading automated data.'; document.getElementById('date-error').classList.remove('hidden');
+                document.getElementById('date-error').innerText = `Error loading ${currentTimeframe} data for ${currentInstrument}. Please run exporter script.`; 
+                document.getElementById('date-error').classList.remove('hidden');
             }
         }
 
         function loadDateData() {
-            const date = document.getElementById('date-picker').value;
+            let selectedDateStr = document.getElementById('date-picker').value;
+            if (currentMode === 'intraday') {
+                // In live intraday mode, always force the most recent timestamp available
+                const allStamps = Object.keys(dashboardData).sort().reverse();
+                selectedDateStr = allStamps.length > 0 ? allStamps[0] : null;
+            } else {
+                // Historical mode: Find the exact timestamp that corresponds to the end of the selected day
+                if (currentTimeframe !== 'daily' && selectedDateStr) {
+                    const allStamps = Object.keys(dashboardData).sort().reverse();
+                    const dayStamps = allStamps.filter(d => d.startsWith(selectedDateStr));
+                    if (dayStamps.length > 0) {
+                        selectedDateStr = dayStamps[0]; // The last candle of that day (since they are sorted reverse chronologically)
+                    } else {
+                        selectedDateStr = null;
+                    }
+                }
+            }
+
             const errEl = document.getElementById('date-error');
             const retEl = document.getElementById('date-return');
-            if(!dashboardData[date]) {
-                errEl.innerText = "Market Closed or No Data Available for " + date;
+            
+            if(!selectedDateStr || !dashboardData[selectedDateStr]) {
+                errEl.innerText = "Market Closed or No Data Available for this date";
                 errEl.classList.remove('hidden');
                 retEl.classList.add('hidden');
                 document.getElementById('res-tomorrow').innerHTML = "N/A";
@@ -607,7 +757,9 @@
                 return;
             }
             errEl.classList.add('hidden');
-            const data = dashboardData[date];
+            
+            currentResolvedDate = selectedDateStr;
+            const data = dashboardData[selectedDateStr];
             
             // FII Update
             let fiiText = data.fii === 'buying' ? '<span class="text-green-600 font-bold">Buying</span>' : (data.fii === 'selling' ? '<span class="text-red-600 font-bold">Selling</span>' : 'Neutral');
@@ -989,9 +1141,10 @@
                 return;
             }
             
-            const dateStr = document.getElementById('date-picker').value;
+            if (!currentResolvedDate) return;
+            
             const allDates = Object.keys(dashboardData).sort();
-            const currIdx = allDates.indexOf(dateStr);
+            const currIdx = allDates.indexOf(currentResolvedDate);
             
             if (currIdx < 60) {
                 alert("Not enough historical data for walk-forward backtest.");
@@ -1129,6 +1282,7 @@
         }
 
         function renderPrediction() {
+            if (!currentResolvedDate) return;
             const scoreData = calculateScore();
             const base_score = scoreData.score;
             const isReversal = scoreData.isReversal;
@@ -1136,7 +1290,7 @@
             const tf_mod = {"tomorrow": 1.0, "next_week": 1.5, "next_month": 2.5}[currentTab];
             const adj_score = base_score * tf_mod;
             
-            const dateStr = document.getElementById('date-picker').value;
+            const dateStr = currentResolvedDate;
             const vol = calculateMarketVolatility(dateStr);
             
             // Adj_score now ranges from ~ -25 to +25. 

@@ -15,14 +15,23 @@ try:
 except ImportError:
     NSELIB_AVAILABLE = False
 
-def main():
-    data_file = "dashboard_data.json"
+def process_symbol(symbol_name, db_filename):
+    data_file = f"dashboard_data.json" if symbol_name == "nifty" else f"dashboard_data_{symbol_name}.json"
     data = {}
     
-    # Note: We will fetch full history below for VIX and USDINR.
-
-    nifty = yf.Ticker("^NSEI")
-    df = nifty.history(period="10y")
+    # Load from our new unified Yahoo+Fyers Database
+    csv_path = f"data/historical/{db_filename}"
+    if os.path.exists(csv_path):
+        df = pd.read_csv(csv_path, index_col=0, parse_dates=True)
+        # Standardize column names
+        df = df.rename(columns={"open": "Open", "high": "High", "low": "Low", "close": "Close", "volume": "Volume"})
+        print(f"Loaded master DB for {symbol_name}: {len(df)} rows.")
+    else:
+        print(f"Master DB {csv_path} missing. Fallback to yfinance...")
+        ticker_map = {"nifty": "^NSEI", "banknifty": "^NSEBANK", "reliance": "RELIANCE.NS"}
+        ticker_sym = ticker_map.get(symbol_name, "^NSEI")
+        ticker = yf.Ticker(ticker_sym)
+        df = ticker.history(period="10y")
     
     # Fetch Institutional Data (VIX & USDINR)
     try:
@@ -48,29 +57,30 @@ def main():
     try:
         from jugaad_data.nse import index_df
         from datetime import datetime, timedelta
-        import pandas as pd
         
         to_date = datetime.now().date()
         from_date = to_date - timedelta(days=30)
-        ns = index_df(symbol="NIFTY 50", from_date=from_date, to_date=to_date)
-        
-        if not ns.empty:
-            ns['Date'] = pd.to_datetime(ns['HistoricalDate'])
-            ns = ns.set_index('Date')
-            ns = ns.sort_index()
-            ns.index = ns.index.tz_localize('Asia/Kolkata')
+        # Skip jugaad_data fallback for non-nifty to keep it simple and clean
+        if symbol_name == "nifty":
+            ns = index_df(symbol="NIFTY 50", from_date=from_date, to_date=to_date)
             
-            ns['Open'] = pd.to_numeric(ns['OPEN'])
-            ns['High'] = pd.to_numeric(ns['HIGH'])
-            ns['Low'] = pd.to_numeric(ns['LOW'])
-            ns['Close'] = pd.to_numeric(ns['CLOSE'])
-            ns = ns[['Open', 'High', 'Low', 'Close']]
-            
-            # Find which dates from ns are missing in df
-            missing = ns[~ns.index.isin(df.index)]
-            if not missing.empty:
-                df = pd.concat([df, missing]).sort_index()
-                print(f"Appended {len(missing)} missing days from jugaad_data.")
+            if not ns.empty:
+                ns['Date'] = pd.to_datetime(ns['HistoricalDate'])
+                ns = ns.set_index('Date')
+                ns = ns.sort_index()
+                ns.index = ns.index.tz_localize('Asia/Kolkata')
+                
+                ns['Open'] = pd.to_numeric(ns['OPEN'])
+                ns['High'] = pd.to_numeric(ns['HIGH'])
+                ns['Low'] = pd.to_numeric(ns['LOW'])
+                ns['Close'] = pd.to_numeric(ns['CLOSE'])
+                ns = ns[['Open', 'High', 'Low', 'Close']]
+                
+                # Find which dates from ns are missing in df
+                missing = ns[~ns.index.isin(df.index)]
+                if not missing.empty:
+                    df = pd.concat([df, missing]).sort_index()
+                    print(f"Appended {len(missing)} missing days from jugaad_data.")
     except Exception as e:
         print("Fallback jugaad_data fetch failed:", e)
 
@@ -362,6 +372,19 @@ def main():
         
     with open(data_file, "w") as f:
         json.dump(data, f, indent=2)
+    print(f"[{symbol_name}] Successfully updated {data_file}")
+
+def main():
+    # Process multiple instruments
+    instruments = [
+        ("nifty", "nifty.csv"),
+        ("banknifty", "banknifty.csv"),
+        ("reliance", "reliance.csv")
+    ]
+    
+    for sym, filename in instruments:
+        print(f"\n--- Processing {sym.upper()} ---")
+        process_symbol(sym, filename)
 
 if __name__ == "__main__":
     main()
