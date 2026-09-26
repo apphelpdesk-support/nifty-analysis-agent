@@ -135,22 +135,62 @@ with st.sidebar:
     )
     show_rsi = st.toggle("Show RSI chart", value=True)
     show_vol = st.toggle("Show volatility chart", value=True)
-    st.caption("Feature set: ret(1/5/20d), RSI, ATR%, gap%, range%, vol20, dist SMA, MACD hist")
+    
+    st.divider()
+    st.header("Feature Selection")
+    sel_mode = st.radio("Selection Mode", ["Manual", "Auto-select (Walk-forward)"], index=1)
+    
+    all_features = settings["analogues"]["features"]
+    if sel_mode == "Manual":
+        active_features = st.multiselect("Active features", all_features, default=all_features)
+        backtest_days = 60
+        top_n = 5
+    else:
+        backtest_days = st.slider("Backtest lookback (days)", 10, 120, 60, 10)
+        top_n = st.slider("Top N features to select", 1, len(all_features), 5, 1)
+        active_features = []
 
 
 @st.cache_data
-def compute(k, look, ma_periods):
+def get_base_data(ma_periods):
     ma_periods = tuple(ma_periods) if ma_periods else None
     frame = patterns.build_features(df, settings, ma_periods=ma_periods)
-    features = [f for f in settings["analogues"]["features"] if f in frame.columns]
+    avail = [f for f in settings["analogues"]["features"] if f in frame.columns]
+    return frame, avail
+
+@st.cache_data
+def get_zscores(frame, avail, look):
+    return patterns.zscore_point_in_time(frame, avail, look)
+
+@st.cache_data
+def do_auto_select(frame, z, avail, k, look, backtest_days, top_n):
     weights = settings["analogues"]["weights"]
-    z = patterns.zscore_point_in_time(frame, features, look)
     target_pos = len(frame) - 1
-    idxs, dists = patterns.find_analogues(frame, z, features, weights, target_pos, k, look)
-    return frame, features, idxs, dists
+    return patterns.auto_select_features(frame, z, avail, weights, target_pos, k, look, backtest_days, top_n)
 
+@st.cache_data
+def get_analogues(frame, z, active, k, look):
+    weights = settings["analogues"]["weights"]
+    target_pos = len(frame) - 1
+    return patterns.find_analogues(frame, z, active, weights, target_pos, k, look)
 
-frame, features, idxs, dists = compute(k, look, tuple(show_ma))
+frame, avail_features = get_base_data(tuple(show_ma))
+z = get_zscores(frame, avail_features, look)
+
+if sel_mode == "Auto-select (Walk-forward)":
+    with st.sidebar:
+        with st.spinner("Running walk-forward backtest..."):
+            best_feats, scores = do_auto_select(frame, z, avail_features, k, look, backtest_days, top_n)
+            active_features = best_feats
+        st.success("Auto-selection complete!")
+        st.write("**Selected Indicators:**")
+        for f in best_feats:
+            st.write(f"- {f} (Win-rate: {scores[f]:.1%})")
+
+if not active_features:
+    active_features = avail_features[:5]
+
+idxs, dists = get_analogues(frame, z, active_features, k, look)
 cohort = frame.iloc[idxs].copy()
 cohort["distance"] = dists
 stats = patterns.outcome_stats(cohort)
@@ -234,10 +274,9 @@ if show_rsi:
     rs.update_yaxes(range=[0, 100])
     st.plotly_chart(rs, width="stretch")
 
-avail_features = [f for f in settings["analogues"]["features"] if f in frame.columns]
 st.subheader("Analogue list (top 30)")
 st.dataframe(
-    cohort[[*avail_features[:6], "distance"]].assign(**{"date": cohort.index.strftime("%Y-%m-%d")})
+    cohort[[*active_features[:6], "distance"]].assign(**{"date": cohort.index.strftime("%Y-%m-%d")})
     .sort_values("distance").head(30),
     width="stretch",
 )

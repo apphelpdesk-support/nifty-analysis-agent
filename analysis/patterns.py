@@ -165,3 +165,46 @@ def scenarios(stats: dict, sentiment_cfg: dict) -> dict:
         "bullish_scenario": {"prob": round(max(prob_up, 1 - prob_up), 3), "target_median_ret": nxt["p75"]},
         "bearish_scenario": {"prob": round(min(prob_up, 1 - prob_up), 3), "target_median_ret": nxt["p25"]},
     }
+
+
+def auto_select_features(
+    frame: pd.DataFrame,
+    z: pd.DataFrame,
+    available_features: list,
+    weights: dict,
+    target_pos: int,
+    k: int,
+    standardize_lookback: int,
+    backtest_days: int = 60,
+    top_n: int = 5,
+) -> tuple:
+    """
+    Evaluates individual features over the last `backtest_days` to determine which ones
+    yield the highest win-rate (accuracy of prob_up predicting nxt_ret direction).
+    Returns the top N feature names and their accuracy scores.
+    """
+    scores = {}
+    for f in available_features:
+        correct = 0
+        valid_days = 0
+        
+        for pos in range(max(1, target_pos - backtest_days), target_pos):
+            idx, dist = find_analogues(frame, z, [f], weights, pos, k, standardize_lookback)
+            if not idx:
+                continue
+            
+            cohort_ret = frame["nxt_ret"].iloc[idx]
+            prob_up = (cohort_ret > 0).mean()
+            predicted_up = prob_up > 0.5
+            actual_up = frame["nxt_ret"].iloc[pos] > 0
+            
+            if predicted_up == actual_up:
+                correct += 1
+            valid_days += 1
+            
+        acc = correct / valid_days if valid_days > 0 else 0.0
+        scores[f] = acc
+        
+    ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    best_features = [f for f, acc in ranked[:top_n]]
+    return best_features, scores
