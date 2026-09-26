@@ -904,7 +904,8 @@
                 'chk-rsi': (d) => {
                     if(!d.signals) return 0;
                     const r = d.signals.rsi_value;
-                    if(r < 35 || r > 70) return (r < 35 ? 1 : -1);
+                    if(r < 45) return 1;
+                    if(r > 60) return -1;
                     return 0;
                 },
                 'chk-ema20': (d) => d.signals && d.signals.ema20_signal === 'bullish' ? 1 : -1,
@@ -948,8 +949,12 @@
                 }
             }
             
-            const baseRate = totalDays > 0 ? marketUpCount / totalDays : 0.5;
-            const threshold = Math.max(0.5, baseRate); // Must beat market drift
+            // True baseline accuracy is whichever direction the market drifted most
+            const naiveAccuracy = Math.max(baseRate, 1 - baseRate);
+            
+            // Allow indicators to be selected if they perform close to naive accuracy (-3% leniency) 
+            // since they might catch outlier large moves that binary win-rate doesn't capture.
+            const threshold = naiveAccuracy - 0.03; 
             
             const chks = Object.keys(evalLogic);
             chks.forEach(id => {
