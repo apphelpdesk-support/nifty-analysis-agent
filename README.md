@@ -1,5 +1,7 @@
 # Nifty Analyst
 
+**📖 [Read the Institutional Edge Dashboard Walkthrough](dashboard_walkthrough.md)** for a complete layman's guide on how to trade using the quantitative dashboard and execution safeguards.
+
 Python research & backtesting system for NIFTY 50 daily analysis, built around
 **historical-analogue matching**: find the most similar historical days to
 today's technical setup, then read what happened on the following day.
