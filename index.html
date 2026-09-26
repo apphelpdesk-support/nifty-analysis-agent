@@ -1161,6 +1161,10 @@
                 prob = 0;
                 strategy = "No indicators selected. Please check at least one indicator to generate a prediction.";
             } else {
+                // Downside Skew: Markets take the stairs up, but the elevator down. 
+                // We apply a 1.4x volatility multiplier to bearish expected moves.
+                const down_skew = 1.4;
+
                 if (adj_score >= 10) {
                     dir = "UP"; exp_move = "+" + (vol * 1.5 * tf_mod).toFixed(1) + "% to +" + (vol * 2.5 * tf_mod).toFixed(1) + "%"; strategy = "Strong conviction. Buy Call Options / Go Long."; color = "green";
                 } else if (adj_score > 5) {
@@ -1168,9 +1172,9 @@
                 } else if (adj_score <= 5 && adj_score >= -5) {
                     dir = "NEUTRAL"; exp_move = "CASH"; strategy = "Probability is too low (NO TRADE ZONE). Institutional models sit in cash here. Protect capital and wait for confluence."; color = "gray"; prob = 50;
                 } else if (adj_score < -5 && adj_score > -10) {
-                    dir = "DOWN"; exp_move = "-" + (vol * 0.5 * tf_mod).toFixed(1) + "% to -" + (vol * 1.5 * tf_mod).toFixed(1) + "%"; strategy = "Mildly negative. Sell on rise."; color = "red";
+                    dir = "DOWN"; exp_move = "-" + (vol * 0.5 * tf_mod * down_skew).toFixed(1) + "% to -" + (vol * 1.5 * tf_mod * down_skew).toFixed(1) + "%"; strategy = "Mildly negative. Sell on rise."; color = "red";
                 } else {
-                    dir = "DOWN"; exp_move = "-" + (vol * 1.5 * tf_mod).toFixed(1) + "% to -" + (vol * 2.5 * tf_mod).toFixed(1) + "%"; strategy = "Strong bearish conviction. Buy Put Options / Short Sell."; color = "red";
+                    dir = "DOWN"; exp_move = "-" + (vol * 1.5 * tf_mod * down_skew).toFixed(1) + "% to -" + (vol * 2.5 * tf_mod * down_skew).toFixed(1) + "%"; strategy = "Strong bearish conviction. Expect violent drops. Buy Put Options / Short Sell."; color = "red";
                 }
             }
             
