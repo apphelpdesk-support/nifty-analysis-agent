@@ -115,6 +115,32 @@ def process_symbol(symbol_name, db_filename):
     df.ta.stochrsi(length=14, rsi_length=14, k=3, d=3, append=True)
     df.ta.macd(fast=12, slow=26, signal=9, append=True)
     df.ta.supertrend(length=7, multiplier=3.0, append=True)
+    df.ta.atr(length=14, append=True)
+    
+    # Calculate continuous differentials
+    df['EMA5_9_diff'] = df['EMA_5'] - df['EMA_9']
+    df['Price_20EMA_diff'] = df['Close'] - df['EMA_20']
+    df['Vol_Ratio'] = df['Volume'] / df['Volume'].rolling(20).mean().replace(0, 1)
+    df['BN_Rel'] = df['BANK_NIFTY_Return'] - df['Return']
+
+    # Apply Rolling Z-Score Normalization (prevent lookahead bias)
+    rolling_window = 252
+    features_to_normalize = {
+        'RSI_14': 'z_rsi',
+        'STOCHRSIk_14_14_3_3': 'z_stochrsi',
+        'EMA5_9_diff': 'z_ema_diff',
+        'Price_20EMA_diff': 'z_price_ema',
+        'ATRr_14': 'z_atr',
+        'Vol_Ratio': 'z_vol',
+        'VIX': 'z_vix',
+        'BN_Rel': 'z_bn_rel'
+    }
+    
+    for col, z_name in features_to_normalize.items():
+        if col in df.columns:
+            r_mean = df[col].rolling(rolling_window).mean()
+            r_std = df[col].rolling(rolling_window).std().replace(0, 1e-5)
+            df[z_name] = (df[col] - r_mean) / r_std
     
 
     # Fetch FII data
@@ -268,6 +294,16 @@ def process_symbol(symbol_name, db_filename):
         nifty_ret = float(row.get("Return", 0.0))
         if math.isnan(nifty_ret): nifty_ret = 0.0
         
+        # Z-scores
+        z_rsi = float(row.get("z_rsi", 0.0))
+        z_stochrsi = float(row.get("z_stochrsi", 0.0))
+        z_ema_diff = float(row.get("z_ema_diff", 0.0))
+        z_price_ema = float(row.get("z_price_ema", 0.0))
+        z_atr = float(row.get("z_atr", 0.0))
+        z_vol = float(row.get("z_vol", 0.0))
+        z_vix = float(row.get("z_vix", 0.0))
+        z_bn_rel = float(row.get("z_bn_rel", 0.0))
+        
         intermarket_div = "neutral"
         if nifty_ret > 0 and bank_nifty_ret < 0:
             intermarket_div = "bearish_divergence"
@@ -315,7 +351,15 @@ def process_symbol(symbol_name, db_filename):
             "stochrsi_signal": "overbought" if stochrsi_k > 80 else ("oversold" if stochrsi_k < 20 else ("bullish crossover" if stochrsi_k > stochrsi_d else "bearish crossover")),
             "rsi_signal": "overbought" if rsi > 70 else ("oversold" if rsi < 30 else "neutral"),
             "macd_signal": "bullish" if macd > macd_signal else "bearish",
-            "supertrend_signal": "bullish" if st_dir == 1 else "bearish"
+            "supertrend_signal": "bullish" if st_dir == 1 else "bearish",
+            "z_rsi": round(z_rsi, 3) if not math.isnan(z_rsi) else 0.0,
+            "z_stochrsi": round(z_stochrsi, 3) if not math.isnan(z_stochrsi) else 0.0,
+            "z_ema_diff": round(z_ema_diff, 3) if not math.isnan(z_ema_diff) else 0.0,
+            "z_price_ema": round(z_price_ema, 3) if not math.isnan(z_price_ema) else 0.0,
+            "z_atr": round(z_atr, 3) if not math.isnan(z_atr) else 0.0,
+            "z_vol": round(z_vol, 3) if not math.isnan(z_vol) else 0.0,
+            "z_vix": round(z_vix, 3) if not math.isnan(z_vix) else 0.0,
+            "z_bn_rel": round(z_bn_rel, 3) if not math.isnan(z_bn_rel) else 0.0
         }
 
         

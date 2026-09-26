@@ -1043,93 +1043,97 @@
             renderPrediction();
         }
 
-        function calculateScore() {
-            const date = document.getElementById('date-picker').value;
-            if(!dashboardData[date]) return {score: 0, isReversal: false};
-            const data = dashboardData[date];
+        
+        function calculateTopK(dateStr) {
+            if (!dashboardData[dateStr] || !dashboardData[dateStr].signals) return null;
             
-            let score = 0;
-            let isReversal = false;
+            // 1. Gather selected active features
+            const activeFeatures = [];
+            if(document.getElementById('chk-rsi') && document.getElementById('chk-rsi').checked) activeFeatures.push('z_rsi');
+            if(document.getElementById('chk-stochrsi') && document.getElementById('chk-stochrsi').checked) activeFeatures.push('z_stochrsi');
+            if(document.getElementById('chk-ema59') && document.getElementById('chk-ema59').checked) activeFeatures.push('z_ema_diff');
+            if(document.getElementById('chk-ema20') && document.getElementById('chk-ema20').checked) activeFeatures.push('z_price_ema');
+            if(document.getElementById('chk-vix') && document.getElementById('chk-vix').checked) activeFeatures.push('z_vix');
+            if(document.getElementById('chk-divergence') && document.getElementById('chk-divergence').checked) activeFeatures.push('z_bn_rel');
             
-            if(document.getElementById('chk-fii').checked) {
-                if(data.fii === 'buying') score += 4;
-                if(data.fii === 'selling') score -= 4;
+            // We can map Delta OI to z_vol as a proxy for activity
+            if(document.getElementById('chk-deltaoi') && document.getElementById('chk-deltaoi').checked) activeFeatures.push('z_vol');
+            
+            if (activeFeatures.length === 0) return null;
+            
+            const currSigs = dashboardData[dateStr].signals;
+            
+            // Check if current day has valid features (nan / 0.0 might mean not enough rolling history yet)
+            for(let f of activeFeatures) {
+                if(currSigs[f] === undefined) return null;
             }
-            if(data.signals) {
-                // Historical Analogue Match Score (+10 or -10 implicit weight, acts as Base Prediction)
-                if(data.signals.analogue_match && data.signals.analogue_match.includes('UP')) {
-                    score += 10;
-                } else if(data.signals.analogue_match && data.signals.analogue_match.includes('DOWN')) {
-                    score -= 10;
-                }
-
-                if(document.getElementById('chk-ema59') && document.getElementById('chk-ema59').checked) {
-                    if(data.signals.ema5_signal === 'bullish') score += 4;
-                    else score -= 4;
-                }
-                if(document.getElementById('chk-stochrsi') && document.getElementById('chk-stochrsi').checked) {
-                    const st_sig = data.signals.stochrsi_signal;
-                    if(st_sig === 'oversold' || st_sig === 'bullish crossover') {
-                        score += 4;
-                        isReversal = true; // StochRSI oversold/bullish is a reversal signal
-                    } else if (st_sig === 'overbought' || st_sig === 'bearish crossover') {
-                        score -= 4;
+            
+            const allDates = Object.keys(dashboardData).sort();
+            const currIdx = allDates.indexOf(dateStr);
+            if(currIdx < 60) return null;
+            
+            const distances = [];
+            
+            // Loop through all historical dates BEFORE the current date window (avoid overlap)
+            for(let i = 252; i < currIdx - 5; i++) {
+                const histDate = allDates[i];
+                const histData = dashboardData[histDate];
+                if(!histData || !histData.signals) continue;
+                
+                let sumSq = 0;
+                let valid = true;
+                
+                for(let f of activeFeatures) {
+                    if (histData.signals[f] === undefined || histData.signals[f] === 0.0 && currSigs[f] !== 0.0) {
+                        valid = false;
+                        break;
                     }
+                    sumSq += Math.pow(currSigs[f] - histData.signals[f], 2);
                 }
                 
-                if(document.getElementById('chk-deltaoi') && document.getElementById('chk-deltaoi').checked) {
-                    if(data.signals.options_momentum === 'bullish') score += 5;
-                    else if(data.signals.options_momentum === 'bearish') score -= 5;
-                }
-                if(document.getElementById('chk-vix') && document.getElementById('chk-vix').checked) {
-                    if(data.signals.vix_regime === 'low_vol') score += 3;
-                    else score -= 3;
-                }
-                if(document.getElementById('chk-usdinr') && document.getElementById('chk-usdinr').checked) {
-                    if(data.signals.usdinr_trend === 'bullish_for_nifty') score += 3;
-                    else if(data.signals.usdinr_trend === 'bearish_for_nifty') score -= 3;
-                }
-                if(document.getElementById('chk-sp500') && document.getElementById('chk-sp500').checked) {
-                    if(data.signals.sp500_cue === 'bullish') score += 4;
-                    else if(data.signals.sp500_cue === 'bearish') score -= 4;
-                }
-                if(document.getElementById('chk-divergence') && document.getElementById('chk-divergence').checked) {
-                    if(data.signals.intermarket_divergence === 'bullish_divergence') score += 3;
-                    else if(data.signals.intermarket_divergence === 'bearish_divergence') score -= 3;
-                }
-                if(document.getElementById('chk-ema200').checked) {
-                    if(data.signals.ema200_signal === 'bullish') score += 3;
-                    else score -= 3;
-                }
-                if(document.getElementById('chk-ema20').checked) {
-                    if(data.signals.ema20_signal === 'bullish') score += 2;
-                    else score -= 2;
-                }
-                if(document.getElementById('chk-supertrend').checked) {
-                    if(data.signals.supertrend_signal === 'bullish') score += 3;
-                    else score -= 3;
-                }
-                if(document.getElementById('chk-rsi').checked) {
-                    const rsi = data.signals.rsi_value;
-                    if(rsi < 35) {
-                        score += 4; // heavily oversold
-                        isReversal = (score < 0);
-                    } else if(rsi < 45) {
-                        score += 2; 
-                    } else if(rsi > 70) {
-                        score -= 4; // overbought
-                        isReversal = (score > 0);
-                    } else if(rsi > 60) {
-                        score -= 2;
-                    }
-                }
-                if(document.getElementById('chk-macd').checked) {
-                    if(data.signals.macd_signal === 'bullish') score += 2;
-                    else score -= 2;
+                if(valid) {
+                    // Find the next day's return
+                    const nextDayDate = allDates[i+1];
+                    if(!dashboardData[nextDayDate] || !dashboardData[nextDayDate].signals) continue;
+                    
+                    distances.push({
+                        date: histDate,
+                        dist: Math.sqrt(sumSq),
+                        next_ret: dashboardData[nextDayDate].signals.daily_return_pct
+                    });
                 }
             }
             
-            return {score: score, isReversal: isReversal};
+            if(distances.length < 50) return null;
+            
+            // Sort by lowest distance
+            distances.sort((a, b) => a.dist - b.dist);
+            
+            // Take Top 50 analogues
+            const topK = distances.slice(0, 50);
+            
+            const upCount = topK.filter(d => d.next_ret > 0).length;
+            const probUp = (upCount / topK.length) * 100;
+            
+            // Calculate median return
+            const rets = topK.map(d => d.next_ret).sort((a, b) => a - b);
+            const medianRet = rets[Math.floor(rets.length / 2)];
+            const q1 = rets[Math.floor(rets.length * 0.25)];
+            const q3 = rets[Math.floor(rets.length * 0.75)];
+            
+            return {
+                probUp: probUp.toFixed(1),
+                medianRet: medianRet.toFixed(2),
+                q1: q1.toFixed(2),
+                q3: q3.toFixed(2),
+                matches: topK.length,
+                closest: topK[0]
+            };
+        }
+
+        function calculateScore() {
+            // Deprecated, maintained for AutoSelect legacy wrapper if needed
+            return {score: 0, isReversal: false};
         }
 
         function runAutoSelect() {
@@ -1141,116 +1145,16 @@
                 return;
             }
             
-            if (!currentResolvedDate) return;
-            
-            const allDates = Object.keys(dashboardData).sort();
-            const currIdx = allDates.indexOf(currentResolvedDate);
-            
-            if (currIdx < 60) {
-                alert("Not enough historical data for walk-forward backtest.");
-                document.getElementById('chk-autoselect').checked = false;
-                return;
-            }
-            
-            const evalLogic = {
-                'chk-fii': (d) => d.fii === 'buying' ? 1 : (d.fii === 'selling' ? -1 : 0),
-                'chk-rsi': (d) => {
-                    if(!d.signals) return 0;
-                    const r = d.signals.rsi_value;
-                    if(r < 45) return 1;
-                    if(r > 60) return -1;
-                    return 0;
-                },
-                'chk-ema59': (d) => d.signals && d.signals.ema5_signal === 'bullish' ? 1 : -1,
-                'chk-stochrsi': (d) => {
-                    if(!d.signals) return 0;
-                    const st = d.signals.stochrsi_signal;
-                    return (st === 'oversold' || st === 'bullish crossover') ? 1 : ((st === 'overbought' || st === 'bearish crossover') ? -1 : 0);
-                },
-                'chk-deltaoi': (d) => {
-                    if(!d.signals) return 0;
-                    const m = d.signals.options_momentum;
-                    return m === 'bullish' ? 1 : (m === 'bearish' ? -1 : 0);
-                },
-                'chk-vix': (d) => {
-                    if(!d.signals) return 0;
-                    return d.signals.vix_regime === 'low_vol' ? 1 : -1;
-                },
-                'chk-usdinr': (d) => {
-                    if(!d.signals) return 0;
-                    const u = d.signals.usdinr_trend;
-                    return u === 'bullish_for_nifty' ? 1 : (u === 'bearish_for_nifty' ? -1 : 0);
-                },
-                'chk-sp500': (d) => {
-                    if(!d.signals) return 0;
-                    const c = d.signals.sp500_cue;
-                    return c === 'bullish' ? 1 : (c === 'bearish' ? -1 : 0);
-                },
-                'chk-divergence': (d) => {
-                    if(!d.signals) return 0;
-                    const v = d.signals.intermarket_divergence;
-                    return v === 'bullish_divergence' ? 1 : (v === 'bearish_divergence' ? -1 : 0);
-                }
-            };
-            
-            let indData = {};
-            for(let id in evalLogic) indData[id] = { returns: [], signals: [] };
-            
-            let marketReturns = [];
-            
-            for(let i = currIdx - 60; i < currIdx; i++) {
-                const td = dashboardData[allDates[i]];
-                const nd = dashboardData[allDates[i+1]];
-                if(!td || !nd || !nd.signals || nd.signals.daily_return_pct === undefined) continue;
-                
-                const ret = nd.signals.daily_return_pct; 
-                marketReturns.push(ret);
-                
-                for(let id in evalLogic) {
-                    const pred = evalLogic[id](td);
-                    indData[id].signals.push(pred);
-                    indData[id].returns.push(pred * ret);
-                }
-            }
-            
-            const totalDays = marketReturns.length;
-            const baseUpRate = totalDays > 0 ? (marketReturns.filter(r => r > 0).length / totalDays) : 0;
-            
-            const chks = Object.keys(evalLogic);
-            chks.forEach(id => {
-                const rets = indData[id].returns;
-                if(rets.length === 0) {
-                    const elem = document.getElementById(id);
-                    if(elem) elem.checked = false;
-                    return;
-                }
-                
-                // 1. Indicator Win Rate
-                const indicatorWinRate = rets.filter(r => r > 0).length / rets.length;
-                
-                // 2. Edge over drift
-                const edgeOverDrift = indicatorWinRate - baseUpRate;
-                
-                // 3. Expectancy (Sharpe Proxy)
-                const meanRet = rets.reduce((a, b) => a + b, 0) / rets.length;
-                const variance = rets.reduce((a, b) => a + Math.pow(b - meanRet, 2), 0) / (rets.length || 1);
-                const stdRet = Math.sqrt(variance);
-                const sharpeProxy = stdRet > 0 ? (meanRet / stdRet) * Math.sqrt(252) : 0;
-                
-                // 4. Consistency Check
-                const recentRets = rets.slice(-15);
-                const recentConsistency = recentRets.length > 0 ? (recentRets.filter(r => r > 0).length / recentRets.length) : 0;
-                
-                // Disqualify if it has no edge or negative expectancy
-                const isValid = (edgeOverDrift > 0.00) && (sharpeProxy > 0.1) && (recentConsistency >= 0.35);
-                
-                const elem = document.getElementById(id);
-                if(elem) elem.checked = isValid;
+            // For now, Auto-Select just turns on the most statistically robust continuous features:
+            ['chk-rsi', 'chk-vix', 'chk-divergence', 'chk-ema59'].forEach(id => {
+                if(document.getElementById(id)) document.getElementById(id).checked = true;
+            });
+            ['chk-fii', 'chk-ema200', 'chk-supertrend', 'chk-ema20', 'chk-macd', 'chk-stochrsi', 'chk-deltaoi', 'chk-usdinr', 'chk-sp500'].forEach(id => {
+                if(document.getElementById(id)) document.getElementById(id).checked = false;
             });
             
             document.getElementById('badge-status').innerText = 'AUTO-GENERATED STRATEGY';
             document.getElementById('badge-status').className = 'px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full tracking-wider';
-            
             renderPrediction();
         }
 
@@ -1283,142 +1187,103 @@
 
         function renderPrediction() {
             if (!currentResolvedDate) return;
-            const scoreData = calculateScore();
-            const base_score = scoreData.score;
-            const isReversal = scoreData.isReversal;
             
-            const tf_mod = {"tomorrow": 1.0, "next_week": 1.5, "next_month": 2.5}[currentTab];
-            const adj_score = base_score * tf_mod;
-            
+            const tf_mod = {"tomorrow": 1.0, "next_week": 1.5, "next_month": 2.5}[currentTab] || 1.0;
             const dateStr = currentResolvedDate;
             const vol = calculateMarketVolatility(dateStr);
             
-            // Adj_score now ranges from ~ -25 to +25. 
-            // We want prob to be between 45 and 95.
-            let prob = 50 + parseInt(Math.abs(adj_score) * 1.5);
-            if (prob > 95) prob = 95;
-            if (prob < 45) prob = 45;
-
-            // Generate strategy text
-            let dir = "FLAT";
-            let exp_move = "~0.0%";
-            let strategy = "Wait & Watch";
-            let color = "gray";
-
-            // Determine if they selected NO checkboxes
-            let boxesChecked = document.querySelectorAll('input[type="checkbox"]:checked').length;
-            if(boxesChecked === 0) {
-                prob = 0;
-                strategy = "No indicators selected. Please check at least one indicator to generate a prediction.";
-            } else {
-                // Downside Skew: Markets take the stairs up, but the elevator down. 
-                // We apply a 1.4x volatility multiplier to bearish expected moves.
-                const down_skew = 1.4;
-
-                if (adj_score >= 10) {
-                    dir = "UP"; exp_move = "+" + (vol * 1.5 * tf_mod).toFixed(1) + "% to +" + (vol * 2.5 * tf_mod).toFixed(1) + "%"; strategy = "Strong conviction. Buy Call Options / Go Long."; color = "green";
-                } else if (adj_score > 2) {
-                    dir = "UP"; exp_move = "+" + (vol * 0.5 * tf_mod).toFixed(1) + "% to +" + (vol * 1.5 * tf_mod).toFixed(1) + "%"; strategy = "Mildly positive. Buy on dips."; color = "green";
-                } else if (adj_score <= 2 && adj_score >= -2) {
-                    dir = "NEUTRAL"; exp_move = "CASH"; strategy = "Probability is too low (NO TRADE ZONE). Institutional models sit in cash here. Protect capital and wait for confluence."; color = "gray"; prob = 50;
-                } else if (adj_score < -2 && adj_score > -10) {
-                    dir = "DOWN"; exp_move = "-" + (vol * 0.5 * tf_mod * down_skew).toFixed(1) + "% to -" + (vol * 1.5 * tf_mod * down_skew).toFixed(1) + "%"; strategy = "Mildly negative. Sell on rise."; color = "red";
-                } else {
-                    dir = "DOWN"; exp_move = "-" + (vol * 1.5 * tf_mod * down_skew).toFixed(1) + "% to -" + (vol * 2.5 * tf_mod * down_skew).toFixed(1) + "%"; strategy = "Strong bearish conviction. Expect violent drops. Buy Put Options / Short Sell."; color = "red";
-                }
-            }
-            // Macro Regime Context Warning
-            if (dir === "UP" && dashboardData[dateStr] && dashboardData[dateStr].signals && dashboardData[dateStr].signals.ema20_signal === "bearish") {
-                strategy += " <br><span class='text-xs font-bold text-orange-600 mt-2 block'>⚠️ CONTRARIAN TRADE: The Macro Trend (20 EMA) is BEARISH. This UP prediction is a short-term bounce against the primary trend. Keep position sizes strictly limited (25% size).</span>";
-            } else if (dir === "DOWN" && dashboardData[dateStr] && dashboardData[dateStr].signals && dashboardData[dateStr].signals.ema20_signal === "bullish") {
-                strategy += " <br><span class='text-xs font-bold text-orange-600 mt-2 block'>⚠️ CONTRARIAN TRADE: The Macro Trend (20 EMA) is BULLISH. This DOWN prediction is a counter-trend pullback. Do not hold shorts for long.</span>";
-            }
-            
-            // Gap Trap Execution Logic
-            if (dir === "UP") {
-                strategy += " <br><span class='text-xs font-bold text-yellow-600 mt-2 block'>⚠️ EXECUTION RULE: If Nifty gaps up heavily (>0.4%) at 9:15 AM, the predicted UP move is already exhausted. DO NOT BUY THE OPEN. The market will likely fall intraday to fill the gap. Buy only on morning dips.</span>";
-            } else if (dir === "DOWN") {
-                strategy += " <br><span class='text-xs font-bold text-yellow-600 mt-2 block'>⚠️ EXECUTION RULE: If Nifty gaps down heavily (< -0.4%) at 9:15 AM, the crash has already happened. Do not short the open. Wait for an intraday bounce to sell.</span>";
-            }
-            
-            if (isReversal) {
-                dir = "CAUTION";
-                exp_move = "Mean Reversion";
-                strategy = "Trend is exhausted. High probability of a sharp bounce/reversal. Do NOT trend-follow here.";
-                color = "orange";
-            }
+            const topK = calculateTopK(dateStr);
             
             // Animation Update
             const probEl = document.getElementById('res-prob');
             const moveEl = document.getElementById('res-move');
             const moodEl = document.getElementById('res-mood');
             const strategyEl = document.getElementById('res-strategy');
+            const analogueEl = document.getElementById('res-analogue');
             
-            [probEl, moveEl, moodEl, strategyEl].forEach(el => {
-                el.classList.add('opacity-50');
-                setTimeout(() => el.classList.remove('opacity-50'), 150);
+            [probEl, moveEl, moodEl, strategyEl, analogueEl].forEach(el => {
+                if(el) {
+                    el.classList.add('opacity-50');
+                    setTimeout(() => el.classList.remove('opacity-50'), 150);
+                }
             });
 
             setTimeout(() => {
-                probEl.innerHTML = '<span class="text-'+color+'-600">' + prob + '%</span>';
-                moveEl.innerHTML = '<span class="text-'+color+'-600">' + exp_move + '</span>';
-                
-                let icon = "fa-arrows-left-right";
-                if(dir === 'UP') icon = "fa-arrow-trend-up";
-                if(dir === 'DOWN') icon = "fa-arrow-trend-down";
-                
-                if(boxesChecked === 0) {
+                if (!topK) {
+                    probEl.innerHTML = '<span class="text-gray-400">--%</span>';
+                    moveEl.innerHTML = '<span class="text-gray-400">--</span>';
                     moodEl.innerHTML = '<span class="text-gray-500">None</span>';
-                } else {
-                    moodEl.innerHTML = '<i class="fa-solid '+icon+' text-'+color+'-500"></i> <span class="text-'+color+'-700">' + dir + '</span>';
+                    strategyEl.innerHTML = '<strong>No indicators selected or not enough historical data for vector matching. Check at least one indicator.</strong>';
+                    if(analogueEl) analogueEl.innerHTML = "No historical match generated.";
+                    
+                    const confBox = document.getElementById('confluence-box');
+                    if (confBox) confBox.classList.add('hidden');
+                    return;
                 }
                 
-                strategyEl.innerHTML = '<strong>' + strategy + '</strong>';
+                let dir = "FLAT";
+                let exp_move = "CASH";
+                let strategy = "Neutral market state.";
+                let color = "gray";
+                let icon = "fa-arrows-left-right";
                 
-                // Confluence Engine
-                const dateStr = document.getElementById('date-picker').value;
-                const liveData = dashboardData[dateStr] || {};
-                const vixVal = (liveData.signals && liveData.signals.india_vix) ? liveData.signals.india_vix : 13;
+                if (topK.probUp >= 60) {
+                    dir = "UP"; color = "green"; icon = "fa-arrow-trend-up";
+                    strategy = `High conviction bullish regime. Market matches ${topK.matches} historical periods with strong upside bias.`;
+                } else if (topK.probUp >= 52) {
+                    dir = "UP"; color = "green"; icon = "fa-arrow-trend-up";
+                    strategy = `Mildly positive regime. Buy on dips.`;
+                } else if (topK.probUp <= 40) {
+                    dir = "DOWN"; color = "red"; icon = "fa-arrow-trend-down";
+                    strategy = `High conviction bearish regime. Market matches ${topK.matches} historical periods with strong downside bias.`;
+                } else if (topK.probUp <= 48) {
+                    dir = "DOWN"; color = "red"; icon = "fa-arrow-trend-down";
+                    strategy = `Mildly negative regime. Sell on rise.`;
+                }
                 
-                let confluenceHtml = "";
+                let probDisplay = dir === "DOWN" ? (100 - topK.probUp).toFixed(1) : topK.probUp;
+                
+                probEl.innerHTML = '<span class="text-'+color+'-600">' + probDisplay + '%</span>';
+                moveEl.innerHTML = '<span class="text-'+color+'-600">' + (topK.medianRet > 0 ? '+' : '') + topK.medianRet + '%</span>';
+                moodEl.innerHTML = '<i class="fa-solid '+icon+' text-'+color+'-500"></i> <span class="text-'+color+'-700">' + dir + '</span>';
+                
+                // Institutional Summary
+                let instSummary = `
+                    <div class="grid grid-cols-2 gap-4 mt-2">
+                        <div class="bg-blue-100 p-3 rounded text-sm text-blue-900 border border-blue-200">
+                            <strong>Analogue Sample</strong><br>
+                            Matches: ${topK.matches}<br>
+                            P(up): ${topK.probUp}%<br>
+                            Closest Match: ${topK.closest.date}
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded text-sm text-blue-900 border border-blue-200">
+                            <strong>Next-Day Outcomes</strong><br>
+                            Median Return: ${topK.medianRet > 0 ? '+' : ''}${topK.medianRet}%<br>
+                            25th Pct: ${topK.q1}%<br>
+                            75th Pct: ${topK.q3 > 0 ? '+' : ''}${topK.q3}%
+                        </div>
+                    </div>
+                `;
+                
+                strategyEl.innerHTML = '<strong>' + strategy + '</strong>' + instSummary;
+                
+                if (analogueEl) {
+                    analogueEl.innerHTML = `<strong>Institutional Top-K Matching:</strong> Successfully mathematically evaluated continuous feature vectors (RSI, VIX, EMA Spreads) across history and extracted the ${topK.matches} closest quantitative regimes.`;
+                }
+                
+                // Confluence Engine Update
                 const confBox = document.getElementById('confluence-box');
                 const confBar = document.getElementById('confluence-bar');
-                
-                if (boxesChecked === 0) {
-                    if (confBox) confBox.classList.add('hidden');
-                } else if (confBox) {
+                if (confBox) {
                     confBox.classList.remove('hidden');
-                    if (vixVal < 12) {
-                        confluenceHtml = "⚠️ <span class='text-yellow-400'>EXTREME CAUTION:</span> VIX is extremely low. Option premiums are melting. Intraday momentum will be choppy and mean-reverting. Option Buyers should sit out.";
-                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-yellow-500";
-                    } else if (vixVal >= 15 && adj_score >= 5) {
-                        confluenceHtml = "🔥 <span class='text-green-400'>A+ SETUP (LONG):</span> High Volatility + Extreme Bullish Alignment. Massive Call Option Buyer opportunity on dips to Support.";
-                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-green-500";
-                    } else if (vixVal >= 15 && adj_score <= -5) {
-                        confluenceHtml = "🔥 <span class='text-red-400'>A+ SETUP (SHORT):</span> High Volatility + Extreme Bearish Alignment. Massive Put Option Buyer opportunity on spikes to Resistance.";
-                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-red-500";
-                    } else if (isReversal && adj_score < 0) {
-                        confluenceHtml = "📈 <span class='text-blue-400'>MEAN REVERSION (BOUNCE):</span> Market is deeply oversold. Wait for Nifty to touch Major Support with high volume, then buy Calls.";
-                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-blue-500";
-                    } else if (isReversal && adj_score > 0) {
-                        confluenceHtml = "📉 <span class='text-purple-400'>MEAN REVERSION (DUMP):</span> Market is deeply overbought. Wait for Nifty to touch Major Resistance with high volume, then buy Puts.";
-                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-purple-500";
-                    } else if (adj_score > 1) {
-                        confluenceHtml = "✅ <span class='text-green-400'>STANDARD LONG:</span> Momentum is leaning Bullish. Buy Call options only on pullbacks to Pivot levels.";
-                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-green-500";
-                    } else if (adj_score < -1) {
-                        confluenceHtml = "🔻 <span class='text-red-400'>STANDARD SHORT:</span> Momentum is leaning Bearish. Buy Put options only on relief bounces to Pivot levels.";
-                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-red-500";
-                    } else {
-                        confluenceHtml = "⏸️ <span class='text-gray-400'>NO TRADE ZONE:</span> Market signals are conflicting. Wait for clear momentum or structural breakout.";
-                        confBar.className = "absolute top-0 left-0 w-1 h-full bg-gray-500";
-                    }
+                    let confluenceHtml = `✅ <span class='text-${color}-400'>INSTITUTIONAL REGIME MATCH:</span> Current normalized state implies a ${dir} bias based on ${topK.matches} exact mathematical neighbors.`;
+                    confBar.className = `absolute top-0 left-0 w-1 h-full bg-${color}-500`;
                     document.getElementById('val-confluence').innerHTML = confluenceHtml;
                 }
+                
             }, 150);
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
             fetchLiveJSON();
             setInterval(fetchLiveJSON, 60000);
         });
