@@ -899,13 +899,6 @@
             let score = 0;
             let isReversal = false;
             
-            // Macro Trend Bias: The 20 EMA dictates the path of least resistance.
-            // If the market is in a downtrend, we artificially depress the score to prevent buying fake bounces.
-            if(data.signals && data.signals.ema20_signal) {
-                if(data.signals.ema20_signal === 'bearish') score -= 8;
-                if(data.signals.ema20_signal === 'bullish') score += 8;
-            }
-            
             if(document.getElementById('chk-fii').checked) {
                 if(data.fii === 'buying') score += 4;
                 if(data.fii === 'selling') score -= 4;
@@ -1180,6 +1173,13 @@
                     dir = "DOWN"; exp_move = "-" + (vol * 1.5 * tf_mod * down_skew).toFixed(1) + "% to -" + (vol * 2.5 * tf_mod * down_skew).toFixed(1) + "%"; strategy = "Strong bearish conviction. Expect violent drops. Buy Put Options / Short Sell."; color = "red";
                 }
             }
+            // Macro Regime Context Warning
+            if (dir === "UP" && dashboardData[dateStr] && dashboardData[dateStr].signals && dashboardData[dateStr].signals.ema20_signal === "bearish") {
+                strategy += " <br><span class='text-xs font-bold text-orange-600 mt-2 block'>⚠️ CONTRARIAN TRADE: The Macro Trend (20 EMA) is BEARISH. This UP prediction is a short-term bounce against the primary trend. Keep position sizes strictly limited (25% size).</span>";
+            } else if (dir === "DOWN" && dashboardData[dateStr] && dashboardData[dateStr].signals && dashboardData[dateStr].signals.ema20_signal === "bullish") {
+                strategy += " <br><span class='text-xs font-bold text-orange-600 mt-2 block'>⚠️ CONTRARIAN TRADE: The Macro Trend (20 EMA) is BULLISH. This DOWN prediction is a counter-trend pullback. Do not hold shorts for long.</span>";
+            }
+            
             // Gap Trap Execution Logic
             if (dir === "UP") {
                 strategy += " <br><span class='text-xs font-bold text-yellow-600 mt-2 block'>⚠️ EXECUTION RULE: If Nifty gaps up heavily (>0.4%) at 9:15 AM, the predicted UP move is already exhausted. DO NOT BUY THE OPEN. The market will likely fall intraday to fill the gap. Buy only on morning dips.</span>";
