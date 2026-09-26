@@ -718,8 +718,11 @@
                     select.min = uniqueDates[uniqueDates.length - 1];
                     select.max = uniqueDates[0];
                     
-                    // Preserve selected date unless it's empty, invalid, or we're in intraday mode (which forces latest)
-                    if (!oldVal || currentMode === 'intraday' || !uniqueDates.includes(oldVal)) {
+                    // Preserve selected date unless it's empty or invalid
+                    if (!oldVal || !uniqueDates.includes(oldVal)) {
+                        select.value = uniqueDates[0];
+                    } else if (!isSilentRefresh && currentMode === 'intraday') {
+                        // When explicitly clicking the Intraday tab, default to the latest date
                         select.value = uniqueDates[0];
                     } else {
                         select.value = oldVal;
@@ -736,20 +739,13 @@
 
         function loadDateData() {
             let selectedDateStr = document.getElementById('date-picker').value;
-            if (currentMode === 'intraday') {
-                // In live intraday mode, always force the most recent timestamp available
+            if (selectedDateStr) {
                 const allStamps = Object.keys(dashboardData).sort().reverse();
-                selectedDateStr = allStamps.length > 0 ? allStamps[0] : null;
-            } else {
-                // Historical mode: Find the exact timestamp that corresponds to the end of the selected day
-                if (currentTimeframe !== 'daily' && selectedDateStr) {
-                    const allStamps = Object.keys(dashboardData).sort().reverse();
-                    const dayStamps = allStamps.filter(d => d.startsWith(selectedDateStr));
-                    if (dayStamps.length > 0) {
-                        selectedDateStr = dayStamps[0]; // The last candle of that day (since they are sorted reverse chronologically)
-                    } else {
-                        selectedDateStr = null;
-                    }
+                const dayStamps = allStamps.filter(d => d.startsWith(selectedDateStr));
+                if (dayStamps.length > 0) {
+                    selectedDateStr = dayStamps[0]; // Resolves to latest intraday bar on that day
+                } else {
+                    selectedDateStr = null;
                 }
             }
 
@@ -760,9 +756,6 @@
                 errEl.innerText = "Market Closed or No Data Available for this date";
                 errEl.classList.remove('hidden');
                 retEl.classList.add('hidden');
-                document.getElementById('res-tomorrow').innerHTML = "N/A";
-                document.getElementById('res-week').innerHTML = "N/A";
-                document.getElementById('res-month').innerHTML = "N/A";
                 return;
             }
             errEl.classList.add('hidden');
