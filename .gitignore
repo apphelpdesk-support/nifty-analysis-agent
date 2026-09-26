@@ -17,3 +17,5 @@ reports/intraday/*.html
 
 # credentials
 config/kite.ini
+# Environment Variables
+.env
