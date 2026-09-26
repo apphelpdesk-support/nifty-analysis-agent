@@ -1178,6 +1178,13 @@
                 }
             }
             
+            // Gap Trap Execution Logic
+            if (dir === "UP") {
+                strategy += " <br><span class='text-xs font-bold text-yellow-600 mt-2 block'>⚠️ EXECUTION RULE: If Nifty gaps up heavily (>0.4%) at 9:15 AM, the predicted UP move is already exhausted. DO NOT BUY THE OPEN. The market will likely fall intraday to fill the gap. Buy only on morning dips.</span>";
+            } else if (dir === "DOWN") {
+                strategy += " <br><span class='text-xs font-bold text-yellow-600 mt-2 block'>⚠️ EXECUTION RULE: If Nifty gaps down heavily (< -0.4%) at 9:15 AM, the crash has already happened. Do not short the open. Wait for an intraday bounce to sell.</span>";
+            }
+            
             if (isReversal) {
                 dir = "CAUTION";
                 exp_move = "Mean Reversion";
