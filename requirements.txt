@@ -12,3 +12,4 @@ nselib>=2.5.1
 
 pandas_ta
 jugaad-data>=0.2.6
+jugaad-data>=0.35.9
