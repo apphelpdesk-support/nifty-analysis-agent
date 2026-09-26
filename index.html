@@ -685,7 +685,7 @@
             }
         }
 
-        async function fetchLiveJSON() {
+        async function fetchLiveJSON(isSilentRefresh = false) {
             try {
                 let jsonFile = 'dashboard_data.json'; // Default daily fallback
                 
@@ -712,7 +712,6 @@
                     // Extract unique dates for the date picker (YYYY-MM-DD)
                     const uniqueDates = [...new Set(dates.map(d => d.split('T')[0]))];
                     
-                    const select = document.getElementById('date-picker');
                     const oldVal = select.value;
                     
                     select.min = uniqueDates[uniqueDates.length - 1];
@@ -1345,7 +1344,7 @@
         }
 window.addEventListener('DOMContentLoaded', () => {
             fetchLiveJSON();
-            setInterval(fetchLiveJSON, 60000);
+            setInterval(() => fetchLiveJSON(true), 60000);
         });
     
         function runPatternScanner() {
