@@ -263,9 +263,9 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
     <header class="bg-white shadow-sm sticky top-0 z-10">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="bg-brand-500 text-white p-2 rounded-lg">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <div class="bg-brand-500 text-white p-2 rounded-lg shrink-0">
                     <i class="fa-solid fa-flask text-xl"></i>
                 </div>
                 <div>
@@ -274,7 +274,7 @@
                 </div>
             </div>
             
-            <div class="flex items-center gap-4">
+            <div class="flex flex-wrap items-center gap-2 md:gap-4 w-full md:w-auto">
                 <select id="instrument-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block p-2 font-bold" onchange="changeInstrument(this.value)">
                     <option value="nifty">NIFTY 50</option>
                     <option value="banknifty">BANK NIFTY</option>
@@ -476,7 +476,7 @@
                 </div>
                 
                 <!-- BTST Sub-tabs (Only visible in Historical mode) -->
-                <div id="historical-subtabs" class="hidden flex gap-2 mb-6">
+                <div id="historical-subtabs" class="hidden flex flex-wrap gap-2 mb-6">
                     <button class="px-3 py-1 text-sm rounded-full bg-brand-100 text-brand-700 font-bold" id="subtab-tomorrow" onclick="selectTab('tomorrow')">Tomorrow</button>
                     <button class="px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200" id="subtab-next_week" onclick="selectTab('next_week')">Next Week</button>
                     <button class="px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200" id="subtab-next_month" onclick="selectTab('next_month')">Next Month</button>
