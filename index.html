@@ -713,9 +713,18 @@
                     const uniqueDates = [...new Set(dates.map(d => d.split('T')[0]))];
                     
                     const select = document.getElementById('date-picker');
-                    select.value = uniqueDates[0];
+                    const oldVal = select.value;
+                    
                     select.min = uniqueDates[uniqueDates.length - 1];
                     select.max = uniqueDates[0];
+                    
+                    // Preserve selected date unless it's empty, invalid, or we're in intraday mode (which forces latest)
+                    if (!oldVal || currentMode === 'intraday' || !uniqueDates.includes(oldVal)) {
+                        select.value = uniqueDates[0];
+                    } else {
+                        select.value = oldVal;
+                    }
+                    
                     loadDateData();
                 }
             } catch(e) {
