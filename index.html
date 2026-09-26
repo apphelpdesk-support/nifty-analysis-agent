@@ -305,7 +305,7 @@
                             <div class="font-bold text-sm text-blue-900">Auto-Select (Walk-Forward Backtest)</div>
                             <div class="text-[11px] text-blue-700 mt-1">Evaluates the last 60 days to auto-select indicators with the highest predictive edge.</div>
                         </div>
-                        <input type="checkbox" id="chk-autoselect" class="w-4 h-4 text-brand-600 rounded" onchange="runAutoSelect()">
+                        <input type="checkbox" id="chk-autoselect" class="w-4 h-4 text-brand-600 rounded" checked onchange="runAutoSelect()">
                     </label>
                 </div>
 
@@ -366,7 +366,7 @@
                     
                     <!-- Fast EMA 5/9 -->
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" id="chk-ema59" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="handleManualToggle()">
+                        <input type="checkbox" id="chk-ema59" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
                         <div class="flex-1">
                             <div class="font-bold text-sm text-indigo-700 group relative">
                                 Intraday Edge: 5/9 EMA
@@ -382,7 +382,7 @@
 
                     <!-- StochRSI -->
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" id="chk-stochrsi" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="handleManualToggle()">
+                        <input type="checkbox" id="chk-stochrsi" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
                         <div class="flex-1">
                             <div class="font-bold text-sm text-indigo-700">Intraday Edge: StochRSI</div>
                             <div class="text-xs text-gray-500 mt-1" id="val-stochrsi">Loading...</div>
@@ -391,7 +391,7 @@
 
                     <!-- Delta OI -->
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" id="chk-deltaoi" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="handleManualToggle()">
+                        <input type="checkbox" id="chk-deltaoi" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
                         <div class="flex-1">
                             <div class="font-bold text-sm text-indigo-700">Intraday Edge: Delta OI</div>
                             <div class="text-xs text-gray-500 mt-1" id="val-deltaoi">Loading...</div>
