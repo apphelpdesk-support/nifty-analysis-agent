@@ -415,6 +415,24 @@
                             <div class="text-xs text-gray-500 mt-1" id="val-usdinr">Loading...</div>
                         </div>
                     </label>
+
+                    <!-- S&P 500 Cues -->
+                    <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                        <input type="checkbox" id="chk-sp500" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-purple-700">Institutional: S&P 500 Overnight Cues</div>
+                            <div class="text-xs text-gray-500 mt-1" id="val-sp500">Loading...</div>
+                        </div>
+                    </label>
+
+                    <!-- Intermarket Divergence -->
+                    <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                        <input type="checkbox" id="chk-divergence" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-purple-700">Institutional: Bank Nifty Divergence</div>
+                            <div class="text-xs text-gray-500 mt-1" id="val-divergence">Loading...</div>
+                        </div>
+                    </label>
                 </div>
             </div>
         </div>
@@ -693,6 +711,34 @@
                     document.getElementById('val-usdinr').innerHTML = '<span class="text-gray-400">N/A</span>';
                 }
                 
+                // SP500 and Divergence
+                if (data.signals.sp500_cue) {
+                    const sc = data.signals.sp500_cue;
+                    const pct = data.signals.sp500_return_pct;
+                    if (sc === 'bullish') {
+                        document.getElementById('val-sp500').innerHTML = `<span class="text-green-600 font-bold">Bullish (${pct > 0 ? '+':''}${pct}%)</span>`;
+                    } else if (sc === 'bearish') {
+                        document.getElementById('val-sp500').innerHTML = `<span class="text-red-600 font-bold">Bearish (${pct}%)</span>`;
+                    } else {
+                        document.getElementById('val-sp500').innerHTML = `<span class="text-gray-500">Neutral (${pct}%)</span>`;
+                    }
+                } else {
+                    document.getElementById('val-sp500').innerHTML = '<span class="text-gray-400">N/A</span>';
+                }
+                
+                if (data.signals.intermarket_divergence) {
+                    const div = data.signals.intermarket_divergence;
+                    if (div === 'bullish_divergence') {
+                        document.getElementById('val-divergence').innerHTML = '<span class="text-green-600 font-bold">Bullish Divergence (Bank Nifty Resilient)</span>';
+                    } else if (div === 'bearish_divergence') {
+                        document.getElementById('val-divergence').innerHTML = '<span class="text-red-600 font-bold">Bearish Divergence (Bank Nifty Weakness)</span>';
+                    } else {
+                        document.getElementById('val-divergence').innerHTML = '<span class="text-gray-500">Aligned (No Divergence)</span>';
+                    }
+                } else {
+                    document.getElementById('val-divergence').innerHTML = '<span class="text-gray-400">N/A</span>';
+                }
+                
                 // Breakout Guide
                 if (data.signals) {
                     const oi = data.signals.options_momentum;
@@ -891,6 +937,14 @@
                     if(data.signals.usdinr_trend === 'bullish_for_nifty') score += 3;
                     else if(data.signals.usdinr_trend === 'bearish_for_nifty') score -= 3;
                 }
+                if(document.getElementById('chk-sp500') && document.getElementById('chk-sp500').checked) {
+                    if(data.signals.sp500_cue === 'bullish') score += 4;
+                    else if(data.signals.sp500_cue === 'bearish') score -= 4;
+                }
+                if(document.getElementById('chk-divergence') && document.getElementById('chk-divergence').checked) {
+                    if(data.signals.intermarket_divergence === 'bullish_divergence') score += 3;
+                    else if(data.signals.intermarket_divergence === 'bearish_divergence') score -= 3;
+                }
                 if(document.getElementById('chk-ema200').checked) {
                     if(data.signals.ema200_signal === 'bullish') score += 3;
                     else score -= 3;
@@ -977,6 +1031,16 @@
                     if(!d.signals) return 0;
                     const u = d.signals.usdinr_trend;
                     return u === 'bullish_for_nifty' ? 1 : (u === 'bearish_for_nifty' ? -1 : 0);
+                },
+                'chk-sp500': (d) => {
+                    if(!d.signals) return 0;
+                    const c = d.signals.sp500_cue;
+                    return c === 'bullish' ? 1 : (c === 'bearish' ? -1 : 0);
+                },
+                'chk-divergence': (d) => {
+                    if(!d.signals) return 0;
+                    const v = d.signals.intermarket_divergence;
+                    return v === 'bullish_divergence' ? 1 : (v === 'bearish_divergence' ? -1 : 0);
                 }
             };
             

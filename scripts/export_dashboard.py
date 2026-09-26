@@ -33,6 +33,14 @@ def main():
         usdinr = yf.Ticker("INR=X")
         inr_history = usdinr.history(period="10y")
         df["USDINR"] = inr_history["Close"]
+        
+        sp500 = yf.Ticker("^GSPC")
+        sp500_history = sp500.history(period="10y")
+        df["SP500"] = sp500_history["Close"]
+        
+        bank_nifty = yf.Ticker("^NSEBANK")
+        bank_history = bank_nifty.history(period="10y")
+        df["BANK_NIFTY"] = bank_history["Close"]
     except Exception as e:
         print("Failed to fetch institutional data:", e)
 
@@ -77,6 +85,17 @@ def main():
         
     if "VIX" not in df.columns:
         df["VIX"] = 15.0
+        
+    if "SP500" in df.columns:
+        # Note: SP500 close yesterday provides the overnight cue for today's Nifty open
+        df["SP500_Return"] = df["SP500"].pct_change().shift(1)
+    else:
+        df["SP500_Return"] = 0.0
+        
+    if "BANK_NIFTY" in df.columns:
+        df["BANK_NIFTY_Return"] = df["BANK_NIFTY"].pct_change()
+    else:
+        df["BANK_NIFTY_Return"] = 0.0
     
     df.ta.ema(length=20, append=True)
     df.ta.ema(length=200, append=True)
@@ -230,6 +249,21 @@ def main():
         
         usdinr_ret = float(row.get("USDINR_Return", 0.0))
         if math.isnan(usdinr_ret): usdinr_ret = 0.0
+        
+        sp500_ret = float(row.get("SP500_Return", 0.0))
+        if math.isnan(sp500_ret): sp500_ret = 0.0
+        
+        bank_nifty_ret = float(row.get("BANK_NIFTY_Return", 0.0))
+        if math.isnan(bank_nifty_ret): bank_nifty_ret = 0.0
+        nifty_ret = float(row.get("Return", 0.0))
+        if math.isnan(nifty_ret): nifty_ret = 0.0
+        
+        intermarket_div = "neutral"
+        if nifty_ret > 0 and bank_nifty_ret < 0:
+            intermarket_div = "bearish_divergence"
+        elif nifty_ret < 0 and bank_nifty_ret > 0:
+            intermarket_div = "bullish_divergence"
+
 
         # For historical dates, we don't have historical option chain, so we apply the live one (or None).
         # A more advanced script would only use this for the latest day.
@@ -255,6 +289,9 @@ def main():
         "india_vix": round(vix_val, 2),
         "vix_regime": "high_vol" if vix_val > 15 else "low_vol",
         "usdinr_trend": "bearish_for_nifty" if usdinr_ret > 0.002 else ("bullish_for_nifty" if usdinr_ret < -0.002 else "neutral"),
+        "sp500_return_pct": round(sp500_ret * 100, 2),
+        "sp500_cue": "bullish" if sp500_ret > 0.003 else ("bearish" if sp500_ret < -0.003 else "neutral"),
+        "intermarket_divergence": intermarket_div,
 
         
             "ema20_signal": "bullish" if close > ema20 else "bearish",
