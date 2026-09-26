@@ -397,6 +397,24 @@
                             <div class="text-xs text-gray-500 mt-1" id="val-deltaoi">Loading...</div>
                         </div>
                     </label>
+
+                    <!-- India VIX -->
+                    <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                        <input type="checkbox" id="chk-vix" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-purple-700">Institutional: VIX Regime</div>
+                            <div class="text-xs text-gray-500 mt-1" id="val-vix">Loading...</div>
+                        </div>
+                    </label>
+
+                    <!-- USDINR -->
+                    <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                        <input type="checkbox" id="chk-usdinr" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
+                        <div class="flex-1">
+                            <div class="font-bold text-sm text-purple-700">Institutional: USDINR Trend</div>
+                            <div class="text-xs text-gray-500 mt-1" id="val-usdinr">Loading...</div>
+                        </div>
+                    </label>
                 </div>
             </div>
         </div>
@@ -653,6 +671,28 @@
                     document.getElementById('val-deltaoi').innerHTML = '<span class="text-gray-400">N/A</span>';
                 }
                 
+                // VIX and USDINR
+                if (data.signals.india_vix !== undefined) {
+                    const vx = data.signals.india_vix;
+                    const vr = data.signals.vix_regime;
+                    document.getElementById('val-vix').innerHTML = `${vx} <span class="font-bold text-${vr==='low_vol'?'green':'red'}-600">(${vr === 'low_vol' ? 'Low Volatility/Complacent' : 'High Volatility'})</span>`;
+                } else {
+                    document.getElementById('val-vix').innerHTML = '<span class="text-gray-400">N/A</span>';
+                }
+                
+                if (data.signals.usdinr_trend) {
+                    const ut = data.signals.usdinr_trend;
+                    if (ut === 'bullish_for_nifty') {
+                        document.getElementById('val-usdinr').innerHTML = '<span class="text-green-600 font-bold">Bullish for Equities (INR Strength)</span>';
+                    } else if (ut === 'bearish_for_nifty') {
+                        document.getElementById('val-usdinr').innerHTML = '<span class="text-red-600 font-bold">Bearish for Equities (USD Strength)</span>';
+                    } else {
+                        document.getElementById('val-usdinr').innerHTML = '<span class="text-gray-500">Neutral</span>';
+                    }
+                } else {
+                    document.getElementById('val-usdinr').innerHTML = '<span class="text-gray-400">N/A</span>';
+                }
+                
                 // Breakout Guide
                 if (data.signals) {
                     const oi = data.signals.options_momentum;
@@ -843,6 +883,14 @@
                     if(data.signals.options_momentum === 'bullish') score += 5;
                     else if(data.signals.options_momentum === 'bearish') score -= 5;
                 }
+                if(document.getElementById('chk-vix') && document.getElementById('chk-vix').checked) {
+                    if(data.signals.vix_regime === 'low_vol') score += 3;
+                    else score -= 3;
+                }
+                if(document.getElementById('chk-usdinr') && document.getElementById('chk-usdinr').checked) {
+                    if(data.signals.usdinr_trend === 'bullish_for_nifty') score += 3;
+                    else if(data.signals.usdinr_trend === 'bearish_for_nifty') score -= 3;
+                }
                 if(document.getElementById('chk-ema200').checked) {
                     if(data.signals.ema200_signal === 'bullish') score += 3;
                     else score -= 3;
@@ -920,6 +968,15 @@
                     if(!d.signals) return 0;
                     const m = d.signals.options_momentum;
                     return m === 'bullish' ? 1 : (m === 'bearish' ? -1 : 0);
+                },
+                'chk-vix': (d) => {
+                    if(!d.signals) return 0;
+                    return d.signals.vix_regime === 'low_vol' ? 1 : -1;
+                },
+                'chk-usdinr': (d) => {
+                    if(!d.signals) return 0;
+                    const u = d.signals.usdinr_trend;
+                    return u === 'bullish_for_nifty' ? 1 : (u === 'bearish_for_nifty' ? -1 : 0);
                 }
             };
             

@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 import pandas as pd
 import pandas_ta as ta
@@ -19,22 +19,22 @@ def main():
     data_file = "dashboard_data.json"
     data = {}
     
-    # Fetch India VIX
-    vix_value = None
-    try:
-        import yfinance as yf
-        import pandas as pd
-        vix_df = yf.download("^INDIAVIX", period="1d")
-        if not vix_df.empty:
-            if isinstance(vix_df.columns, pd.MultiIndex):
-                vix_value = round(float(vix_df["Close"]["^INDIAVIX"].iloc[-1]), 2)
-            else:
-                vix_value = round(float(vix_df["Close"].iloc[-1]), 2)
-    except Exception as e:
-        print("Failed to fetch VIX:", e)
+    # Note: We will fetch full history below for VIX and USDINR.
 
     nifty = yf.Ticker("^NSEI")
     df = nifty.history(period="10y")
+    
+    # Fetch Institutional Data (VIX & USDINR)
+    try:
+        vix = yf.Ticker("^INDIAVIX")
+        vix_history = vix.history(period="10y")
+        df["VIX"] = vix_history["Close"]
+        
+        usdinr = yf.Ticker("INR=X")
+        inr_history = usdinr.history(period="10y")
+        df["USDINR"] = inr_history["Close"]
+    except Exception as e:
+        print("Failed to fetch institutional data:", e)
 
     # --- NEW: Fetch missing recent dates using jugaad-data (more reliable) ---
     try:
@@ -68,6 +68,15 @@ def main():
 
 
     df["Return"] = df["Close"].pct_change()
+    
+    if "USDINR" in df.columns:
+        df["USDINR_Return"] = df["USDINR"].pct_change()
+    else:
+        df["USDINR"] = 80.0
+        df["USDINR_Return"] = 0.0
+        
+    if "VIX" not in df.columns:
+        df["VIX"] = 15.0
     
     df.ta.ema(length=20, append=True)
     df.ta.ema(length=200, append=True)
@@ -119,6 +128,7 @@ def main():
     global_options_support = None
     global_options_resistance = None
     global_options_max_pain = None
+    global_options_momentum = None
     try:
         from jugaad_data.nse import NSELive
         n = NSELive()
@@ -214,11 +224,13 @@ def main():
 
         
         if math.isnan(low_val): low_val = close
+        
+        vix_val = float(row.get("VIX", 15.0))
+        if math.isnan(vix_val): vix_val = 15.0
+        
+        usdinr_ret = float(row.get("USDINR_Return", 0.0))
+        if math.isnan(usdinr_ret): usdinr_ret = 0.0
 
-        
-        
-
-        
         # For historical dates, we don't have historical option chain, so we apply the live one (or None).
         # A more advanced script would only use this for the latest day.
         options_support = global_options_support if date_obj == trading_days[-1] else None
@@ -240,6 +252,9 @@ def main():
         "options_resistance": options_resistance,
         "options_max_pain": options_max_pain,
         "options_momentum": options_momentum,
+        "india_vix": round(vix_val, 2),
+        "vix_regime": "high_vol" if vix_val > 15 else "low_vol",
+        "usdinr_trend": "bearish_for_nifty" if usdinr_ret > 0.002 else ("bullish_for_nifty" if usdinr_ret < -0.002 else "neutral"),
 
         
             "ema20_signal": "bullish" if close > ema20 else "bearish",
@@ -301,11 +316,7 @@ def main():
             except:
                 pass
 
-        
-        if vix_value is not None and date_str == df.index[-1].strftime('%Y-%m-%d'):
-            if signals is not None:
-                signals["india_vix"] = vix_value
-                
+        # Legacy VIX block removed as it is handled historically now
         data[date_str] = {
             "fii": fii,
             "fii_value": fii_value,
