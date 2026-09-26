@@ -1174,6 +1174,15 @@
                 }
             }
             
+            // Macro Regime Filter (The Dead-Cat Bounce Protector)
+            if (dir === "UP" && dashboardData[dateStr] && dashboardData[dateStr].signals && dashboardData[dateStr].signals.ema20_signal === "bearish") {
+                dir = "CAUTION";
+                exp_move = "Bear Flag / Bounce";
+                strategy = "⚠️ MACRO DOWNTREND DETECTED: Price is below the 20-Day EMA. Although intraday indicators are bullish today, this is highly likely a 'Dead-Cat Bounce' before a heavy selloff. DO NOT BUY. Fade the rally or stay in cash.";
+                color = "orange";
+                prob = 50; // Force neutral probability
+            }
+            
             // Gap Trap Execution Logic
             if (dir === "UP") {
                 strategy += " <br><span class='text-xs font-bold text-yellow-600 mt-2 block'>⚠️ EXECUTION RULE: If Nifty gaps up heavily (>0.4%) at 9:15 AM, the predicted UP move is already exhausted. DO NOT BUY THE OPEN. The market will likely fall intraday to fill the gap. Buy only on morning dips.</span>";
