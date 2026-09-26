@@ -48,6 +48,24 @@ def realized_vol(close: pd.Series, window: int, annualize: bool = True) -> pd.Se
     return vol * 100.0
 
 
+def adx(df: pd.DataFrame, period: int = 14) -> pd.Series:
+    prev_close = df["close"].shift(1)
+    tr = pd.concat([df["high"] - df["low"], (df["high"] - prev_close).abs(), (df["low"] - prev_close).abs()], axis=1).max(axis=1)
+    
+    up_move = df["high"] - df["high"].shift(1)
+    down_move = df["low"].shift(1) - df["low"]
+    
+    plus_dm = np.where((up_move > down_move) & (up_move > 0), up_move, 0.0)
+    minus_dm = np.where((down_move > up_move) & (down_move > 0), down_move, 0.0)
+    
+    atr_ = tr.ewm(alpha=1.0/period, adjust=False, min_periods=period).mean()
+    plus_di = 100 * pd.Series(plus_dm, index=df.index).ewm(alpha=1.0/period, adjust=False, min_periods=period).mean() / atr_
+    minus_di = 100 * pd.Series(minus_dm, index=df.index).ewm(alpha=1.0/period, adjust=False, min_periods=period).mean() / atr_
+    
+    dx = 100 * (plus_di - minus_di).abs() / (plus_di + minus_di)
+    return dx.ewm(alpha=1.0/period, adjust=False, min_periods=period).mean()
+
+
 def add_indicators(df: pd.DataFrame, cfg: dict) -> pd.DataFrame:
     """Add indicator columns to a clean OHLCV frame (lowercase cols)."""
     out = df.copy()
@@ -70,6 +88,7 @@ def add_indicators(df: pd.DataFrame, cfg: dict) -> pd.DataFrame:
     out["range_pct"] = (high - low) / close * 100.0
     out["vol_10d"] = realized_vol(close, 10)
     out["vol_20d"] = realized_vol(close, 20)
+    out["adx_14"] = adx(out, 14)
     for w in ind["return_windows"]:
         out[f"ret_{w}d"] = close.pct_change(w) * 100.0
     return out

@@ -143,10 +143,10 @@ with st.sidebar:
     all_features = settings["analogues"]["features"]
     if sel_mode == "Manual":
         active_features = st.multiselect("Active features", all_features, default=all_features)
-        backtest_days = 60
+        backtest_days = 90
         top_n = 5
     else:
-        backtest_days = st.slider("Backtest lookback (days)", 10, 120, 60, 10)
+        backtest_days = st.slider("Backtest lookback (days)", 30, 150, 90, 10)
         top_n = st.slider("Top N features to select", 1, len(all_features), 5, 1)
         active_features = []
 
@@ -185,7 +185,7 @@ if sel_mode == "Auto-select (Walk-forward)":
         st.success("Auto-selection complete!")
         st.write("**Selected Indicators:**")
         for f in best_feats:
-            st.write(f"- {f} (Win-rate: {scores[f]:.1%})")
+            st.write(f"- {f} (Edge: {scores[f]*100:.1f}%)")
 
 if not active_features:
     active_features = avail_features[:5]

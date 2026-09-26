@@ -175,36 +175,75 @@ def auto_select_features(
     target_pos: int,
     k: int,
     standardize_lookback: int,
-    backtest_days: int = 60,
+    backtest_days: int = 90,
     top_n: int = 5,
 ) -> tuple:
     """
-    Evaluates individual features over the last `backtest_days` to determine which ones
-    yield the highest win-rate (accuracy of prob_up predicting nxt_ret direction).
-    Returns the top N feature names and their accuracy scores.
+    Evaluates individual features using robust quantitative scoring:
+    1. Regime Tagging (ADX) to filter candidate features.
+    2. Out-of-Sample Validation (Train/Val split).
+    3. Information Coefficient (Edge over Base Rate).
+    4. Expectancy (Risk-Adjusted Return).
+    Returns the top N feature names and their validation edge scores.
     """
-    scores = {}
-    for f in available_features:
+    current_adx = float(frame["adx_14"].iloc[target_pos]) if "adx_14" in frame.columns else 22.0
+    
+    trend_features = {"dist_sma20", "dist_sma50", "dist_sma200", "macd_hist_pct", "ret_20d", "ret_5d"}
+    range_features = {"rsi_14", "range_pct", "atr_pct", "vol_20d", "gap_pct", "ret_1d"}
+    
+    allowed_features = available_features.copy()
+    if current_adx > 25:
+        allowed_features = [f for f in allowed_features if f in trend_features or f not in range_features]
+    elif current_adx < 20:
+        allowed_features = [f for f in allowed_features if f in range_features or f not in trend_features]
+
+    train_start = max(1, target_pos - backtest_days)
+    val_start = target_pos - (backtest_days // 3)
+    
+    def evaluate_window(f, start, end):
+        if end <= start:
+            return 0.0, 0.0
         correct = 0
-        valid_days = 0
-        
-        for pos in range(max(1, target_pos - backtest_days), target_pos):
-            idx, dist = find_analogues(frame, z, [f], weights, pos, k, standardize_lookback)
+        valid = 0
+        strat_returns = []
+        for pos in range(start, end):
+            idx, _ = find_analogues(frame, z, [f], weights, pos, k, standardize_lookback)
             if not idx:
                 continue
             
-            cohort_ret = frame["nxt_ret"].iloc[idx]
-            prob_up = (cohort_ret > 0).mean()
-            predicted_up = prob_up > 0.5
-            actual_up = frame["nxt_ret"].iloc[pos] > 0
+            prob_up = (frame["nxt_ret"].iloc[idx] > 0).mean()
+            pred_up = prob_up > 0.5
+            actual_ret = frame["nxt_ret"].iloc[pos]
+            actual_up = actual_ret > 0
             
-            if predicted_up == actual_up:
+            if pred_up == actual_up:
                 correct += 1
-            valid_days += 1
+            valid += 1
             
-        acc = correct / valid_days if valid_days > 0 else 0.0
-        scores[f] = acc
+            trade_ret = actual_ret if pred_up else -actual_ret
+            strat_returns.append(trade_ret)
+            
+        acc = correct / valid if valid > 0 else 0.0
+        base_rate = (frame["nxt_ret"].iloc[start:end] > 0).mean()
+        edge = acc - base_rate
+        exp = float(np.mean(strat_returns)) if strat_returns else 0.0
+        return edge, exp
+
+    scores = {}
+    for f in allowed_features:
+        t_edge, t_exp = evaluate_window(f, train_start, val_start)
+        v_edge, v_exp = evaluate_window(f, val_start, target_pos)
         
+        # Only select if it showed positive edge and expectancy in BOTH windows
+        if t_edge > 0.0 and t_exp > 0.0 and v_edge > 0.0 and v_exp > 0.0:
+            scores[f] = (t_edge + v_edge) / 2.0
+            
+    # Fallback if strict validation eliminates all features:
+    if not scores:
+        for f in allowed_features:
+            _, t_exp = evaluate_window(f, train_start, target_pos)
+            scores[f] = t_exp
+            
     ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-    best_features = [f for f, acc in ranked[:top_n]]
+    best_features = [f for f, score in ranked[:top_n]]
     return best_features, scores
