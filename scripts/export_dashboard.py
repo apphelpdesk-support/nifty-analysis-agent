@@ -415,91 +415,155 @@ def process_symbol(symbol_name, db_filename):
         }
         
     if symbol_name == "nifty":
-        print("Running Walk-Forward Optimizer to find current best features...")
+        # Replace WFO block in export_dashboard.py
+        print("Running Phase 3B Walk-Forward Optimizer to find current best features...")
         try:
             import itertools
             df_wfo = df.copy()
             df_wfo.dropna(subset=['z_rsi', 'z_stochrsi', 'z_ema_diff', 'z_price_ema', 'z_atr', 'z_vol'], inplace=True)
             
-            # Note: We only optimize over the most mathematically robust continuous features
             available_features = ['z_rsi', 'z_stochrsi', 'z_ema_diff', 'z_price_ema', 'z_atr', 'z_vol']
             feature_matrix = df_wfo[available_features].values
             returns_wfo = df_wfo['Return'].values
             
             n_days = len(feature_matrix)
-            eval_window = 30
+            eval_window = 60 # 30 for Val, 30 for OOS
             print(f"WFO n_days after dropna: {n_days}")
             
             if n_days > 252 + eval_window:
                 test_combs = []
-                for r in range(3, 5):
+                for r in range(2, 6): # Min 2, max 5 features
                     test_combs.extend(list(itertools.combinations(range(len(available_features)), r)))
                 
-                best_edge = -999
-                best_comb = None
-                
-                for comb in test_combs:
-                    win_count = 0
-                    total_trades = 0
-                    cumulative_ret = 0
-                    
+                # Precompute all predictions for the last 60 days to make rolling OOS instant
+                predictions = {c_idx: {} for c_idx in range(len(test_combs))}
+                for c_idx, comb in enumerate(test_combs):
                     mat = feature_matrix[:, comb]
-                    
                     for i in range(n_days - eval_window - 1, n_days - 1):
                         target_vec = mat[i]
                         search_mat = mat[:i-5]
                         if len(search_mat) < 50: continue
-                        
+                            
                         diffs = search_mat - target_vec
                         dists = np.sum(diffs**2, axis=1)
-                        
-                        if len(dists) > 50:
-                            top_50_idx = np.argpartition(dists, 50)[:50]
-                        else:
-                            top_50_idx = np.arange(len(dists))
+                        top_n = min(50, len(dists))
+                        top_idx = np.argpartition(dists, top_n)[:top_n]
                             
-                        next_rets = returns_wfo[top_50_idx + 1]
+                        next_rets = returns_wfo[top_idx + 1]
                         up_count = np.sum(next_rets > 0)
-                        prob_up = (up_count / 50) * 100
-                        
+                        prob_up = (up_count / top_n) * 100
                         actual_next_ret = returns_wfo[i + 1]
-                        
+                        predictions[c_idx][i] = (prob_up, actual_next_ret)
+        
+                def calc_edge(c_idx, start_i, end_i):
+                    win_count, total_trades, cumulative_ret = 0, 0, 0
+                    for i in range(start_i, end_i):
+                        if i not in predictions[c_idx]: continue
+                        prob_up, actual_ret = predictions[c_idx][i]
                         if prob_up >= 55:
                             total_trades += 1
-                            if actual_next_ret > 0: win_count += 1
-                            cumulative_ret += actual_next_ret
+                            if actual_ret > 0: win_count += 1
+                            cumulative_ret += actual_ret
                         elif prob_up <= 45:
                             total_trades += 1
-                            if actual_next_ret < 0: win_count += 1
-                            cumulative_ret -= actual_next_ret
+                            if actual_ret < 0: win_count += 1
+                            cumulative_ret -= actual_ret
                             
-                    if total_trades >= 5:
-                        win_rate = win_count / total_trades
-                        edge = cumulative_ret * win_rate
-                        if edge > best_edge:
-                            best_edge = edge
-                            best_comb = [available_features[idx] for idx in comb]
+                    if total_trades < 5: return -999, 0, 0, 0
+                    win_rate = win_count / total_trades
+                    avg_ret = cumulative_ret / total_trades
+                    edge = cumulative_ret * win_rate
+                    # Complexity Penalty: 0.1% per feature
+                    adj_edge = edge - (len(test_combs[c_idx]) * 0.001)
+                    return adj_edge, total_trades, win_rate, avg_ret
+        
+                oos_start = n_days - 30 - 1
+                oos_end = n_days - 1
+                
+                oos_trades, oos_wins, oos_cum_ret = 0, 0, 0
+                selected_combs_freq = {c_idx: 0 for c_idx in range(len(test_combs))}
+                
+                # Rolling OOS Loop
+                for today_i in range(oos_start, oos_end):
+                    val_start = today_i - 30
+                    val_end = today_i
+                    
+                    best_val_edge, best_c_idx = -999, None
+                    for c_idx in range(len(test_combs)):
+                        adj_edge, _, _, _ = calc_edge(c_idx, val_start, val_end)
+                        if adj_edge > best_val_edge:
+                            best_val_edge = adj_edge
+                            best_c_idx = c_idx
                             
-                # Map z_names to UI checkboxes
+                    if best_c_idx is not None and best_val_edge > 0:
+                        selected_combs_freq[best_c_idx] += 1
+                        prob_up, actual_ret = predictions[best_c_idx].get(today_i, (50, 0))
+                        if prob_up >= 55:
+                            oos_trades += 1
+                            if actual_ret > 0: oos_wins += 1
+                            oos_cum_ret += actual_ret
+                        elif prob_up <= 45:
+                            oos_trades += 1
+                            if actual_ret < 0: oos_wins += 1
+                            oos_cum_ret -= actual_ret
+        
+                oos_win_rate = (oos_wins / oos_trades) if oos_trades > 0 else 0
+                oos_avg_ret = (oos_cum_ret / oos_trades) if oos_trades > 0 else 0
+                oos_edge = oos_avg_ret * oos_win_rate * oos_trades # Total Edge
+        
+                # Final Model Selection for Tomorrow
+                best_final_edge, best_final_c_idx, best_final_stats = -999, None, None
+                for c_idx in range(len(test_combs)):
+                    adj_edge, t, wr, ar = calc_edge(c_idx, oos_start, oos_end) # Val is the OOS period
+                    if adj_edge > best_final_edge:
+                        best_final_edge = adj_edge
+                        best_final_c_idx = c_idx
+                        best_final_stats = (t, wr, ar)
+                
                 ui_mapping = {
-                    'z_rsi': 'chk-rsi',
-                    'z_stochrsi': 'chk-stochrsi',
-                    'z_ema_diff': 'chk-ema59',
-                    'z_price_ema': 'chk-ema20',
-                    'z_vol': 'chk-deltaoi', # Proxy
-                    'z_vix': 'chk-vix',
-                    'z_bn_rel': 'chk-divergence'
+                    'z_rsi': 'chk-rsi', 'z_stochrsi': 'chk-stochrsi',
+                    'z_ema_diff': 'chk-ema59', 'z_price_ema': 'chk-ema20',
+                    'z_vol': 'chk-deltaoi', 'z_vix': 'chk-vix', 'z_bn_rel': 'chk-divergence'
                 }
                 
-                if best_comb:
+                stability = {}
+                feature_freq = {f: 0 for f in available_features}
+                for c_idx, count in selected_combs_freq.items():
+                    if count > 0:
+                        for f_idx in test_combs[c_idx]:
+                            feature_freq[available_features[f_idx]] += count
+                for f, freq in feature_freq.items():
+                    stability[ui_mapping.get(f, f)] = round((freq / 30) * 100, 1)
+        
+                if best_final_c_idx is not None and best_final_edge > 0 and oos_edge > 0:
+                    best_comb = [available_features[idx] for idx in test_combs[best_final_c_idx]]
                     ui_boxes = [ui_mapping[f] for f in best_comb if f in ui_mapping]
+                    
                     data["_meta"] = {
                         "wfo_optimal_features": ui_boxes,
-                        "wfo_edge": round(float(best_edge), 4)
+                        "val_edge": round(float(best_final_edge), 4),
+                        "val_win_rate": round(float(best_final_stats[1]*100), 1),
+                        "val_trades": int(best_final_stats[0]),
+                        "oos_edge": round(float(oos_edge), 4),
+                        "oos_win_rate": round(float(oos_win_rate*100), 1),
+                        "oos_trades": int(oos_trades),
+                        "stability": stability,
+                        "status": "SIGNAL"
                     }
-                    print(f"WFO Optimal Set: {ui_boxes} (Edge: {best_edge:.4f})")
+                    print(f"WFO Phase 3B Optimal Set: {ui_boxes}")
+                else:
+                    # No edge state
+                    data["_meta"] = {
+                        "wfo_optimal_features": [],
+                        "val_edge": round(float(best_final_edge), 4) if best_final_edge != -999 else 0,
+                        "oos_edge": round(float(oos_edge), 4) if oos_trades > 0 else 0,
+                        "stability": stability,
+                        "status": "NO SIGNAL"
+                    }
+                    print("WFO Phase 3B: NO SIGNAL detected.")
+                    
         except Exception as e:
-            print("WFO Failed:", e)
+            print("WFO Phase 3B Failed:", e)
             
     with open(data_file, "w") as f:
         json.dump(data, f, indent=2)
