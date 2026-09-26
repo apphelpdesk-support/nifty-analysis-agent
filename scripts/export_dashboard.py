@@ -414,6 +414,93 @@ def process_symbol(symbol_name, db_filename):
             "signals": signals
         }
         
+    if symbol_name == "nifty":
+        print("Running Walk-Forward Optimizer to find current best features...")
+        try:
+            import itertools
+            df_wfo = df.copy()
+            df_wfo.dropna(subset=['z_rsi', 'z_stochrsi', 'z_ema_diff', 'z_price_ema', 'z_atr', 'z_vol'], inplace=True)
+            
+            # Note: We only optimize over the most mathematically robust continuous features
+            available_features = ['z_rsi', 'z_stochrsi', 'z_ema_diff', 'z_price_ema', 'z_atr', 'z_vol']
+            feature_matrix = df_wfo[available_features].values
+            returns_wfo = df_wfo['Return'].values
+            
+            n_days = len(feature_matrix)
+            eval_window = 30
+            print(f"WFO n_days after dropna: {n_days}")
+            
+            if n_days > 252 + eval_window:
+                test_combs = []
+                for r in range(3, 5):
+                    test_combs.extend(list(itertools.combinations(range(len(available_features)), r)))
+                
+                best_edge = -999
+                best_comb = None
+                
+                for comb in test_combs:
+                    win_count = 0
+                    total_trades = 0
+                    cumulative_ret = 0
+                    
+                    mat = feature_matrix[:, comb]
+                    
+                    for i in range(n_days - eval_window - 1, n_days - 1):
+                        target_vec = mat[i]
+                        search_mat = mat[:i-5]
+                        if len(search_mat) < 50: continue
+                        
+                        diffs = search_mat - target_vec
+                        dists = np.sum(diffs**2, axis=1)
+                        
+                        if len(dists) > 50:
+                            top_50_idx = np.argpartition(dists, 50)[:50]
+                        else:
+                            top_50_idx = np.arange(len(dists))
+                            
+                        next_rets = returns_wfo[top_50_idx + 1]
+                        up_count = np.sum(next_rets > 0)
+                        prob_up = (up_count / 50) * 100
+                        
+                        actual_next_ret = returns_wfo[i + 1]
+                        
+                        if prob_up >= 55:
+                            total_trades += 1
+                            if actual_next_ret > 0: win_count += 1
+                            cumulative_ret += actual_next_ret
+                        elif prob_up <= 45:
+                            total_trades += 1
+                            if actual_next_ret < 0: win_count += 1
+                            cumulative_ret -= actual_next_ret
+                            
+                    if total_trades >= 5:
+                        win_rate = win_count / total_trades
+                        edge = cumulative_ret * win_rate
+                        if edge > best_edge:
+                            best_edge = edge
+                            best_comb = [available_features[idx] for idx in comb]
+                            
+                # Map z_names to UI checkboxes
+                ui_mapping = {
+                    'z_rsi': 'chk-rsi',
+                    'z_stochrsi': 'chk-stochrsi',
+                    'z_ema_diff': 'chk-ema59',
+                    'z_price_ema': 'chk-ema20',
+                    'z_vol': 'chk-deltaoi', # Proxy
+                    'z_vix': 'chk-vix',
+                    'z_bn_rel': 'chk-divergence'
+                }
+                
+                if best_comb:
+                    ui_boxes = [ui_mapping[f] for f in best_comb if f in ui_mapping]
+                    data["_meta"] = {
+                        "wfo_optimal_features": ui_boxes,
+                        "wfo_edge": round(float(best_edge), 4)
+                    }
+                    print(f"WFO Optimal Set: {ui_boxes} (Edge: {best_edge:.4f})")
+        except Exception as e:
+            print("WFO Failed:", e)
+            
     with open(data_file, "w") as f:
         json.dump(data, f, indent=2)
     print(f"[{symbol_name}] Successfully updated {data_file}")

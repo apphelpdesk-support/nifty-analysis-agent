@@ -183350,5 +183350,13 @@
       "z_bn_rel": 0.0,
       "analogue_match": "Similar to 21 Sep 2007 (Next day went UP)"
     }
+  },
+  "_meta": {
+    "wfo_optimal_features": [
+      "chk-rsi",
+      "chk-stochrsi",
+      "chk-ema20"
+    ],
+    "wfo_edge": 0.0179
   }
 }

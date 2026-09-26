@@ -81,6 +81,18 @@ def process_intraday_symbol(symbol_name, db_filename):
             tf_df = tf_df[tf_df.index >= one_year_ago]
         
         data = {}
+        
+        # Inject WFO metadata from historical run if available
+        try:
+            hist_json = f"dashboard_data.json" if symbol_name == "nifty" else f"dashboard_data_{symbol_name}.json"
+            if os.path.exists(hist_json):
+                with open(hist_json, 'r') as f:
+                    hist_data = json.load(f)
+                    if "_meta" in hist_data:
+                        data["_meta"] = hist_data["_meta"]
+        except Exception as e:
+            pass
+            
         for dt, row in tf_df.iterrows():
             date_str = dt.isoformat()
             signals = {
