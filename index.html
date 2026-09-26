@@ -1001,8 +1001,6 @@
             
             const evalLogic = {
                 'chk-fii': (d) => d.fii === 'buying' ? 1 : (d.fii === 'selling' ? -1 : 0),
-                'chk-ema200': (d) => d.signals && d.signals.ema200_signal === 'bullish' ? 1 : -1,
-                'chk-supertrend': (d) => d.signals && d.signals.supertrend_signal === 'bullish' ? 1 : -1,
                 'chk-rsi': (d) => {
                     if(!d.signals) return 0;
                     const r = d.signals.rsi_value;
@@ -1010,8 +1008,6 @@
                     if(r > 60) return -1;
                     return 0;
                 },
-                'chk-ema20': (d) => d.signals && d.signals.ema20_signal === 'bullish' ? 1 : -1,
-                'chk-macd': (d) => d.signals && d.signals.macd_signal === 'bullish' ? 1 : -1,
                 'chk-ema59': (d) => d.signals && d.signals.ema5_signal === 'bullish' ? 1 : -1,
                 'chk-stochrsi': (d) => {
                     if(!d.signals) return 0;
