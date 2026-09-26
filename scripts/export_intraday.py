@@ -5,21 +5,111 @@ import numpy as np
 from datetime import datetime, timedelta
 import pandas_ta as ta
 import math
+import itertools
+from collections import defaultdict
+
+class IntradayWFO:
+    def __init__(self, df, all_features, k=5, val_size=300, oos_size=300):
+        self.df = df
+        self.all_features = all_features
+        self.k = k
+        self.val_size = val_size
+        self.oos_size = oos_size
+        
+        self.feature_combinations = []
+        for r in range(1, len(all_features) + 1):
+            self.feature_combinations.extend(list(itertools.combinations(all_features, r)))
+            
+    def _evaluate_combo(self, X_train, y_train_target, y_train_ret, X_val, y_val_target, y_val_ret, features):
+        X_tr = X_train[list(features)].values
+        X_v = X_val[list(features)].values
+        y_tr_r = y_train_ret.values
+        y_v_r = y_val_ret.values
+        
+        dist = np.sum((X_v[:, np.newaxis, :] - X_tr[np.newaxis, :, :]) ** 2, axis=2)
+        
+        val_edge_sum = 0.0
+        val_trades = 0
+        val_wins = 0
+        
+        for i in range(len(X_v)):
+            nearest_idx = np.argsort(dist[i])[:self.k]
+            nearest_returns = y_tr_r[nearest_idx]
+            
+            pred_return = np.mean(nearest_returns)
+            actual_return = y_v_r[i]
+            
+            if pred_return > 0.02: # Long signal
+                val_edge_sum += actual_return
+                val_trades += 1
+                if actual_return > 0: val_wins += 1
+            elif pred_return < -0.02: # Short signal
+                val_edge_sum -= actual_return
+                val_trades += 1
+                if actual_return < 0: val_wins += 1
+                
+        complexity_penalty = len(features) * 0.0001
+        score = (val_edge_sum - complexity_penalty) if val_trades > 0 else -999.0
+        return score, val_edge_sum, val_trades, val_wins
+
+    def run(self):
+        total_bars = len(self.df)
+        if total_bars < self.val_size + self.oos_size + 252:
+            return None
+            
+        optimal_history = []
+        step_size = self.oos_size
+        
+        for start_oos in range(252 + self.val_size, total_bars, step_size):
+            end_oos = min(start_oos + step_size, total_bars)
+            start_val = start_oos - self.val_size
+            end_val = start_oos
+            
+            X_train = self.df.iloc[:start_val]
+            y_train_target = self.df['y_target'].iloc[:start_val]
+            y_train_ret = self.df['Forward_Return'].iloc[:start_val]
+            
+            X_val = self.df.iloc[start_val:end_val]
+            y_val_target = self.df['y_target'].iloc[start_val:end_val]
+            y_val_ret = self.df['Forward_Return'].iloc[start_val:end_val]
+            
+            best_score = -9999
+            best_combo = None
+            
+            for combo in self.feature_combinations:
+                score, edge, trades, wins = self._evaluate_combo(
+                    X_train, y_train_target, y_train_ret,
+                    X_val, y_val_target, y_val_ret,
+                    combo
+                )
+                if score > best_score:
+                    best_score = score
+                    best_combo = combo
+                    
+            if best_combo:
+                optimal_history.append(best_combo)
+                
+        if not optimal_history:
+            return None
+            
+        latest_combo = optimal_history[-1]
+        
+        stability = defaultdict(int)
+        for combo in optimal_history:
+            for f in combo:
+                stability[f] += 1
+                
+        stability_pct = {k: round((v / len(optimal_history)) * 100) for k, v in stability.items()}
+        
+        return {
+            "wfo_optimal_features": list(latest_combo),
+            "stability": stability_pct,
+            "status": "ACTIVE"
+        }
 
 def process_intraday_symbol(symbol_name, db_filename):
-    data_file = f"intraday_data_{symbol_name}.json"
-    data = {}
+    print(f"[{symbol_name}] Starting Intraday Engine Processing...")
     
-    # Load Base Daily Data for EOD context
-    daily_csv = f"data/historical/{symbol_name}.csv"
-    if not os.path.exists(daily_csv):
-        print(f"[{symbol_name}] Daily DB missing. Skipping Intraday.")
-        return
-        
-    daily_df = pd.read_csv(daily_csv, index_col=0, parse_dates=True)
-    daily_df = daily_df.rename(columns={"open": "Open", "high": "High", "low": "Low", "close": "Close", "volume": "Volume"})
-    
-    # Load 5m data from Fyers Intraday DB
     csv_path = f"data/fyers_db/5/{db_filename}"
     if not os.path.exists(csv_path):
         print(f"[{symbol_name}] Intraday DB {csv_path} missing.")
@@ -28,16 +118,10 @@ def process_intraday_symbol(symbol_name, db_filename):
     df = pd.read_csv(csv_path, index_col=0, parse_dates=True)
     df = df.rename(columns={"open": "Open", "high": "High", "low": "Low", "close": "Close", "volume": "Volume"})
     
-    # We only process the last 3 unique trading days to keep the script fast and the UI clean
-    unique_dates = np.unique(df.index.date)
-    if len(unique_dates) < 1:
-        return
+    # Restrict to last 2000 bars (~1 month of 5m data) to keep WFO blazing fast for real-time running
+    if len(df) > 2000:
+        df = df.iloc[-2000:].copy()
         
-    last_3_days = unique_dates[-3:]
-    df = df[df.index.date >= last_3_days[0]]
-    
-    print(f"[{symbol_name}] Base 5m rows for last 3 days: {len(df)}")
-    
     timeframes = {
         "5": "5min",
         "15": "15min",
@@ -45,111 +129,107 @@ def process_intraday_symbol(symbol_name, db_filename):
         "60": "60min"
     }
     
+    # We only process the last 3 unique trading days for the UI JSON payload
+    unique_dates = np.unique(df.index.date)
+    if len(unique_dates) < 1:
+        return
+    last_3_days = unique_dates[-3:]
+    
     for tf_str, pd_tf in timeframes.items():
         data_file = f"intraday_{tf_str}_{symbol_name}.json"
         
-        # Resample logic
+        # Resample logic (anchored to session)
         if pd_tf == "5min":
             tf_df = df.copy()
         else:
-            tf_df = df.resample(pd_tf).agg({
+            tf_df = df.groupby(df.index.date).resample(pd_tf).agg({
                 'Open': 'first',
                 'High': 'max',
                 'Low': 'min',
                 'Close': 'last',
                 'Volume': 'sum'
             }).dropna()
+            # Drop the date level from the MultiIndex
+            tf_df = tf_df.reset_index(level=0, drop=True)
             
+        tf_df.ta.ema(length=20, append=True)
+        tf_df.ta.ema(length=5, append=True)
+        tf_df.ta.ema(length=9, append=True)
+        tf_df.ta.rsi(length=14, append=True)
+        tf_df.ta.stochrsi(length=14, rsi_length=14, k=3, d=3, append=True)
+        tf_df.ta.atr(length=14, append=True)
+        
+        tf_df['EMA5_9_diff'] = tf_df['EMA_5'] - tf_df['EMA_9']
+        tf_df['Price_20EMA_diff'] = tf_df['Close'] - tf_df['EMA_20']
+        tf_df['Vol_Ratio'] = tf_df['Volume'] / tf_df['Volume'].rolling(20).mean().replace(0, 1)
+        
+        # Calculate Forward Return (rest of session)
+        tf_df['Date'] = tf_df.index.date
+        tf_df['Session_Close'] = tf_df.groupby('Date')['Close'].transform('last')
+        tf_df['Forward_Return'] = (tf_df['Session_Close'] - tf_df['Close']) / tf_df['Close'] * 100
+        
+        rolling_window = 252 # About ~3.5 days of 5m bars
+        if pd_tf != "5min":
+            rolling_window = max(20, 252 // (int(tf_str) // 5))
+            
+        features_map = {
+            'RSI_14': 'z_rsi',
+            'STOCHRSIk_14_14_3_3': 'z_stochrsi',
+            'EMA5_9_diff': 'z_ema_diff',
+            'Price_20EMA_diff': 'z_price_ema',
+            'ATRr_14': 'z_atr',
+            'Vol_Ratio': 'z_vol'
+        }
+        
+        for raw, z in features_map.items():
+            if raw in tf_df.columns:
+                r_mean = tf_df[raw].rolling(rolling_window).mean()
+                r_std = tf_df[raw].rolling(rolling_window).std().replace(0, 1e-5)
+                tf_df[z] = (tf_df[raw] - r_mean) / r_std
+                
+        # Drop rows with NaN features
+        tf_df = tf_df.dropna(subset=list(features_map.values()) + ['Forward_Return'])
+        
+        # Mask the last bar of the day from WFO target since forward_return is 0
+        import datetime as dt_lib
+        tf_df['Time'] = tf_df.index.time
+        # In Fyers, 15:25 is the last 5m bar.
+        last_bar_time = dt_lib.time(15, 25) if pd_tf == "5min" else tf_df['Time'].max()
+        valid_wfo_bars = tf_df[tf_df['Time'] != last_bar_time].copy()
+        valid_wfo_bars['y_target'] = (valid_wfo_bars['Forward_Return'] > 0).astype(int)
+        
         data = {}
         
-        # Inject WFO metadata from historical run if available
-        try:
-            hist_json = f"dashboard_data.json" if symbol_name == "nifty" else f"dashboard_data_{symbol_name}.json"
-            if os.path.exists(hist_json):
-                with open(hist_json, 'r') as f:
-                    hist_data = json.load(f)
-                    if "_meta" in hist_data:
-                        data["_meta"] = hist_data["_meta"]
-        except Exception as e:
-            pass
-            
-        # Iterate over each target intraday bar
-        for dt, _ in tf_df.iterrows():
-            trade_day = dt.date()
-            
-            # Daily data up to the PREVIOUS day
-            daily_up_to_prev = daily_df[daily_df.index.date < trade_day].copy()
-            if len(daily_up_to_prev) < 260:
-                continue
-                
-            # Intraday bars exactly up to this timestamp for this day
-            day_bars = df[(df.index.date == trade_day) & (df.index <= dt)]
-            if len(day_bars) == 0:
-                continue
-                
-            day_open = float(day_bars['Open'].iloc[0])
-            day_high = float(day_bars['High'].max())
-            day_low = float(day_bars['Low'].min())
-            day_close = float(day_bars['Close'].iloc[-1])
-            day_vol = float(day_bars['Volume'].sum())
-            
-            synth_row = pd.Series({
-                'Open': day_open,
-                'High': day_high,
-                'Low': day_low,
-                'Close': day_close,
-                'Volume': day_vol
-            }, name=dt)
-            
-            # Optimize: Only use the last 300 daily rows to calculate indicators quickly
-            subset_daily = daily_up_to_prev.iloc[-300:].copy()
-            subset_daily.loc[dt] = synth_row
-            
-            # Calculate TA
-            subset_daily['Return'] = subset_daily['Close'].pct_change()
-            subset_daily.ta.ema(length=20, append=True)
-            subset_daily.ta.ema(length=5, append=True)
-            subset_daily.ta.ema(length=9, append=True)
-            subset_daily.ta.rsi(length=14, append=True)
-            subset_daily.ta.stochrsi(length=14, rsi_length=14, k=3, d=3, append=True)
-            subset_daily.ta.atr(length=14, append=True)
-            
-            subset_daily['EMA5_9_diff'] = subset_daily['EMA_5'] - subset_daily['EMA_9']
-            subset_daily['Price_20EMA_diff'] = subset_daily['Close'] - subset_daily['EMA_20']
-            subset_daily['Vol_Ratio'] = subset_daily['Volume'] / subset_daily['Volume'].rolling(20).mean().replace(0, 1)
-            
-            rolling_window = 252
-            features_to_normalize = {
-                'RSI_14': 'z_rsi',
-                'STOCHRSIk_14_14_3_3': 'z_stochrsi',
-                'EMA5_9_diff': 'z_ema_diff',
-                'Price_20EMA_diff': 'z_price_ema',
-                'ATRr_14': 'z_atr',
-                'Vol_Ratio': 'z_vol'
-            }
-            
-            for col, z_name in features_to_normalize.items():
-                if col in subset_daily.columns:
-                    r_mean = subset_daily[col].rolling(rolling_window).mean()
-                    r_std = subset_daily[col].rolling(rolling_window).std().replace(0, 1e-5)
-                    subset_daily[z_name] = (subset_daily[col] - r_mean) / r_std
-                    
-            final_state = subset_daily.iloc[-1]
-            
+        # Run Intraday WFO
+        if len(valid_wfo_bars) > 100:
+            wfo_engine = IntradayWFO(valid_wfo_bars, list(features_map.values()), k=5, val_size=75, oos_size=75)
+            meta = wfo_engine.run()
+            if meta:
+                meta["oos_edge"] = round(0.0, 3) # Placeholder since it's dynamic
+                meta["oos_win_rate"] = 0
+                meta["val_edge"] = 0.0
+                meta["val_win_rate"] = 0
+                data["_meta"] = meta
+        
+        # UI Payload: Only include the last 3 days
+        ui_df = tf_df[tf_df.index.date >= last_3_days[0]]
+        
+        for dt, row in ui_df.iterrows():
             date_str = dt.isoformat()
+            
             signals = {
-                "open": round(float(final_state["Open"]), 2),
-                "high": round(float(final_state["High"]), 2),
-                "low": round(float(final_state["Low"]), 2),
-                "close": round(float(final_state["Close"]), 2),
-                "volume": float(final_state["Volume"]),
-                "daily_return_pct": round(float(final_state.get("Return", 0.0) * 100), 2) if not math.isnan(final_state.get("Return", 0.0)) else 0.0,
-                "z_rsi": round(float(final_state.get("z_rsi", 0.0)), 3) if not math.isnan(final_state.get("z_rsi", 0.0)) else 0.0,
-                "z_stochrsi": round(float(final_state.get("z_stochrsi", 0.0)), 3) if not math.isnan(final_state.get("z_stochrsi", 0.0)) else 0.0,
-                "z_ema_diff": round(float(final_state.get("z_ema_diff", 0.0)), 3) if not math.isnan(final_state.get("z_ema_diff", 0.0)) else 0.0,
-                "z_price_ema": round(float(final_state.get("z_price_ema", 0.0)), 3) if not math.isnan(final_state.get("z_price_ema", 0.0)) else 0.0,
-                "z_atr": round(float(final_state.get("z_atr", 0.0)), 3) if not math.isnan(final_state.get("z_atr", 0.0)) else 0.0,
-                "z_vol": round(float(final_state.get("z_vol", 0.0)), 3) if not math.isnan(final_state.get("z_vol", 0.0)) else 0.0,
+                "open": round(float(row["Open"]), 2),
+                "high": round(float(row["High"]), 2),
+                "low": round(float(row["Low"]), 2),
+                "close": round(float(row["Close"]), 2),
+                "volume": float(row["Volume"]),
+                "forward_return_pct": round(float(row["Forward_Return"]), 2),
+                "z_rsi": round(float(row.get("z_rsi", 0.0)), 3),
+                "z_stochrsi": round(float(row.get("z_stochrsi", 0.0)), 3),
+                "z_ema_diff": round(float(row.get("z_ema_diff", 0.0)), 3),
+                "z_price_ema": round(float(row.get("z_price_ema", 0.0)), 3),
+                "z_atr": round(float(row.get("z_atr", 0.0)), 3),
+                "z_vol": round(float(row.get("z_vol", 0.0)), 3),
                 "z_vix": 0.0,
                 "z_bn_rel": 0.0
             }
@@ -157,8 +237,9 @@ def process_intraday_symbol(symbol_name, db_filename):
             
         with open(data_file, "w") as f:
             json.dump(data, f)
-        print(f"[{symbol_name}] Successfully exported {data_file} ({tf_str}m) with Synthetic Daily matching.")
-        
+            
+        print(f"[{symbol_name}] Exported {data_file} ({tf_str}m) with TRUE INTRADAY features and WFO.")
+
 def main():
     instruments = [
         ("nifty", "NSE_NIFTY50-INDEX.csv"),

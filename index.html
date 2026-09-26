@@ -1101,14 +1101,20 @@
                 }
                 
                 if(valid) {
-                    // Find the next day's return
-                    const nextDayDate = allDates[i+1];
-                    if(!dashboardData[nextDayDate] || !dashboardData[nextDayDate].signals) continue;
+                    let fwdPct = 0;
+                    if (currentMode === 'intraday') {
+                        if (histData.signals.forward_return_pct === undefined) continue;
+                        fwdPct = histData.signals.forward_return_pct;
+                    } else {
+                        const nextDayDate = allDates[i+1];
+                        if(!dashboardData[nextDayDate] || !dashboardData[nextDayDate].signals) continue;
+                        fwdPct = dashboardData[nextDayDate].signals.daily_return_pct;
+                    }
                     
                     distances.push({
                         date: histDate,
                         dist: Math.sqrt(sumSq),
-                        next_ret: dashboardData[nextDayDate].signals.daily_return_pct
+                        next_ret: fwdPct
                     });
                 }
             }

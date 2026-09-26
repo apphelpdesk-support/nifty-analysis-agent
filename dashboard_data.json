@@ -183355,8 +183355,23 @@
     "wfo_optimal_features": [
       "chk-rsi",
       "chk-stochrsi",
-      "chk-ema20"
+      "chk-ema59",
+      "chk-deltaoi"
     ],
-    "wfo_edge": 0.0179
+    "val_edge": 0.0306,
+    "val_win_rate": 84.6,
+    "val_trades": 13,
+    "oos_edge": 0.0027,
+    "oos_win_rate": 50.0,
+    "oos_trades": 14,
+    "stability": {
+      "chk-rsi": 86.7,
+      "chk-stochrsi": 76.7,
+      "chk-ema59": 100.0,
+      "chk-ema20": 23.3,
+      "z_atr": 76.7,
+      "chk-deltaoi": 63.3
+    },
+    "status": "SIGNAL"
   }
 }
