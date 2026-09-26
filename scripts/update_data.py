@@ -28,9 +28,18 @@ def main() -> None:
         action="store_true",
         help="Refresh the 60-day 5-minute archive via the free yfinance collector",
     )
+    ap.add_argument(
+        "--fyers",
+        action="store_true",
+        help="Refresh live Nifty data directly from the Fyers API (zero delay)",
+    )
     args = ap.parse_args()
 
     settings = st.load_settings()
+    if args.fyers:
+        data_intraday.update_all_fyers(settings)
+        return
+
     if args.intraday:
         data_intraday.update_all_free(settings)
         return

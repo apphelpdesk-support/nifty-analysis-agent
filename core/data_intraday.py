@@ -101,3 +101,78 @@ def import_bulk_csv(csv_path, name: str, settings: dict, minutes: int = 5) -> Pa
     combined = pd.concat([existing.reset_index(), clean.reset_index()]).drop_duplicates(subset=["ts"], keep="last")
     combined = combined.set_index("ts").sort_index()
     return _save_bars(combined, name, settings, minutes)
+
+
+def update_from_fyers(name: str, symbol: str, settings: dict, days: int = 5) -> pd.DataFrame:
+    """Fetch live and historical 5-minute bars from Fyers API v3."""
+    import os
+    from datetime import datetime, timedelta
+    from dotenv import load_dotenv
+    from fyers_apiv3 import fyersModel
+
+    load_dotenv()
+    client_id = os.getenv("FYERS_APP_ID")
+    
+    token_file = ".fyers_token"
+    if not os.path.exists(token_file):
+        print("[fyers] No access token found. Run fyers_login.py first.")
+        return load_bars(name, 5, settings)
+        
+    with open(token_file, "r") as f:
+        access_token = f.read().strip()
+        
+    fyers = fyersModel.FyersModel(client_id=client_id, is_async=False, token=access_token, log_path="")
+    
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=days)
+    
+    # Map symbols (Yahoo to Fyers)
+    fyers_symbol = "NSE:NIFTY50-INDEX" if "NSEI" in symbol else symbol
+    
+    data = {
+        "symbol": fyers_symbol,
+        "resolution": "5",
+        "date_format": "1",
+        "range_from": start_date.strftime("%Y-%m-%d"),
+        "range_to": end_date.strftime("%Y-%m-%d"),
+        "cont_flag": "1"
+    }
+    
+    response = fyers.history(data=data)
+    if response.get("s") != "ok" or "candles" not in response:
+        print(f"[fyers] fetch failed for {symbol}: {response}")
+        return load_bars(name, 5, settings)
+        
+    # Convert Fyers epochs to DatetimeIndex
+    candles = response["candles"]
+    df = pd.DataFrame(candles, columns=["epoch", "open", "high", "low", "close", "volume"])
+    df["ts"] = pd.to_datetime(df["epoch"], unit="s")
+    df = df.set_index("ts").drop(columns=["epoch"])
+    
+    tz = session.session_cfg(settings)["tz"]
+    fresh = _finalize(df, tz)
+    
+    if fresh.empty:
+        print(f"[fyers] no recent bars for {symbol}")
+        return load_bars(name, 5, settings)
+        
+    fresh.index.name = "ts"
+    existing = load_bars(name, 5, settings)
+    
+    if existing.empty:
+        combined = fresh
+    else:
+        # Fyers index is tz-aware but naive pd.concat gets messy, ensure matching names
+        combined = pd.concat([existing.reset_index(), fresh.reset_index()]).drop_duplicates(subset=["ts"], keep="last")
+        combined = combined.set_index("ts").sort_index()
+        
+    _save_bars(combined, name, settings, 5)
+    print(f"[fyers] {name}: {len(combined)} 5m bars archived (last {days}d from Fyers live)")
+    return combined
+
+
+def update_all_fyers(settings: dict) -> None:
+    syms = settings["symbols"]
+    for name, symbol in [("nifty", syms["nifty"])]:
+        update_from_fyers(name, symbol, settings, days=5)
+    print("[intraday] Fyers live collector done.")
