@@ -972,7 +972,7 @@
                 const recentConsistency = recentRets.length > 0 ? (recentRets.filter(r => r > 0).length / recentRets.length) : 0;
                 
                 // Disqualify if it has no edge or negative expectancy
-                const isValid = (edgeOverDrift > 0.03) && (sharpeProxy > 0.5) && (recentConsistency >= 0.50);
+                const isValid = (edgeOverDrift > 0.00) && (sharpeProxy > 0.1) && (recentConsistency >= 0.35);
                 
                 const elem = document.getElementById(id);
                 if(elem) elem.checked = isValid;
@@ -993,6 +993,24 @@
             renderPrediction();
         }
 
+        function calculateMarketVolatility(dateStr, days = 15) {
+            const allDates = Object.keys(dashboardData).sort();
+            const currIdx = allDates.indexOf(dateStr);
+            if(currIdx === -1 || currIdx < days) return 0.8;
+            
+            let rets = [];
+            for(let i = currIdx - days; i < currIdx; i++) {
+                const d = dashboardData[allDates[i]];
+                if(d && d.signals && d.signals.daily_return_pct !== undefined) {
+                    rets.push(Math.abs(d.signals.daily_return_pct));
+                }
+            }
+            if(rets.length === 0) return 0.8;
+            
+            const avgMove = rets.reduce((a, b) => a + b, 0) / rets.length;
+            return avgMove;
+        }
+
         function renderPrediction() {
             const scoreData = calculateScore();
             const base_score = scoreData.score;
@@ -1000,6 +1018,9 @@
             
             const tf_mod = {"tomorrow": 1.0, "next_week": 1.5, "next_month": 2.5}[currentTab];
             const adj_score = base_score * tf_mod;
+            
+            const dateStr = document.getElementById('date-picker').value;
+            const vol = calculateMarketVolatility(dateStr);
             
             let prob = 50 + parseInt(Math.abs(adj_score) * 2.5);
             if (prob > 95) prob = 95;
@@ -1018,15 +1039,15 @@
                 strategy = "No indicators selected. Please check at least one indicator to generate a prediction.";
             } else {
                 if (adj_score >= 5) {
-                    dir = "UP"; exp_move = "+" + (1.2 * tf_mod).toFixed(1) + "%"; strategy = "Strong conviction. Buy Call Options / Go Long."; color = "green";
+                    dir = "UP"; exp_move = "+" + (vol * 1.5 * tf_mod).toFixed(1) + "% to +" + (vol * 2.5 * tf_mod).toFixed(1) + "%"; strategy = "Strong conviction. Buy Call Options / Go Long."; color = "green";
                 } else if (adj_score > 1) {
-                    dir = "UP"; exp_move = "+" + (0.4 * tf_mod).toFixed(1) + "%"; strategy = "Mildly positive. Buy on dips."; color = "green";
+                    dir = "UP"; exp_move = "+" + (vol * 0.5 * tf_mod).toFixed(1) + "% to +" + (vol * 1.5 * tf_mod).toFixed(1) + "%"; strategy = "Mildly positive. Buy on dips."; color = "green";
                 } else if (adj_score <= 1 && adj_score >= -1) {
-                    dir = "FLAT"; exp_move = "~0.0%"; strategy = "Market is indecisive based on your selected indicators. Stay out."; color = "gray";
+                    dir = "FLAT"; exp_move = "-" + (vol * 0.4 * tf_mod).toFixed(1) + "% to +" + (vol * 0.4 * tf_mod).toFixed(1) + "%"; strategy = "Market is indecisive based on your selected indicators. Stay out."; color = "gray";
                 } else if (adj_score < -1 && adj_score > -5) {
-                    dir = "DOWN"; exp_move = "-" + (0.5 * tf_mod).toFixed(1) + "%"; strategy = "Mildly negative. Sell on rise."; color = "red";
+                    dir = "DOWN"; exp_move = "-" + (vol * 0.5 * tf_mod).toFixed(1) + "% to -" + (vol * 1.5 * tf_mod).toFixed(1) + "%"; strategy = "Mildly negative. Sell on rise."; color = "red";
                 } else {
-                    dir = "DOWN"; exp_move = "-" + (1.5 * tf_mod).toFixed(1) + "%"; strategy = "Strong bearish conviction. Buy Put Options / Short Sell."; color = "red";
+                    dir = "DOWN"; exp_move = "-" + (vol * 1.5 * tf_mod).toFixed(1) + "% to -" + (vol * 2.5 * tf_mod).toFixed(1) + "%"; strategy = "Strong bearish conviction. Buy Put Options / Short Sell."; color = "red";
                 }
             }
             
