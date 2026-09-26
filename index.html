@@ -298,10 +298,21 @@
                 </h2>
                 <p class="text-xs text-gray-500 mb-4">Check/Uncheck indicators to see how they affect the prediction engine in real-time.</p>
                 
+                <!-- Auto Select Box -->
+                <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <div>
+                            <div class="font-bold text-sm text-blue-900">Auto-Select (Walk-Forward Backtest)</div>
+                            <div class="text-[11px] text-blue-700 mt-1">Evaluates the last 60 days to auto-select indicators with the highest predictive edge.</div>
+                        </div>
+                        <input type="checkbox" id="chk-autoselect" class="w-4 h-4 text-brand-600 rounded" onchange="runAutoSelect()">
+                    </label>
+                </div>
+
                 <div class="space-y-3" id="indicator-list">
                     <!-- FII -->
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" id="chk-fii" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="renderPrediction()">
+                        <input type="checkbox" id="chk-fii" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
                         <div class="flex-1">
                             <div class="font-bold text-sm text-gray-800">Institutional (FII) Flow</div>
                             <div class="text-xs text-gray-500 mt-1" id="val-fii">Loading...</div>
@@ -310,7 +321,7 @@
 
                     <!-- 200 EMA -->
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" id="chk-ema200" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="renderPrediction()">
+                        <input type="checkbox" id="chk-ema200" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
                         <div class="flex-1">
                             <div class="font-bold text-sm text-gray-800">200-Day EMA (Long Term)</div>
                             <div class="text-xs text-gray-500 mt-1" id="val-ema200">Loading...</div>
@@ -319,7 +330,7 @@
 
                     <!-- SuperTrend -->
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" id="chk-supertrend" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="renderPrediction()">
+                        <input type="checkbox" id="chk-supertrend" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
                         <div class="flex-1">
                             <div class="font-bold text-sm text-gray-800">SuperTrend</div>
                             <div class="text-xs text-gray-500 mt-1" id="val-supertrend">Loading...</div>
@@ -328,7 +339,7 @@
 
                     <!-- RSI -->
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" id="chk-rsi" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="renderPrediction()">
+                        <input type="checkbox" id="chk-rsi" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
                         <div class="flex-1">
                             <div class="font-bold text-sm text-gray-800">RSI (Momentum)</div>
                             <div class="text-xs text-gray-500 mt-1" id="val-rsi">Loading...</div>
@@ -337,7 +348,7 @@
                     
                     <!-- 20 EMA -->
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" id="chk-ema20" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="renderPrediction()">
+                        <input type="checkbox" id="chk-ema20" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
                         <div class="flex-1">
                             <div class="font-bold text-sm text-gray-800">20-Day EMA (Short Term)</div>
                             <div class="text-xs text-gray-500 mt-1" id="val-ema20">Loading...</div>
@@ -346,7 +357,7 @@
                     
                     <!-- MACD -->
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" id="chk-macd" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="renderPrediction()">
+                        <input type="checkbox" id="chk-macd" class="mt-1 w-4 h-4 text-brand-600 rounded" onchange="handleManualToggle()">
                         <div class="flex-1">
                             <div class="font-bold text-sm text-gray-800">MACD Crossover</div>
                             <div class="text-xs text-gray-500 mt-1" id="val-macd">Loading...</div>
@@ -355,7 +366,7 @@
                     
                     <!-- Fast EMA 5/9 -->
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" id="chk-ema59" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="renderPrediction()">
+                        <input type="checkbox" id="chk-ema59" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="handleManualToggle()">
                         <div class="flex-1">
                             <div class="font-bold text-sm text-indigo-700 group relative">
                                 Intraday Edge: 5/9 EMA
@@ -371,7 +382,7 @@
 
                     <!-- StochRSI -->
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" id="chk-stochrsi" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="renderPrediction()">
+                        <input type="checkbox" id="chk-stochrsi" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="handleManualToggle()">
                         <div class="flex-1">
                             <div class="font-bold text-sm text-indigo-700">Intraday Edge: StochRSI</div>
                             <div class="text-xs text-gray-500 mt-1" id="val-stochrsi">Loading...</div>
@@ -380,7 +391,7 @@
 
                     <!-- Delta OI -->
                     <label class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" id="chk-deltaoi" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="renderPrediction()">
+                        <input type="checkbox" id="chk-deltaoi" class="mt-1 w-4 h-4 text-brand-600 rounded" checked onchange="handleManualToggle()">
                         <div class="flex-1">
                             <div class="font-bold text-sm text-indigo-700">Intraday Edge: Delta OI</div>
                             <div class="text-xs text-gray-500 mt-1" id="val-deltaoi">Loading...</div>
@@ -780,7 +791,11 @@
                 }
             }
             
-            renderPrediction();
+            if(document.getElementById('chk-autoselect').checked) {
+                runAutoSelect();
+            } else {
+                renderPrediction();
+            }
         }
 
         function selectTab(tab) {
@@ -861,6 +876,102 @@
             }
             
             return {score: score, isReversal: isReversal};
+        }
+
+        function runAutoSelect() {
+            const isAuto = document.getElementById('chk-autoselect').checked;
+            if(!isAuto) {
+                document.getElementById('badge-status').innerText = 'CUSTOM STRATEGY';
+                document.getElementById('badge-status').className = 'px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full tracking-wider';
+                renderPrediction();
+                return;
+            }
+            
+            const dateStr = document.getElementById('date-picker').value;
+            const allDates = Object.keys(dashboardData).sort();
+            const currIdx = allDates.indexOf(dateStr);
+            
+            if (currIdx < 60) {
+                alert("Not enough historical data for walk-forward backtest.");
+                document.getElementById('chk-autoselect').checked = false;
+                return;
+            }
+            
+            const evalLogic = {
+                'chk-fii': (d) => d.fii === 'buying' ? 1 : (d.fii === 'selling' ? -1 : 0),
+                'chk-ema200': (d) => d.signals && d.signals.ema200_signal === 'bullish' ? 1 : -1,
+                'chk-supertrend': (d) => d.signals && d.signals.supertrend_signal === 'bullish' ? 1 : -1,
+                'chk-rsi': (d) => {
+                    if(!d.signals) return 0;
+                    const r = d.signals.rsi_value;
+                    if(r < 35 || r > 70) return (r < 35 ? 1 : -1);
+                    return 0;
+                },
+                'chk-ema20': (d) => d.signals && d.signals.ema20_signal === 'bullish' ? 1 : -1,
+                'chk-macd': (d) => d.signals && d.signals.macd_signal === 'bullish' ? 1 : -1,
+                'chk-ema59': (d) => d.signals && d.signals.ema5_signal === 'bullish' ? 1 : -1,
+                'chk-stochrsi': (d) => {
+                    if(!d.signals) return 0;
+                    const st = d.signals.stochrsi_signal;
+                    return (st === 'oversold' || st === 'bullish crossover') ? 1 : ((st === 'overbought' || st === 'bearish crossover') ? -1 : 0);
+                },
+                'chk-deltaoi': (d) => {
+                    if(!d.signals) return 0;
+                    const m = d.signals.options_momentum;
+                    return m === 'bullish' ? 1 : (m === 'bearish' ? -1 : 0);
+                }
+            };
+            
+            let indScores = {};
+            for(let id in evalLogic) indScores[id] = { correct: 0, total: 0 };
+            
+            let marketUpCount = 0;
+            let totalDays = 0;
+            
+            for(let i = currIdx - 60; i < currIdx; i++) {
+                const td = dashboardData[allDates[i]];
+                const nd = dashboardData[allDates[i+1]];
+                if(!td || !nd || !nd.signals || nd.signals.daily_return_pct === undefined) continue;
+                
+                totalDays++;
+                const actualDir = nd.signals.daily_return_pct > 0 ? 1 : -1;
+                if (actualDir > 0) marketUpCount++;
+                
+                for(let id in evalLogic) {
+                    const pred = evalLogic[id](td);
+                    if(pred !== 0) {
+                        indScores[id].total += 1;
+                        if((pred > 0 && actualDir > 0) || (pred < 0 && actualDir < 0)) {
+                            indScores[id].correct += 1;
+                        }
+                    }
+                }
+            }
+            
+            const baseRate = totalDays > 0 ? marketUpCount / totalDays : 0.5;
+            const threshold = Math.max(0.5, baseRate); // Must beat market drift
+            
+            const chks = Object.keys(evalLogic);
+            chks.forEach(id => {
+                const s = indScores[id];
+                let winRate = s.total > 0 ? s.correct / s.total : 0;
+                let elem = document.getElementById(id);
+                if(elem) elem.checked = (winRate > threshold);
+            });
+            
+            document.getElementById('badge-status').innerText = 'AUTO-GENERATED STRATEGY';
+            document.getElementById('badge-status').className = 'px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full tracking-wider';
+            
+            renderPrediction();
+        }
+
+        function handleManualToggle() {
+            if(document.getElementById('chk-autoselect').checked) {
+                document.getElementById('chk-autoselect').checked = false;
+                document.getElementById('badge-status').innerText = 'CUSTOM STRATEGY';
+                document.getElementById('badge-status').className = 'px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full tracking-wider';
+            }
+            renderPrediction();
         }
 
         function renderPrediction() {
