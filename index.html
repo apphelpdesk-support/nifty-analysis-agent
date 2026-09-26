@@ -923,46 +923,59 @@
                 }
             };
             
-            let indScores = {};
-            for(let id in evalLogic) indScores[id] = { correct: 0, total: 0 };
+            let indData = {};
+            for(let id in evalLogic) indData[id] = { returns: [], signals: [] };
             
-            let marketUpCount = 0;
-            let totalDays = 0;
+            let marketReturns = [];
             
             for(let i = currIdx - 60; i < currIdx; i++) {
                 const td = dashboardData[allDates[i]];
                 const nd = dashboardData[allDates[i+1]];
                 if(!td || !nd || !nd.signals || nd.signals.daily_return_pct === undefined) continue;
                 
-                totalDays++;
-                const actualDir = nd.signals.daily_return_pct > 0 ? 1 : -1;
-                if (actualDir > 0) marketUpCount++;
+                const ret = nd.signals.daily_return_pct; 
+                marketReturns.push(ret);
                 
                 for(let id in evalLogic) {
                     const pred = evalLogic[id](td);
-                    if(pred !== 0) {
-                        indScores[id].total += 1;
-                        if((pred > 0 && actualDir > 0) || (pred < 0 && actualDir < 0)) {
-                            indScores[id].correct += 1;
-                        }
-                    }
+                    indData[id].signals.push(pred);
+                    indData[id].returns.push(pred * ret);
                 }
             }
             
-            const baseRate = totalDays > 0 ? marketUpCount / totalDays : 0.5;
-            // True baseline accuracy is whichever direction the market drifted most
-            const naiveAccuracy = Math.max(baseRate, 1 - baseRate);
-            
-            // Allow indicators to be selected if they perform close to naive accuracy (-3% leniency) 
-            // since they might catch outlier large moves that binary win-rate doesn't capture.
-            const threshold = naiveAccuracy - 0.03; 
+            const totalDays = marketReturns.length;
+            const baseUpRate = totalDays > 0 ? (marketReturns.filter(r => r > 0).length / totalDays) : 0;
             
             const chks = Object.keys(evalLogic);
             chks.forEach(id => {
-                const s = indScores[id];
-                let winRate = s.total > 0 ? s.correct / s.total : 0;
-                let elem = document.getElementById(id);
-                if(elem) elem.checked = (winRate > threshold);
+                const rets = indData[id].returns;
+                if(rets.length === 0) {
+                    const elem = document.getElementById(id);
+                    if(elem) elem.checked = false;
+                    return;
+                }
+                
+                // 1. Indicator Win Rate
+                const indicatorWinRate = rets.filter(r => r > 0).length / rets.length;
+                
+                // 2. Edge over drift
+                const edgeOverDrift = indicatorWinRate - baseUpRate;
+                
+                // 3. Expectancy (Sharpe Proxy)
+                const meanRet = rets.reduce((a, b) => a + b, 0) / rets.length;
+                const variance = rets.reduce((a, b) => a + Math.pow(b - meanRet, 2), 0) / (rets.length || 1);
+                const stdRet = Math.sqrt(variance);
+                const sharpeProxy = stdRet > 0 ? (meanRet / stdRet) * Math.sqrt(252) : 0;
+                
+                // 4. Consistency Check
+                const recentRets = rets.slice(-15);
+                const recentConsistency = recentRets.length > 0 ? (recentRets.filter(r => r > 0).length / recentRets.length) : 0;
+                
+                // Disqualify if it has no edge or negative expectancy
+                const isValid = (edgeOverDrift > 0.03) && (sharpeProxy > 0.5) && (recentConsistency >= 0.50);
+                
+                const elem = document.getElementById(id);
+                if(elem) elem.checked = isValid;
             });
             
             document.getElementById('badge-status').innerText = 'AUTO-GENERATED STRATEGY';
