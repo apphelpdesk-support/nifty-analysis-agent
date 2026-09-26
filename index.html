@@ -899,6 +899,13 @@
             let score = 0;
             let isReversal = false;
             
+            // Macro Trend Bias: The 20 EMA dictates the path of least resistance.
+            // If the market is in a downtrend, we artificially depress the score to prevent buying fake bounces.
+            if(data.signals && data.signals.ema20_signal) {
+                if(data.signals.ema20_signal === 'bearish') score -= 8;
+                if(data.signals.ema20_signal === 'bullish') score += 8;
+            }
+            
             if(document.getElementById('chk-fii').checked) {
                 if(data.fii === 'buying') score += 4;
                 if(data.fii === 'selling') score -= 4;
@@ -1173,16 +1180,6 @@
                     dir = "DOWN"; exp_move = "-" + (vol * 1.5 * tf_mod * down_skew).toFixed(1) + "% to -" + (vol * 2.5 * tf_mod * down_skew).toFixed(1) + "%"; strategy = "Strong bearish conviction. Expect violent drops. Buy Put Options / Short Sell."; color = "red";
                 }
             }
-            
-            // Macro Regime Filter (The Dead-Cat Bounce Protector)
-            if (dir === "UP" && dashboardData[dateStr] && dashboardData[dateStr].signals && dashboardData[dateStr].signals.ema20_signal === "bearish") {
-                dir = "CAUTION";
-                exp_move = "Bear Flag / Bounce";
-                strategy = "⚠️ MACRO DOWNTREND DETECTED: Price is below the 20-Day EMA. Although intraday indicators are bullish today, this is highly likely a 'Dead-Cat Bounce' before a heavy selloff. DO NOT BUY. Fade the rally or stay in cash.";
-                color = "orange";
-                prob = 50; // Force neutral probability
-            }
-            
             // Gap Trap Execution Logic
             if (dir === "UP") {
                 strategy += " <br><span class='text-xs font-bold text-yellow-600 mt-2 block'>⚠️ EXECUTION RULE: If Nifty gaps up heavily (>0.4%) at 9:15 AM, the predicted UP move is already exhausted. DO NOT BUY THE OPEN. The market will likely fall intraday to fill the gap. Buy only on morning dips.</span>";
