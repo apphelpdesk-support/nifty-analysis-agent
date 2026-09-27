@@ -757,10 +757,8 @@
         }
 
         function changeTimeframe(tf) {
-            if (currentMode === 'historical') {
-                currentTimeframe = tf;
-                fetchLiveJSON();
-            }
+            currentTimeframe = tf;
+            fetchLiveJSON();
         }
 
         async function fetchLiveJSON(isSilentRefresh = false) {
@@ -1411,7 +1409,7 @@
                         document.getElementById('old-strategy-box').classList.add('hidden');
                     }
                     
-                    const currSigs = currentMode === 'intraday' ? liveData.latest : dashboardData[dateStr].signals;
+                    const currSigs = dashboardData[dateStr].signals;
                     const currPrice = currSigs.close;
                     document.getElementById('te-price').textContent = currPrice.toFixed(2);
                     
