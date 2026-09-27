@@ -741,9 +741,11 @@
             if (!isOpen) {
                 document.getElementById('market-closed-warning').classList.remove('hidden');
                 document.getElementById('dashboard-data-container').classList.add('hidden');
+                document.getElementById('timeframe-select').classList.add('hidden');
             } else {
                 document.getElementById('market-closed-warning').classList.add('hidden');
                 document.getElementById('dashboard-data-container').classList.remove('hidden');
+                document.getElementById('timeframe-select').classList.remove('hidden');
             }
         }
 
