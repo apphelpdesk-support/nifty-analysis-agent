@@ -489,7 +489,13 @@
                     <p class="text-gray-300 mt-2">Live Intraday Engine is paused. The engine automatically wakes up at 9:15 AM IST.<br>Switch to the <b>Historical & BTST</b> tab to backtest past dates.</p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div id="dashboard-data-container">
+                    <div class="bg-gray-100 rounded-lg p-3 text-center mb-6 border border-gray-200">
+                        <span class="text-sm text-gray-500 font-bold uppercase tracking-wider">Data Snapshot Time</span>
+                        <div id="data-timestamp-badge" class="text-xl font-black text-slate-800 mt-1">--</div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                     <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 text-center">
                         <div class="text-gray-500 text-xs mb-1 font-bold uppercase tracking-wider">Probability</div>
                         <div class="text-3xl font-black text-gray-900" id="res-prob">--%</div>
@@ -671,6 +677,7 @@
                         </div>
                     </div>
                 </div>
+                </div>
 
             </div>
         </div>
@@ -708,6 +715,7 @@
                 datePickerContainer.classList.remove('hidden');
                 subtabs.classList.remove('hidden');
                 document.getElementById('market-closed-warning').classList.add('hidden');
+                document.getElementById('dashboard-data-container').classList.remove('hidden');
                 currentTimeframe = 'daily'; // Force daily context
             }
             fetchLiveJSON();
@@ -732,8 +740,10 @@
             
             if (!isOpen) {
                 document.getElementById('market-closed-warning').classList.remove('hidden');
+                document.getElementById('dashboard-data-container').classList.add('hidden');
             } else {
                 document.getElementById('market-closed-warning').classList.add('hidden');
+                document.getElementById('dashboard-data-container').classList.remove('hidden');
             }
         }
 
@@ -852,6 +862,17 @@
             errEl.classList.add('hidden');
             
             currentResolvedDate = selectedDateStr;
+            
+            // Update Timestamp Badge
+            let displayDate = selectedDateStr;
+            if (selectedDateStr.includes('T')) {
+                const parts = selectedDateStr.split('T');
+                displayDate = parts[0] + " at " + parts[1].substring(0, 5);
+            }
+            if (document.getElementById('data-timestamp-badge')) {
+                document.getElementById('data-timestamp-badge').textContent = displayDate;
+            }
+            
             const data = dashboardData[selectedDateStr];
             
             // FII Update
