@@ -526,7 +526,7 @@
                                 <span class="text-lg font-bold text-yellow-400" id="te-entry">--</span>
                             </div>
                             <div class="flex justify-between items-end border-b border-gray-800 pb-2">
-                                <span class="text-gray-400 text-sm uppercase">Confirmation</span>
+                                <span class="text-gray-400 text-sm uppercase" id="te-conf-label">Confirmation</span>
                                 <span class="text-sm font-semibold text-gray-300" id="te-conf">--</span>
                             </div>
                             
@@ -567,7 +567,7 @@
                             
                             <div class="mt-4 pt-4 border-t border-gray-700">
                                 <div class="flex justify-between items-end border-b border-gray-800 pb-2 mt-2">
-                                    <span class="text-gray-400 text-sm uppercase">Reversal Zone</span>
+                                    <span class="text-gray-400 text-sm uppercase" id="te-rev-label">Reversal Zone</span>
                                     <span class="text-md font-bold text-purple-400" id="te-rev-zone">--</span>
                                 </div>
                                 <div class="flex justify-between items-end border-b border-gray-800 pb-2 mt-2">
@@ -1209,8 +1209,19 @@
             // Sort by lowest distance
             distances.sort((a, b) => a.dist - b.dist);
             
-            // Take Top 50 analogues
-            const topK = distances.slice(0, 50);
+            // Deduplicate by base date to prevent overlapping intraday states dominating
+            const seenDates = new Set();
+            const dedup = [];
+            for (let d of distances) {
+                const baseDate = d.date.split('T')[0];
+                if (!seenDates.has(baseDate)) {
+                    seenDates.add(baseDate);
+                    dedup.push(d);
+                }
+            }
+            
+            // Take Top 50 unique analogues
+            const topK = dedup.slice(0, 50);
             
             const upCount = topK.filter(d => d.next_ret > 0).length;
             const probUp = (upCount / topK.length) * 100;
@@ -1447,10 +1458,14 @@
                     MAE.sort((a,b)=>a-b);
                     
                     const getP = (arr, p) => arr.length > 0 ? arr[Math.floor(arr.length * p)] : 0;
+                    
+                    // Phase 4: Dynamic Quantiles for Target and Excursion Mapping
+                    const mfe25 = getP(MFE, 0.25);
                     const mfe50 = getP(MFE, 0.5);
                     const mfe75 = getP(MFE, 0.75);
                     const mfe90 = getP(MFE, 0.90);
                     
+                    const mae25 = getP(MAE, 0.25);
                     const mae50 = getP(MAE, 0.5);
                     const mae75 = getP(MAE, 0.75);
                     const mae90 = getP(MAE, 0.90);
@@ -1463,24 +1478,42 @@
                     let accentColor = "bg-gray-500";
                     let entry = "--", conf = "--", t1 = "--", t2 = "--", stop = "--", rr = "--", revZ = "--", revT = "--", action = "DO NOTHING";
                     
-                    const timeHorizon = currentMode === 'intraday' ? '15m' : 'Daily';
+                    const isBTST = currentMode === 'historical';
+                    const timeHorizon = isBTST ? 'Daily' : '15m';
                     
+                    // Dynamic labels based on mode
+                    const confLabel = document.getElementById('te-conf-label');
+                    const revLabel = document.getElementById('te-rev-label');
+                    if(confLabel) confLabel.textContent = isBTST ? 'Overnight Rules' : 'Confirmation';
+                    if(revLabel) revLabel.textContent = isBTST ? 'Daily Reversal Watch' : 'Potential Exhaustion';
+                    
+                    // Evaluate long/short using true MAE magnitude (Math.abs already applied to MAE array)
+                    // We compare mfe50 to mae50 (both positive magnitudes)
                     if (upC > downC && (pUp > 45 || pUp*1 + pRg*1 > 70) && mfe50 > mae50 * 1.1) {
                         bias = "LONG BIAS";
                         biasColor = "text-green-400";
                         accentColor = "bg-green-500";
                         
-                        const entryOffset = currPrice * (Math.max(0.05, mae50 * 0.3) / 100);
+                        // Breakout trigger based on 25th percentile of expected drawdown instead of static median
+                        const entryOffset = currPrice * (Math.max(0.05, mae25 * 0.5) / 100);
                         const entryPrice = currPrice + entryOffset;
-                        
                         entry = "> " + entryPrice.toFixed(0);
-                        conf = timeHorizon + " close > entry | Vol > Avg";
                         
+                        if (isBTST) {
+                            conf = "Gap up >0.5%: Don't chase | Flat: Normal Entry";
+                        } else {
+                            conf = "15m close > entry | Vol > Avg";
+                        }
+                        
+                        // Conservative Target 1 (50th percentile)
                         const t1Offset = currPrice * (mfe50 * volMult / 100);
+                        // Base Target 2 (75th percentile)
                         const t2Offset = currPrice * (mfe75 * volMult / 100);
+                        
                         t1 = (currPrice + t1Offset).toFixed(0);
                         t2 = (currPrice + t2Offset).toFixed(0);
                         
+                        // Stop loss at 75th percentile of adverse excursion
                         const stopOffset = currPrice * (mae75 * volMult / 100);
                         const stopPrice = currPrice - stopOffset;
                         stop = Math.min(currPrice - 10, stopPrice).toFixed(0); 
@@ -1489,25 +1522,33 @@
                         const reward = (currPrice + t1Offset) - entryPrice;
                         rr = risk > 0 ? "1 : " + (reward/risk).toFixed(1) : "--";
                         
-                        revZ = t2 + " - " + (currPrice + currPrice*(mfe90/100)).toFixed(0);
-                        revT = "< " + (currPrice + t2Offset - 15).toFixed(0);
+                        // Reversal exhaustion zone (90th percentile extension)
+                        const revOffset = currPrice * (mfe90 * volMult / 100);
+                        revZ = t2 + " - " + (currPrice + revOffset).toFixed(0);
+                        revT = isBTST ? "Close < " + t2 : "15m close < " + t1;
                         
-                        action = "WAIT FOR BREAKOUT";
-                        if (pUp > 60) action = "BUY PULLBACK / BREAKOUT";
+                        action = isBTST ? "EVALUATE BTST LONG" : (pUp > 60 ? "BUY PULLBACK / BREAKOUT" : "WAIT FOR TRIGGER");
                         
                     } else if (downC > upC && (pDn > 45 || pDn*1 + pRg*1 > 70) && mae50 > mfe50 * 1.1) {
                         bias = "SHORT BIAS";
                         biasColor = "text-red-400";
                         accentColor = "bg-red-500";
                         
-                        const shortT1 = currPrice - (currPrice * (mae50 * volMult / 100));
-                        const shortT2 = currPrice - (currPrice * (mae75 * volMult / 100));
-                        
-                        const entryOffset = currPrice * (Math.max(0.05, mfe50 * 0.3) / 100);
+                        const entryOffset = currPrice * (Math.max(0.05, mfe25 * 0.5) / 100);
                         const entryPrice = currPrice - entryOffset;
-                        
                         entry = "< " + entryPrice.toFixed(0);
-                        conf = timeHorizon + " close < entry | Breakdown";
+                        
+                        if (isBTST) {
+                            conf = "Gap down <-0.5%: Don't chase | Flat: Normal Entry";
+                        } else {
+                            conf = "15m close < entry | Breakdown";
+                        }
+                        
+                        const t1Offset = currPrice * (mae50 * volMult / 100);
+                        const t2Offset = currPrice * (mae75 * volMult / 100);
+                        
+                        const shortT1 = currPrice - t1Offset;
+                        const shortT2 = currPrice - t2Offset;
                         
                         t1 = shortT1.toFixed(0);
                         t2 = shortT2.toFixed(0);
@@ -1520,11 +1561,11 @@
                         const reward = entryPrice - shortT1;
                         rr = risk > 0 ? "1 : " + (reward/risk).toFixed(1) : "--";
                         
-                        revZ = t2 + " - " + (currPrice - currPrice*(mae90/100)).toFixed(0);
-                        revT = "> " + (shortT2 + 15).toFixed(0);
+                        const revOffset = currPrice * (mae90 * volMult / 100);
+                        revZ = t2 + " - " + (currPrice - revOffset).toFixed(0);
+                        revT = isBTST ? "Close > " + t2 : "15m close > " + t1;
                         
-                        action = "WAIT FOR BREAKDOWN";
-                        if (pDn > 60) action = "SELL RALLY / BREAKDOWN";
+                        action = isBTST ? "EVALUATE BTST SHORT" : (pDn > 60 ? "SELL RALLY / BREAKDOWN" : "WAIT FOR TRIGGER");
                     } else {
                         bias = "RANGE / NO TRADE";
                         biasColor = "text-gray-400";
