@@ -782,7 +782,8 @@
                 dashboardData = await res.json();
                 
                 const select = document.getElementById('date-picker');
-                const dates = Object.keys(dashboardData).sort().reverse();
+                // Ensure _meta key from dashboard_data is excluded from date selection logic
+                const dates = Object.keys(dashboardData).filter(k => k !== '_meta').sort().reverse();
                 
                 if (dates.length > 0) {
                     // Extract unique dates for the date picker (YYYY-MM-DD)
