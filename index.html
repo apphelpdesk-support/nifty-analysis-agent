@@ -704,11 +704,11 @@
                 }
                 checkMarketStatus();
             } else {
-                tfSelect.classList.remove('hidden');
+                tfSelect.classList.add('hidden'); // Hide for BTST
                 datePickerContainer.classList.remove('hidden');
                 subtabs.classList.remove('hidden');
                 document.getElementById('market-closed-warning').classList.add('hidden');
-                currentTimeframe = tfSelect.value;
+                currentTimeframe = 'daily'; // Force daily context
             }
             fetchLiveJSON();
         }
