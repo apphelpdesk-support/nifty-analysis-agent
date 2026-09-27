@@ -506,7 +506,85 @@
                     </div>
                 </div>
 
-                <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 mb-6 flex-grow">
+                                <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-6 flex-grow shadow-2xl relative overflow-hidden hidden" id="trade-engine-box">
+                    <div class="absolute top-0 left-0 w-1 h-full" id="trade-engine-accent"></div>
+                    <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+                        <h3 class="font-bold text-white flex items-center gap-2 text-xl tracking-wide">
+                            <i class="fa-solid fa-crosshairs text-blue-400"></i> NIFTY TRADE ENGINE
+                        </h3>
+                        <div id="te-bias" class="text-xl font-black text-green-400 uppercase tracking-widest bg-gray-800 px-4 py-1 rounded">LONG BIAS</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-300">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-end border-b border-gray-800 pb-2">
+                                <span class="text-gray-400 text-sm uppercase">Current Price</span>
+                                <span class="text-2xl font-bold text-white" id="te-price">--</span>
+                            </div>
+                            <div class="flex justify-between items-end border-b border-gray-800 pb-2">
+                                <span class="text-gray-400 text-sm uppercase">Entry Trigger</span>
+                                <span class="text-lg font-bold text-yellow-400" id="te-entry">--</span>
+                            </div>
+                            <div class="flex justify-between items-end border-b border-gray-800 pb-2">
+                                <span class="text-gray-400 text-sm uppercase">Confirmation</span>
+                                <span class="text-sm font-semibold text-gray-300" id="te-conf">--</span>
+                            </div>
+                            
+                            <div class="mt-6 pt-2 border-t-2 border-gray-700">
+                                <div class="flex justify-between items-end border-b border-gray-800 pb-2 mt-2">
+                                    <span class="text-gray-400 text-sm uppercase">Stop / Invalidation</span>
+                                    <span class="text-lg font-bold text-red-400" id="te-stop">--</span>
+                                </div>
+                                <div class="flex justify-between items-end border-b border-gray-800 pb-2 mt-2">
+                                    <span class="text-gray-400 text-sm uppercase">Target 1</span>
+                                    <span class="text-lg font-bold text-green-400" id="te-t1">--</span>
+                                </div>
+                                <div class="flex justify-between items-end border-b border-gray-800 pb-2 mt-2">
+                                    <span class="text-gray-400 text-sm uppercase">Target 2</span>
+                                    <span class="text-lg font-bold text-green-500" id="te-t2">--</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-end border-b border-gray-800 pb-2">
+                                <span class="text-gray-400 text-sm uppercase">Expected R:R</span>
+                                <span class="text-lg font-bold text-cyan-400" id="te-rr">--</span>
+                            </div>
+                            
+                            <div class="pt-4 pb-2">
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-green-400">UP: <span id="te-prob-up">--%</span></span>
+                                    <span class="text-gray-400">RANGE: <span id="te-prob-range">--%</span></span>
+                                    <span class="text-red-400">DOWN: <span id="te-prob-down">--%</span></span>
+                                </div>
+                                <div class="w-full h-2 bg-gray-700 rounded overflow-hidden flex">
+                                    <div id="te-bar-up" class="h-full bg-green-500" style="width: 33%"></div>
+                                    <div id="te-bar-range" class="h-full bg-gray-500" style="width: 33%"></div>
+                                    <div id="te-bar-down" class="h-full bg-red-500" style="width: 34%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-4 border-t border-gray-700">
+                                <div class="flex justify-between items-end border-b border-gray-800 pb-2 mt-2">
+                                    <span class="text-gray-400 text-sm uppercase">Reversal Zone</span>
+                                    <span class="text-md font-bold text-purple-400" id="te-rev-zone">--</span>
+                                </div>
+                                <div class="flex justify-between items-end border-b border-gray-800 pb-2 mt-2">
+                                    <span class="text-gray-400 text-sm uppercase">Reversal Trigger</span>
+                                    <span class="text-md font-bold text-purple-300" id="te-rev-trig">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t border-gray-700 text-center">
+                        <div class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Action</div>
+                        <div id="te-action" class="text-2xl font-black text-yellow-400">WAIT FOR BREAKOUT</div>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 mb-6 flex-grow" id="old-strategy-box">
                     <h3 class="font-bold text-blue-900 mb-2 flex items-center gap-2">
                         <i class="fa-solid fa-lightbulb text-blue-500"></i> Actionable Strategy
                     </h3>
@@ -1094,19 +1172,34 @@
                 
                 if(valid) {
                     let fwdPct = 0;
+                    let mfe = undefined;
+                    let mae = undefined;
                     if (currentMode === 'intraday') {
                         if (histData.signals.forward_return_pct === undefined) continue;
                         fwdPct = histData.signals.forward_return_pct;
+                        mfe = histData.signals.forward_max_up_pct;
+                        mae = histData.signals.forward_max_down_pct;
                     } else {
                         const nextDayDate = allDates[i+1];
                         if(!dashboardData[nextDayDate] || !dashboardData[nextDayDate].signals) continue;
-                        fwdPct = dashboardData[nextDayDate].signals.daily_return_pct;
+                        const nextData = dashboardData[nextDayDate];
+                        fwdPct = nextData.signals.daily_return_pct;
+                        if (nextData.signals.high && nextData.signals.low && histData.signals.close) {
+                            mfe = ((nextData.signals.high - histData.signals.close) / histData.signals.close) * 100;
+                            mae = ((nextData.signals.low - histData.signals.close) / histData.signals.close) * 100;
+                        }
+                    }
+                    
+                    if (mfe !== undefined && mae !== undefined) {
+                        histData.signals.forward_max_up_pct = mfe;
+                        histData.signals.forward_max_down_pct = mae;
                     }
                     
                     distances.push({
                         date: histDate,
                         dist: Math.sqrt(sumSq),
-                        next_ret: fwdPct
+                        next_ret: fwdPct,
+                        histData: histData
                     });
                 }
             }
@@ -1129,6 +1222,7 @@
             const q3 = rets[Math.floor(rets.length * 0.75)];
             
             return {
+                topK: topK,
                 probUp: probUp.toFixed(1),
                 medianRet: medianRet.toFixed(2),
                 q1: q1.toFixed(2),
@@ -1307,6 +1401,159 @@
                 moodEl.innerHTML = '<i class="fa-solid '+icon+' text-'+color+'-500"></i> <span class="text-'+color+'-700">' + dir + '</span>';
                 
                 // Institutional Summary
+                
+                // --- TRADE DECISION ENGINE LOGIC ---
+                if (document.getElementById('trade-engine-box') && topK && topK.topK) {
+                    document.getElementById('trade-engine-box').classList.remove('hidden');
+                    if (document.getElementById('old-strategy-box')) {
+                        document.getElementById('old-strategy-box').classList.add('hidden');
+                    }
+                    
+                    const currPrice = currSigs.close;
+                    document.getElementById('te-price').innerText = currPrice.toFixed(2);
+                    
+                    // Calculate outcome distribution (Up > 0.15%, Range -0.15 to 0.15, Down < -0.15)
+                    let upC = 0, downC = 0, rangeC = 0;
+                    const MFE = [], MAE = [];
+                    
+                    const matchArr = topK.topK;
+                    
+                    matchArr.forEach(d => {
+                        const r = d.next_ret;
+                        if (r > 0.15) upC++;
+                        else if (r < -0.15) downC++;
+                        else rangeC++;
+                        
+                        if (d.mfe !== undefined) {
+                            MFE.push(d.mfe);
+                            MAE.push(Math.abs(d.mae || 0));
+                        }
+                    });
+                    
+                    const pUp = ((upC / matchArr.length) * 100).toFixed(0);
+                    const pDn = ((downC / matchArr.length) * 100).toFixed(0);
+                    const pRg = ((rangeC / matchArr.length) * 100).toFixed(0);
+                    
+                    document.getElementById('te-prob-up').innerText = pUp + '%';
+                    document.getElementById('te-prob-down').innerText = pDn + '%';
+                    document.getElementById('te-prob-range').innerText = pRg + '%';
+                    
+                    document.getElementById('te-bar-up').style.width = pUp + '%';
+                    document.getElementById('te-bar-down').style.width = pDn + '%';
+                    document.getElementById('te-bar-range').style.width = pRg + '%';
+                    
+                    MFE.sort((a,b)=>a-b);
+                    MAE.sort((a,b)=>a-b);
+                    
+                    const getP = (arr, p) => arr.length > 0 ? arr[Math.floor(arr.length * p)] : 0;
+                    const mfe50 = getP(MFE, 0.5);
+                    const mfe75 = getP(MFE, 0.75);
+                    const mfe90 = getP(MFE, 0.90);
+                    
+                    const mae50 = getP(MAE, 0.5);
+                    const mae75 = getP(MAE, 0.75);
+                    const mae90 = getP(MAE, 0.90);
+                    
+                    const atrVal = currSigs.z_atr !== undefined ? currSigs.z_atr : 0;
+                    const volMult = 1.0 + (Math.max(0, atrVal) * 0.1);
+                    
+                    let bias = "NO TRADE";
+                    let biasColor = "text-gray-400";
+                    let accentColor = "bg-gray-500";
+                    let entry = "--", conf = "--", t1 = "--", t2 = "--", stop = "--", rr = "--", revZ = "--", revT = "--", action = "DO NOTHING";
+                    
+                    const timeHorizon = currentMode === 'intraday' ? '15m' : 'Daily';
+                    
+                    if (upC > downC && (pUp > 45 || pUp*1 + pRg*1 > 70) && mfe50 > mae50 * 1.1) {
+                        bias = "LONG BIAS";
+                        biasColor = "text-green-400";
+                        accentColor = "bg-green-500";
+                        
+                        const entryOffset = currPrice * (Math.max(0.05, mae50 * 0.3) / 100);
+                        const entryPrice = currPrice + entryOffset;
+                        
+                        entry = "> " + entryPrice.toFixed(0);
+                        conf = timeHorizon + " close > entry | Vol > Avg";
+                        
+                        const t1Offset = currPrice * (mfe50 * volMult / 100);
+                        const t2Offset = currPrice * (mfe75 * volMult / 100);
+                        t1 = (currPrice + t1Offset).toFixed(0);
+                        t2 = (currPrice + t2Offset).toFixed(0);
+                        
+                        const stopOffset = currPrice * (mae75 * volMult / 100);
+                        const stopPrice = currPrice - stopOffset;
+                        stop = Math.min(currPrice - 10, stopPrice).toFixed(0); 
+                        
+                        const risk = entryPrice - stopPrice;
+                        const reward = (currPrice + t1Offset) - entryPrice;
+                        rr = risk > 0 ? "1 : " + (reward/risk).toFixed(1) : "--";
+                        
+                        revZ = t2 + " - " + (currPrice + currPrice*(mfe90/100)).toFixed(0);
+                        revT = "< " + (currPrice + t2Offset - 15).toFixed(0);
+                        
+                        action = "WAIT FOR BREAKOUT";
+                        if (pUp > 60) action = "BUY PULLBACK / BREAKOUT";
+                        
+                    } else if (downC > upC && (pDn > 45 || pDn*1 + pRg*1 > 70) && mae50 > mfe50 * 1.1) {
+                        bias = "SHORT BIAS";
+                        biasColor = "text-red-400";
+                        accentColor = "bg-red-500";
+                        
+                        const shortT1 = currPrice - (currPrice * (mae50 * volMult / 100));
+                        const shortT2 = currPrice - (currPrice * (mae75 * volMult / 100));
+                        
+                        const entryOffset = currPrice * (Math.max(0.05, mfe50 * 0.3) / 100);
+                        const entryPrice = currPrice - entryOffset;
+                        
+                        entry = "< " + entryPrice.toFixed(0);
+                        conf = timeHorizon + " close < entry | Breakdown";
+                        
+                        t1 = shortT1.toFixed(0);
+                        t2 = shortT2.toFixed(0);
+                        
+                        const stopOffset = currPrice * (mfe75 * volMult / 100);
+                        const stopPrice = currPrice + stopOffset;
+                        stop = Math.max(currPrice + 10, stopPrice).toFixed(0);
+                        
+                        const risk = stopPrice - entryPrice;
+                        const reward = entryPrice - shortT1;
+                        rr = risk > 0 ? "1 : " + (reward/risk).toFixed(1) : "--";
+                        
+                        revZ = t2 + " - " + (currPrice - currPrice*(mae90/100)).toFixed(0);
+                        revT = "> " + (shortT2 + 15).toFixed(0);
+                        
+                        action = "WAIT FOR BREAKDOWN";
+                        if (pDn > 60) action = "SELL RALLY / BREAKDOWN";
+                    } else {
+                        bias = "RANGE / NO TRADE";
+                        biasColor = "text-gray-400";
+                        accentColor = "bg-gray-500";
+                        conf = "Choppy / Conflicting Signals";
+                    }
+                    
+                    document.getElementById('te-bias').innerText = bias;
+                    document.getElementById('te-bias').className = `text-xl font-black ${biasColor} uppercase tracking-widest bg-gray-800 px-4 py-1 rounded`;
+                    document.getElementById('trade-engine-accent').className = `absolute top-0 left-0 w-1 h-full ${accentColor}`;
+                    
+                    document.getElementById('te-entry').innerText = entry;
+                    document.getElementById('te-conf').innerText = conf;
+                    document.getElementById('te-t1').innerText = t1;
+                    document.getElementById('te-t2').innerText = t2;
+                    document.getElementById('te-stop').innerText = stop;
+                    document.getElementById('te-rr').innerText = rr;
+                    document.getElementById('te-rev-zone').innerText = revZ;
+                    document.getElementById('te-rev-trig').innerText = revT;
+                    
+                    document.getElementById('te-action').innerText = action;
+                    if (action.includes("BUY") || action.includes("SELL")) {
+                        document.getElementById('te-action').className = "text-2xl font-black text-green-400";
+                    } else if (action.includes("WAIT")) {
+                        document.getElementById('te-action').className = "text-2xl font-black text-yellow-400";
+                    } else {
+                        document.getElementById('te-action').className = "text-2xl font-black text-gray-500";
+                    }
+                }
+                
                 let instSummary = `
                     <div class="grid grid-cols-2 gap-4 mt-2">
                         <div class="bg-blue-100 p-3 rounded text-sm text-blue-900 border border-blue-200">
