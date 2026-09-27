@@ -809,7 +809,7 @@
                 }
             } catch(e) {
                 console.error(e);
-                document.getElementById('date-error').innerText = `Error loading ${currentTimeframe} data for ${currentInstrument}. Please run exporter script.`; 
+                document.getElementById('date-error').textContent = `Error loading ${currentTimeframe} data for ${currentInstrument}. Please run exporter script.`; 
                 document.getElementById('date-error').classList.remove('hidden');
             }
         }
@@ -830,7 +830,7 @@
             const retEl = document.getElementById('date-return');
             
             if(!selectedDateStr || !dashboardData[selectedDateStr]) {
-                errEl.innerText = "Market Closed or No Data Available for this date";
+                errEl.textContent = "Market Closed or No Data Available for this date";
                 errEl.classList.remove('hidden');
                 retEl.classList.add('hidden');
                 return;
@@ -979,33 +979,33 @@
                     const bVal = document.getElementById('val-breakout');
                     const bDesc = document.getElementById('val-breakout-desc');
                     
-                    if (document.getElementById('res-s1').innerText != "N/A" && oi && stoch) {
+                    if (document.getElementById('res-s1').textContent != "N/A" && oi && stoch) {
                         bBox.classList.remove('hidden');
                         const pSup = data.signals.options_support || "Data Syncing...";
                         const pRes = data.signals.options_resistance || "Data Syncing...";
-                        document.getElementById('guide-sup').innerText = pSup;
-                        document.getElementById('guide-res').innerText = pRes;
+                        document.getElementById('guide-sup').textContent = pSup;
+                        document.getElementById('guide-res').textContent = pRes;
                         
                         if (oi === 'bullish' && stoch === 'bullish crossover') {
                             bBar.className = "absolute top-0 left-0 w-1 h-full bg-green-500";
                             bVal.innerHTML = "<span class='text-green-400'>CONTINUATION (UPSIDE BREAKOUT)</span>";
-                            bDesc.innerText = "Momentum and Option writers are completely aligned for a pump. If price hits Resistance, expect it to break through easily. Do not short Resistance.";
+                            bDesc.textContent = "Momentum and Option writers are completely aligned for a pump. If price hits Resistance, expect it to break through easily. Do not short Resistance.";
                         } else if (oi === 'bullish' && (stoch === 'overbought' || stoch === 'bearish crossover')) {
                             bBar.className = "absolute top-0 left-0 w-1 h-full bg-orange-500";
                             bVal.innerHTML = "<span class='text-orange-400'>REVERSAL (UPSIDE FAKEOUT)</span>";
-                            bDesc.innerText = "Trend is bullish but momentum is exhausted. If price hits Resistance, expect a fakeout trap. High probability of rejection. Consider shorting Resistance.";
+                            bDesc.textContent = "Trend is bullish but momentum is exhausted. If price hits Resistance, expect a fakeout trap. High probability of rejection. Consider shorting Resistance.";
                         } else if (oi === 'bearish' && stoch === 'bearish crossover') {
                             bBar.className = "absolute top-0 left-0 w-1 h-full bg-red-500";
                             bVal.innerHTML = "<span class='text-red-400'>CONTINUATION (DOWNSIDE BREAKDOWN)</span>";
-                            bDesc.innerText = "Momentum and Option writers are completely aligned for a dump. If price hits Support, expect it to shatter easily. Do not buy Support.";
+                            bDesc.textContent = "Momentum and Option writers are completely aligned for a dump. If price hits Support, expect it to shatter easily. Do not buy Support.";
                         } else if (oi === 'bearish' && (stoch === 'oversold' || stoch === 'bullish crossover')) {
                             bBar.className = "absolute top-0 left-0 w-1 h-full bg-orange-500";
                             bVal.innerHTML = "<span class='text-orange-400'>REVERSAL (DOWNSIDE FAKEOUT)</span>";
-                            bDesc.innerText = "Trend is bearish but momentum is exhausted. If price hits Support, expect a fakeout trap. High probability of bounce. Consider buying Support.";
+                            bDesc.textContent = "Trend is bearish but momentum is exhausted. If price hits Support, expect a fakeout trap. High probability of bounce. Consider buying Support.";
                         } else {
                             bBar.className = "absolute top-0 left-0 w-1 h-full bg-gray-500";
                             bVal.innerHTML = "<span class='text-gray-400'>NEUTRAL (WAIT FOR 15-MIN CLOSE)</span>";
-                            bDesc.innerText = "Indicators are mixed. Wait for a full 15-minute candle to close above Resistance or below Support to confirm a breakout before entering.";
+                            bDesc.textContent = "Indicators are mixed. Wait for a full 15-minute candle to close above Resistance or below Support to confirm a breakout before entering.";
                         }
                     } else {
                         bBox.classList.add('hidden');
@@ -1048,31 +1048,31 @@
             if(document.getElementById('desc-pain')) document.getElementById('desc-pain').remove();
 
             if (data.signals.options_resistance && data.signals.options_support) {
-                document.getElementById('res-r1').innerText = data.signals.options_resistance;
-                document.getElementById('res-s1').innerText = data.signals.options_support;
+                document.getElementById('res-r1').textContent = data.signals.options_resistance;
+                document.getElementById('res-s1').textContent = data.signals.options_support;
                 
                 let descR = document.createElement('span');
                 descR.id = 'desc-r1';
                 descR.className = 'block text-xs text-gray-500 mt-2 border-t pt-1';
-                descR.innerText = "Max call writers (Sellers)";
+                descR.textContent = "Max call writers (Sellers)";
                 r1Element.appendChild(descR);
 
                 let descS = document.createElement('span');
                 descS.id = 'desc-s1';
                 descS.className = 'block text-xs text-gray-500 mt-2 border-t pt-1';
-                descS.innerText = "Max put writers (Buyers)";
+                descS.textContent = "Max put writers (Buyers)";
                 s1Element.appendChild(descS);
                 
                 if (data.signals.options_max_pain) {
-                    document.getElementById('res-pain').innerText = data.signals.options_max_pain;
+                    document.getElementById('res-pain').textContent = data.signals.options_max_pain;
                     let descP = document.createElement('span');
                     descP.id = 'desc-pain';
                     descP.className = 'block text-xs text-gray-500 mt-2 border-t pt-1';
-                    descP.innerText = "Expiry Magnet";
+                    descP.textContent = "Expiry Magnet";
                     if(document.getElementById('desc-pain')) document.getElementById('desc-pain').remove();
                     document.getElementById('res-pain').parentElement.appendChild(descP);
                 } else {
-                    document.getElementById('res-pain').innerText = "N/A";
+                    document.getElementById('res-pain').textContent = "N/A";
                 }
             } else if (data.signals.high && data.signals.low) {
                 const high = data.signals.high;
@@ -1081,23 +1081,23 @@
                 const pivot = (high + low + close) / 3;
                 const r1 = (2 * pivot) - low;
                 const s1 = (2 * pivot) - high;
-                document.getElementById('res-r1').innerText = r1.toFixed(2);
-                document.getElementById('res-s1').innerText = s1.toFixed(2);
+                document.getElementById('res-r1').textContent = r1.toFixed(2);
+                document.getElementById('res-s1').textContent = s1.toFixed(2);
                 
                 let descR = document.createElement('span');
                 descR.id = 'desc-r1';
                 descR.className = 'block text-xs text-gray-500 mt-2 border-t pt-1';
-                descR.innerText = "(Calculated via Standard Pivots)";
+                descR.textContent = "(Calculated via Standard Pivots)";
                 r1Element.appendChild(descR);
 
                 let descS = document.createElement('span');
                 descS.id = 'desc-s1';
                 descS.className = 'block text-xs text-gray-500 mt-2 border-t pt-1';
-                descS.innerText = "(Calculated via Standard Pivots)";
+                descS.textContent = "(Calculated via Standard Pivots)";
                 s1Element.appendChild(descS);
             } else {
-                document.getElementById('res-r1').innerText = 'Data Syncing...';
-                document.getElementById('res-s1').innerText = 'Data Syncing...';
+                document.getElementById('res-r1').textContent = 'Data Syncing...';
+                document.getElementById('res-s1').textContent = 'Data Syncing...';
             }
             
             // Analogue
@@ -1199,7 +1199,9 @@
                         date: histDate,
                         dist: Math.sqrt(sumSq),
                         next_ret: fwdPct,
-                        histData: histData
+                        histData: histData,
+                        mfe: mfe,
+                        mae: mae
                     });
                 }
             }
@@ -1314,7 +1316,7 @@
         function handleManualToggle() {
             if(document.getElementById('chk-autoselect').checked) {
                 document.getElementById('chk-autoselect').checked = false;
-                document.getElementById('badge-status').innerText = 'CUSTOM STRATEGY';
+                document.getElementById('badge-status').textContent = 'CUSTOM STRATEGY';
                 document.getElementById('badge-status').className = 'px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full tracking-wider';
             }
             renderPrediction();
@@ -1409,8 +1411,9 @@
                         document.getElementById('old-strategy-box').classList.add('hidden');
                     }
                     
+                    const currSigs = currentMode === 'intraday' ? liveData.latest : dashboardData[dateStr].signals;
                     const currPrice = currSigs.close;
-                    document.getElementById('te-price').innerText = currPrice.toFixed(2);
+                    document.getElementById('te-price').textContent = currPrice.toFixed(2);
                     
                     // Calculate outcome distribution (Up > 0.15%, Range -0.15 to 0.15, Down < -0.15)
                     let upC = 0, downC = 0, rangeC = 0;
@@ -1434,9 +1437,9 @@
                     const pDn = ((downC / matchArr.length) * 100).toFixed(0);
                     const pRg = ((rangeC / matchArr.length) * 100).toFixed(0);
                     
-                    document.getElementById('te-prob-up').innerText = pUp + '%';
-                    document.getElementById('te-prob-down').innerText = pDn + '%';
-                    document.getElementById('te-prob-range').innerText = pRg + '%';
+                    document.getElementById('te-prob-up').textContent = pUp + '%';
+                    document.getElementById('te-prob-down').textContent = pDn + '%';
+                    document.getElementById('te-prob-range').textContent = pRg + '%';
                     
                     document.getElementById('te-bar-up').style.width = pUp + '%';
                     document.getElementById('te-bar-down').style.width = pDn + '%';
@@ -1531,20 +1534,20 @@
                         conf = "Choppy / Conflicting Signals";
                     }
                     
-                    document.getElementById('te-bias').innerText = bias;
+                    document.getElementById('te-bias').textContent = bias;
                     document.getElementById('te-bias').className = `text-xl font-black ${biasColor} uppercase tracking-widest bg-gray-800 px-4 py-1 rounded`;
                     document.getElementById('trade-engine-accent').className = `absolute top-0 left-0 w-1 h-full ${accentColor}`;
                     
-                    document.getElementById('te-entry').innerText = entry;
-                    document.getElementById('te-conf').innerText = conf;
-                    document.getElementById('te-t1').innerText = t1;
-                    document.getElementById('te-t2').innerText = t2;
-                    document.getElementById('te-stop').innerText = stop;
-                    document.getElementById('te-rr').innerText = rr;
-                    document.getElementById('te-rev-zone').innerText = revZ;
-                    document.getElementById('te-rev-trig').innerText = revT;
+                    document.getElementById('te-entry').textContent = entry;
+                    document.getElementById('te-conf').textContent = conf;
+                    document.getElementById('te-t1').textContent = t1;
+                    document.getElementById('te-t2').textContent = t2;
+                    document.getElementById('te-stop').textContent = stop;
+                    document.getElementById('te-rr').textContent = rr;
+                    document.getElementById('te-rev-zone').textContent = revZ;
+                    document.getElementById('te-rev-trig').textContent = revT;
                     
-                    document.getElementById('te-action').innerText = action;
+                    document.getElementById('te-action').textContent = action;
                     if (action.includes("BUY") || action.includes("SELL")) {
                         document.getElementById('te-action').className = "text-2xl font-black text-green-400";
                     } else if (action.includes("WAIT")) {

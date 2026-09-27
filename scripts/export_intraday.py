@@ -168,6 +168,19 @@ def process_intraday_symbol(symbol_name, db_filename):
         tf_df['Session_Close'] = tf_df.groupby('Date')['Close'].transform('last')
         tf_df['Forward_Return'] = (tf_df['Session_Close'] - tf_df['Close']) / tf_df['Close'] * 100
         
+        # Calculate Forward Max Up (MFE) and Max Down (MAE) for the rest of the session
+        reversed_df = tf_df.iloc[::-1]
+        tf_df['Session_Max_High'] = reversed_df.groupby('Date')['High'].cummax().iloc[::-1]
+        tf_df['Session_Min_Low'] = reversed_df.groupby('Date')['Low'].cummin().iloc[::-1]
+        
+        tf_df['Session_Max_High_Next'] = tf_df.groupby('Date')['Session_Max_High'].shift(-1)
+        tf_df['Session_Min_Low_Next'] = tf_df.groupby('Date')['Session_Min_Low'].shift(-1)
+        
+        tf_df['Forward_Max_Up'] = (tf_df['Session_Max_High_Next'] - tf_df['Close']) / tf_df['Close'] * 100
+        tf_df['Forward_Max_Down'] = (tf_df['Session_Min_Low_Next'] - tf_df['Close']) / tf_df['Close'] * 100
+        tf_df['Forward_Max_Up'] = tf_df['Forward_Max_Up'].fillna(0)
+        tf_df['Forward_Max_Down'] = tf_df['Forward_Max_Down'].fillna(0)
+        
         rolling_window = 252 # About ~3.5 days of 5m bars
         if pd_tf != "5min":
             rolling_window = max(20, 252 // (int(tf_str) // 5))
@@ -224,6 +237,8 @@ def process_intraday_symbol(symbol_name, db_filename):
                 "close": round(float(row["Close"]), 2),
                 "volume": float(row["Volume"]),
                 "forward_return_pct": round(float(row["Forward_Return"]), 2),
+                "forward_max_up_pct": round(float(row.get("Forward_Max_Up", 0.0)), 2),
+                "forward_max_down_pct": round(float(row.get("Forward_Max_Down", 0.0)), 2),
                 "z_rsi": round(float(row.get("z_rsi", 0.0)), 3),
                 "z_stochrsi": round(float(row.get("z_stochrsi", 0.0)), 3),
                 "z_ema_diff": round(float(row.get("z_ema_diff", 0.0)), 3),
