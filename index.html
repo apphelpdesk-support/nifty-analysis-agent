@@ -793,12 +793,24 @@
                     select.min = uniqueDates[uniqueDates.length - 1];
                     select.max = uniqueDates[0];
                     
+                    // Find the most recent weekday (Mon-Fri) from the data to pre-select
+                    let latestWeekday = uniqueDates[0];
+                    for (let d of uniqueDates) {
+                        // Parse as local time by adding time string to avoid UTC shift issues
+                        const dateObj = new Date(d + "T00:00:00");
+                        const dayOfWeek = dateObj.getDay();
+                        if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Not Sunday (0) or Saturday (6)
+                            latestWeekday = d;
+                            break;
+                        }
+                    }
+                    
                     // Preserve selected date unless it's empty or invalid
                     if (!oldVal || !uniqueDates.includes(oldVal)) {
-                        select.value = uniqueDates[0];
+                        select.value = latestWeekday;
                     } else if (!isSilentRefresh && currentMode === 'intraday') {
-                        // When explicitly clicking the Intraday tab, default to the latest date
-                        select.value = uniqueDates[0];
+                        // When explicitly clicking the Intraday tab, default to the latest weekday
+                        select.value = latestWeekday;
                     } else {
                         select.value = oldVal;
                     }
