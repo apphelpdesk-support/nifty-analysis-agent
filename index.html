@@ -1671,9 +1671,10 @@
             }, 150);
         }
 window.addEventListener('DOMContentLoaded', () => {
-            fetchLiveJSON();
-            setInterval(() => fetchLiveJSON(true), 60000);
-        });
+    checkMarketStatus();
+    fetchLiveJSON();
+    setInterval(() => fetchLiveJSON(true), 60000);
+});
     
         function runPatternScanner() {
             const startStr = document.getElementById('scan-start').value;
