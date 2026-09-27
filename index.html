@@ -703,7 +703,6 @@
             if (mode === 'intraday') {
                 // Keep timeframe visible but maybe restrict 'daily'
                 tfSelect.classList.remove('hidden');
-                datePickerContainer.classList.add('hidden');
                 subtabs.classList.add('hidden');
                 if (tfSelect.value === 'daily') {
                     tfSelect.value = '5'; // Default to 5m if daily was selected
@@ -712,7 +711,6 @@
                 checkMarketStatus();
             } else {
                 tfSelect.classList.add('hidden'); // Hide for BTST
-                datePickerContainer.classList.remove('hidden');
                 subtabs.classList.remove('hidden');
                 document.getElementById('market-closed-warning').classList.add('hidden');
                 document.getElementById('dashboard-data-container').classList.remove('hidden');
