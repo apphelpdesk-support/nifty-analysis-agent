@@ -127,7 +127,11 @@ def update_from_fyers(name: str, symbol: str, settings: dict, days: int = 5) -> 
     start_date = end_date - timedelta(days=days)
     
     # Map symbols (Yahoo to Fyers)
-    fyers_symbol = "NSE:NIFTY50-INDEX" if "NSEI" in symbol else symbol
+    fyers_map = {
+        "^NSEI": "NSE:NIFTY50-INDEX",
+        "^NSEBANK": "NSE:NIFTYBANK-INDEX"
+    }
+    fyers_symbol = fyers_map.get(symbol, "NSE:NIFTY50-INDEX" if "NSEI" in symbol else symbol)
     
     data = {
         "symbol": fyers_symbol,
@@ -172,7 +176,13 @@ def update_from_fyers(name: str, symbol: str, settings: dict, days: int = 5) -> 
 
 
 def update_all_fyers(settings: dict) -> None:
+    try:
+        from core import data_fyers as dfy
+        dfy.build_historical_database("NSE:NIFTY50-INDEX", "5", days_back=10)
+        dfy.build_historical_database("NSE:NIFTYBANK-INDEX", "5", days_back=10)
+    except Exception as exc:
+        print(f"[fyers] Fyers DB update note: {exc}")
     syms = settings["symbols"]
-    for name, symbol in [("nifty", syms["nifty"])]:
+    for name, symbol in [("nifty", syms["nifty"]), ("bank_nifty", syms.get("bank_nifty", "^NSEBANK"))]:
         update_from_fyers(name, symbol, settings, days=5)
     print("[intraday] Fyers live collector done.")
