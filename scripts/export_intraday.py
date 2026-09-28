@@ -16,12 +16,13 @@ class IntradayWFO:
     feature stability tracking, NO SIGNAL if OOS edge isn't positive.
     """
 
-    def __init__(self, df, all_features, k=50, val_size=300, oos_size=300):
+    def __init__(self, df, all_features, k=50, val_size=300, oos_size=300, train_size=252):
         self.df = df
         self.all_features = all_features
         self.k = k
         self.val_size = val_size
         self.oos_size = oos_size
+        self.train_size = train_size
 
         # 1–5 feature combinations (finalized spec)
         self.feature_combinations = []
@@ -62,14 +63,15 @@ class IntradayWFO:
                 if actual_return < 0:
                     wins += 1
 
-        # Complexity penalty: penalise higher-dimensional combos
-        complexity_penalty = len(features) * 0.001
+        # Complexity penalty: penalise higher-dimensional combos (-0.01% per feature)
+        # Note: Since edge_sum is in percentage points (e.g. 0.44 means 0.44%), 0.01% is 0.01
+        complexity_penalty = len(features) * 0.01
         score = (edge_sum - complexity_penalty) if trades > 0 else -999.0
         return score, edge_sum, trades, wins
 
     def run(self):
         total_bars = len(self.df)
-        min_required = 252 + self.val_size + self.oos_size
+        min_required = self.train_size + self.val_size + self.oos_size
         if total_bars < min_required:
             print(f"  WFO: not enough bars ({total_bars} < {min_required}), skipping.")
             return None
@@ -80,7 +82,7 @@ class IntradayWFO:
         oos_wins_total = 0
         step_size = self.oos_size
 
-        for start_oos in range(252 + self.val_size, total_bars, step_size):
+        for start_oos in range(self.train_size + self.val_size, total_bars, step_size):
             end_oos = min(start_oos + step_size, total_bars)
             start_val = start_oos - self.val_size
 
@@ -317,9 +319,18 @@ def process_intraday_symbol(symbol_name, db_filename):
         
         # Run Intraday WFO with features that map directly to UI checkboxes
         wfo_features = ['z_rsi', 'z_stochrsi', 'z_ema_diff', 'z_price_ema', 'z_vol']
-        min_wfo_bars = 252 + 300 + 300  # train + val + oos
-        if len(valid_wfo_bars) > min_wfo_bars:
-            wfo_engine = IntradayWFO(valid_wfo_bars, wfo_features, k=50, val_size=300, oos_size=300)
+        total_valid = len(valid_wfo_bars)
+        
+        # Dynamically scale WFO windows if we don't have enough history for the full 852-bar spec
+        if total_valid >= 100:
+            if total_valid > 252 + 300 + 300:
+                t_size, v_size, o_size = 252, 300, 300
+            else:
+                v_size = int(total_valid * 0.25)
+                o_size = int(total_valid * 0.25)
+                t_size = total_valid - v_size - o_size
+                
+            wfo_engine = IntradayWFO(valid_wfo_bars, wfo_features, k=50, val_size=v_size, oos_size=o_size, train_size=t_size)
             meta = wfo_engine.run()
             if meta:
                 data["_meta"] = meta

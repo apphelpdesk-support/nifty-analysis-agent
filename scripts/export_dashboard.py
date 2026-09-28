@@ -473,8 +473,8 @@ def process_symbol(symbol_name, db_filename):
                     win_rate = win_count / total_trades
                     avg_ret = cumulative_ret / total_trades
                     edge = cumulative_ret * win_rate
-                    # Complexity Penalty: 0.1% per feature
-                    adj_edge = edge - (len(test_combs[c_idx]) * 0.001)
+                    # Complexity Penalty: 0.01% per feature
+                    adj_edge = edge - (len(test_combs[c_idx]) * 0.01)
                     return adj_edge, total_trades, win_rate, avg_ret
         
                 oos_start = n_days - 30 - 1
