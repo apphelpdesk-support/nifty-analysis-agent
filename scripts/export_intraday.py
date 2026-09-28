@@ -110,12 +110,64 @@ class IntradayWFO:
 def process_intraday_symbol(symbol_name, db_filename):
     print(f"[{symbol_name}] Starting Intraday Engine Processing...")
     
+    from pathlib import Path
+    import pytz
+    IST = pytz.timezone("Asia/Kolkata")
+
     csv_path = f"data/fyers_db/5/{db_filename}"
-    if not os.path.exists(csv_path):
-        print(f"[{symbol_name}] Intraday DB {csv_path} missing.")
+    df = None
+    
+    # 1. Load Fyers DB if present
+    if os.path.exists(csv_path):
+        try:
+            df = pd.read_csv(csv_path, index_col=0, parse_dates=True)
+            df.columns = [c.lower() for c in df.columns]
+        except Exception as e:
+            print(f"[{symbol_name}] Error reading {csv_path}: {e}")
+            
+    # 2. Check for yfinance archive data (e.g. data/intraday/5m/nifty.csv or bank_nifty.csv)
+    yf_name_map = {
+        "nifty": "nifty",
+        "banknifty": "bank_nifty",
+        "reliance": "reliance"
+    }
+    yf_filename = yf_name_map.get(symbol_name, symbol_name)
+    yf_path = f"data/intraday/5m/{yf_filename}.csv"
+    
+    if os.path.exists(yf_path):
+        try:
+            yf_df = pd.read_csv(yf_path, index_col=0, parse_dates=True)
+            yf_df.columns = [c.lower() for c in yf_df.columns]
+            
+            if df is not None and not df.empty:
+                if df.index.tz is None:
+                    df.index = df.index.tz_localize("UTC").tz_convert(IST)
+                else:
+                    df.index = df.index.tz_convert(IST)
+                if yf_df.index.tz is None:
+                    yf_df.index = yf_df.index.tz_localize("UTC").tz_convert(IST)
+                else:
+                    yf_df.index = yf_df.index.tz_convert(IST)
+                    
+                df = pd.concat([df, yf_df])
+                df = df[~df.index.duplicated(keep="last")].sort_index()
+                Path(csv_path).parent.mkdir(parents=True, exist_ok=True)
+                df.to_csv(csv_path)
+            else:
+                df = yf_df
+                if df.index.tz is None:
+                    df.index = df.index.tz_localize("UTC").tz_convert(IST)
+                else:
+                    df.index = df.index.tz_convert(IST)
+                Path(csv_path).parent.mkdir(parents=True, exist_ok=True)
+                df.to_csv(csv_path)
+        except Exception as e:
+            print(f"[{symbol_name}] Error merging yfinance archive: {e}")
+            
+    if df is None or df.empty:
+        print(f"[{symbol_name}] No intraday data available for {symbol_name}.")
         return
-        
-    df = pd.read_csv(csv_path, index_col=0, parse_dates=True)
+
     df = df.rename(columns={"open": "Open", "high": "High", "low": "Low", "close": "Close", "volume": "Volume"})
     
     # Restrict to last 2000 bars (~1 month of 5m data) to keep WFO blazing fast for real-time running
