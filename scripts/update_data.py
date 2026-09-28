@@ -37,8 +37,9 @@ def main() -> None:
 
     settings = st.load_settings()
     if args.fyers:
-        data_intraday.update_all_fyers(settings)
-        return
+        # Non-zero exit on a failed fetch so callers (the intraday loop) can
+        # detect an outage instead of re-exporting a stale cache.
+        sys.exit(0 if data_intraday.update_all_fyers(settings) else 1)
 
     if args.intraday:
         data_intraday.update_all_free(settings)

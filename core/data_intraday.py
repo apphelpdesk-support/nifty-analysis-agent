@@ -98,8 +98,13 @@ def import_bulk_csv(csv_path, name: str, settings: dict, minutes: int = 5) -> Pa
     return _save_bars(combined, name, settings, minutes)
 
 
-def update_from_fyers(name: str, symbol: str, settings: dict, days: int = 5) -> pd.DataFrame:
-    """Fetch live and historical 5-minute bars from Fyers API v3."""
+def update_from_fyers(name: str, symbol: str, settings: dict, days: int = 5):
+    """Fetch live and historical 5-minute bars from Fyers API v3.
+
+    Returns the archived frame on success, or None if the fetch produced
+    nothing new. Callers must treat None as failure: this function swallows
+    network/auth errors so a network outage cannot crash the intraday loop.
+    """
     import os
     from datetime import datetime, timedelta
     from dotenv import load_dotenv
@@ -111,7 +116,7 @@ def update_from_fyers(name: str, symbol: str, settings: dict, days: int = 5) -> 
     token_file = ".fyers_token"
     if not os.path.exists(token_file):
         print("[fyers] No access token found. Run fyers_login.py first.")
-        return load_bars(name, 5, settings)
+        return None
         
     with open(token_file, "r") as f:
         access_token = f.read().strip()
@@ -137,10 +142,17 @@ def update_from_fyers(name: str, symbol: str, settings: dict, days: int = 5) -> 
         "cont_flag": "1"
     }
     
-    response = fyers.history(data=data)
+    try:
+        response = fyers.history(data=data)
+    except Exception as exc:
+        # Network/DNS/auth failures surface here. Report as a failed fetch
+        # rather than letting the exception escape the intraday loop.
+        print(f"[fyers] request error for {symbol}: {exc}")
+        return None
+
     if response.get("s") != "ok" or "candles" not in response:
         print(f"[fyers] fetch failed for {symbol}: {response}")
-        return load_bars(name, 5, settings)
+        return None
         
     # Convert Fyers epochs to DatetimeIndex
     candles = response["candles"]
@@ -152,7 +164,7 @@ def update_from_fyers(name: str, symbol: str, settings: dict, days: int = 5) -> 
     
     if fresh.empty:
         print(f"[fyers] no recent bars for {symbol}")
-        return load_bars(name, 5, settings)
+        return None
         
     fresh.index.name = "ts"
     existing = load_bars(name, 5, settings)
@@ -169,14 +181,22 @@ def update_from_fyers(name: str, symbol: str, settings: dict, days: int = 5) -> 
     return combined
 
 
-def update_all_fyers(settings: dict) -> None:
+def update_all_fyers(settings: dict) -> bool:
+    """Refresh the Fyers-backed intraday archive.
+
+    Returns True if at least one symbol yielded a fresh fetch. The historical
+    database refresh is best-effort and does not affect the result.
+    """
     try:
         from core import data_fyers as dfy
         dfy.build_historical_database("NSE:NIFTY50-INDEX", "5", days_back=10)
         dfy.build_historical_database("NSE:NIFTYBANK-INDEX", "5", days_back=10)
     except Exception as exc:
-        print(f"[fyers] Fyers DB update note: {exc}")
+        print(f"[fyers] Fyers DB refresh skipped: {exc}")
     syms = settings["symbols"]
+    ok = 0
     for name, symbol in [("nifty", syms["nifty"]), ("bank_nifty", syms.get("bank_nifty", "^NSEBANK"))]:
-        update_from_fyers(name, symbol, settings, days=5)
-    print("[intraday] Fyers live collector done.")
+        if update_from_fyers(name, symbol, settings, days=5) is not None:
+            ok += 1
+    print(f"[intraday] Fyers collector done: {ok}/2 symbols refreshed.")
+    return ok > 0

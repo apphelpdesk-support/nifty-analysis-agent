@@ -30,9 +30,32 @@ historical-analogue matching. It is NOT a web app.
 - Bar features are point-in-time; forward outcomes are same-session only, and
   session-final bars are excluded from analogue candidates (no valid rest-of-session).
 - Session = 09:15-15:30 IST; resampling anchors at 09:15 (`origin="start"`) so
-  bars never bridge sessions.
+  bars never bridge sessions. Pre-open rows (e.g. the Fyers 09:05/09:10 bars)
+  are filtered out by `core.session.filter_session`.
+- The raw 5m cap (`intraday.max_raw_bars_5m`) is applied **before** resampling,
+  so 5/15/30/60m all cover the same calendar span.
 - Deep Kite index bars have volume=0 (index has none); volume context uses the
-  lagged daily aggregate. The 60d yfinance collector carries real bar volume.
+  lagged daily aggregate. NOTE: the 60d yfinance collector has been observed to
+  carry volume=0 on ~99% of bars, which contradicts an earlier version of this
+  line — treat yfinance bar volume as unreliable.
+
+## Intraday automation
+
+- `scripts/auto_intraday_loop.py` runs every 5 min in market hours and **must be
+  launched manually each trading day** — there is no scheduled task for it. It
+  self-terminates at 15:31 IST after a final session export.
+- The loop gates on data freshness, not exit codes: the Fyers fetch swallows
+  network errors, so before exporting/pushing it verifies the newest bar in
+  **every** published 5m archive (`FYERS_ARCHIVES` in the script) is within
+  12 min. Gating on NIFTY alone would republish a stale Bank Nifty. On stale
+  data it logs `ALERT`, skips the export and push, and reports `RECOVERED`
+  when the feed returns. **Consequence: during a feed outage the dashboard
+  freezes rather than republishing stale data, and the commit log gaps.** That
+  is intended.
+- The closing 15:31 cycle is exempt from the gate: the archive already holds
+  the full session, so a failed final fetch must not cost the session export.
+
+
 
 ## Working environment
 
