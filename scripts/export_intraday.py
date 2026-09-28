@@ -17,7 +17,7 @@ class IntradayWFO:
         self.oos_size = oos_size
         
         self.feature_combinations = []
-        for r in range(1, len(all_features) + 1):
+        for r in range(2, 5): # Enforce multi-indicator confluence (min 2, max 4 features)
             self.feature_combinations.extend(list(itertools.combinations(all_features, r)))
             
     def _evaluate_combo(self, X_train, y_train_target, y_train_ret, X_val, y_val_target, y_val_ret, features):
@@ -268,9 +268,10 @@ def process_intraday_symbol(symbol_name, db_filename):
         
         data = {}
         
-        # Run Intraday WFO
+        # Run Intraday WFO with features that map directly to UI checkboxes
+        wfo_features = ['z_rsi', 'z_stochrsi', 'z_ema_diff', 'z_price_ema', 'z_vol']
         if len(valid_wfo_bars) > 100:
-            wfo_engine = IntradayWFO(valid_wfo_bars, list(features_map.values()), k=5, val_size=75, oos_size=75)
+            wfo_engine = IntradayWFO(valid_wfo_bars, wfo_features, k=5, val_size=75, oos_size=75)
             meta = wfo_engine.run()
             if meta:
                 meta["oos_edge"] = round(0.0, 3) # Placeholder since it's dynamic
