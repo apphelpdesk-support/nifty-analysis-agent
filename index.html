@@ -1309,10 +1309,31 @@
                     return;
                 }
                 
-                const optimalFeatures = meta.wfo_optimal_features;
+                const optimalFeatures = meta.wfo_optimal_features || [];
+                const featureToCbId = {
+                    'z_rsi': 'chk-rsi',
+                    'z_stochrsi': 'chk-stochrsi',
+                    'z_ema_diff': 'chk-ema59',
+                    'z_price_ema': 'chk-ema20',
+                    'z_vol': 'chk-deltaoi',
+                    'z_atr': 'chk-stochrsi',
+                    'z_vix': 'chk-vix',
+                    'z_bn_rel': 'chk-divergence',
+                    'chk-rsi': 'chk-rsi',
+                    'chk-stochrsi': 'chk-stochrsi',
+                    'chk-ema59': 'chk-ema59',
+                    'chk-ema20': 'chk-ema20',
+                    'chk-vix': 'chk-vix',
+                    'chk-divergence': 'chk-divergence',
+                    'chk-deltaoi': 'chk-deltaoi'
+                };
+                let activeCbIds = optimalFeatures.map(f => featureToCbId[f] || f);
+                if (activeCbIds.length === 0) {
+                    activeCbIds = ['chk-rsi', 'chk-ema59', 'chk-stochrsi'];
+                }
                 
                 document.querySelectorAll('.indicator-checkbox').forEach(cb => {
-                    if (optimalFeatures.includes(cb.id)) {
+                    if (activeCbIds.includes(cb.id)) {
                         cb.checked = true;
                         cb.closest('label').classList.add('ring-2', 'ring-blue-500', 'bg-blue-50');
                     } else {
