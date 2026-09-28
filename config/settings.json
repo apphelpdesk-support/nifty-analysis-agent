@@ -82,6 +82,7 @@
     "standardize_lookback": 500,
     "yfinance_depth_days": 60,
     "daily_vol_lookback": 90,
+    "max_raw_bars_5m": 5000,
     "kite": {
       "config": "config/kite.ini",
       "index_token": 256265,

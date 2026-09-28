@@ -1,5 +1,10 @@
 import json
 import os
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
@@ -7,6 +12,9 @@ import pandas_ta as ta
 import math
 import itertools
 from collections import defaultdict
+
+import core.settings as settings_mod
+from core import session as session_mod
 
 class IntradayWFO:
     """Walk-Forward Optimizer for intraday bar-level feature selection.
@@ -155,6 +163,27 @@ class IntradayWFO:
             "status": "ACTIVE"
         }
 
+_RESAMPLE_COLS = {"open": "Open", "high": "High", "low": "Low", "close": "Close", "volume": "Volume"}
+
+
+def resample_session(df: pd.DataFrame, minutes: int, settings: dict) -> pd.DataFrame:
+    """Session-anchored OHLCV frame at the requested timeframe.
+
+    Delegates to core.session.resample_ohlcv so both intraday invariants hold:
+    bins anchor at the session open (09:15) and truncated end-of-session bins
+    are dropped. A default-origin resample instead lands 30m/60m bars on the
+    :00/:30 midnight grid, which does not line up with a 09:15 session open and
+    leaves a short final bar at the close that would contaminate the features.
+    """
+    if minutes == 5:
+        return df.copy()
+
+    lower = df.rename(columns=str.lower)
+    out = session_mod.resample_ohlcv(lower, minutes, settings)
+    out = out.drop(columns=["_session"], errors="ignore")
+    return out.rename(columns=_RESAMPLE_COLS)
+
+
 def process_intraday_symbol(symbol_name, db_filename):
     print(f"[{symbol_name}] Starting Intraday Engine Processing...")
     
@@ -217,17 +246,26 @@ def process_intraday_symbol(symbol_name, db_filename):
         return
 
     df = df.rename(columns={"open": "Open", "high": "High", "low": "Low", "close": "Close", "volume": "Volume"})
-    
-    # Keep enough bars for WFO (train 252 + val 300 + oos 300 = 852 min) plus history.
-    # 5000 bars ≈ 67 trading days of 5m data — ample for multiple WFO folds.
-    if len(df) > 5000:
-        df = df.iloc[-5000:].copy()
-        
+
+    settings = settings_mod.load_settings()
+
+    # Drop pre-open / closing-auction rows. The Fyers 5m archive carries
+    # 09:05 and 09:10 bars, so a raw pass-through would otherwise see 77 bars
+    # on some sessions instead of 75. Same filter the archive loader applies,
+    # so both intraday pipelines share one definition of the session.
+    df = session_mod.filter_session(df, settings)
+
+    # Cap the RAW 5m window once, BEFORE any resampling, so every timeframe
+    # (5/15/30/60m) covers the same calendar span. Capping each timeframe
+    # independently would silently give them different histories.
+    # 5000 bars ~= 67 trading days; enough for multiple WFO folds at 5m/15m.
+    df = session_mod.cap_raw_bars(df, settings)
+
     timeframes = {
-        "5": "5min",
-        "15": "15min",
-        "30": "30min",
-        "60": "60min"
+        "5": 5,
+        "15": 15,
+        "30": 30,
+        "60": 60
     }
     
     # We only process the last 3 unique trading days for the UI JSON payload
@@ -236,22 +274,13 @@ def process_intraday_symbol(symbol_name, db_filename):
         return
     last_3_days = unique_dates[-3:]
     
-    for tf_str, pd_tf in timeframes.items():
+    for tf_str, minutes in timeframes.items():
         data_file = f"intraday_{tf_str}_{symbol_name}.json"
-        
-        # Resample logic (anchored to session)
-        if pd_tf == "5min":
-            tf_df = df.copy()
-        else:
-            tf_df = df.groupby(df.index.date).resample(pd_tf).agg({
-                'Open': 'first',
-                'High': 'max',
-                'Low': 'min',
-                'Close': 'last',
-                'Volume': 'sum'
-            }).dropna()
-            # Drop the date level from the MultiIndex
-            tf_df = tf_df.reset_index(level=0, drop=True)
+
+        tf_df = resample_session(df, minutes, settings)
+        if tf_df.empty:
+            print(f"[{symbol_name}] {tf_str}m resample produced no bars, skipping.")
+            continue
             
         tf_df.ta.ema(length=200, append=True)
         tf_df.ta.ema(length=20, append=True)
@@ -286,8 +315,8 @@ def process_intraday_symbol(symbol_name, db_filename):
         tf_df['Forward_Max_Down'] = tf_df['Forward_Max_Down'].fillna(0)
         
         rolling_window = 252 # About ~3.5 days of 5m bars
-        if pd_tf != "5min":
-            rolling_window = max(20, 252 // (int(tf_str) // 5))
+        if minutes != 5:
+            rolling_window = max(20, 252 // (minutes // 5))
             
         features_map = {
             'RSI_14': 'z_rsi',
@@ -307,12 +336,13 @@ def process_intraday_symbol(symbol_name, db_filename):
         # Drop rows with NaN features
         tf_df = tf_df.dropna(subset=list(features_map.values()) + ['Forward_Return'])
         
-        # Mask the last bar of the day from WFO target since forward_return is 0
-        import datetime as dt_lib
+        # Mask each session's own final bar from the WFO target: Forward_Return
+        # is 0 there by construction, so those rows carry no signal. Derived
+        # per day rather than from a single global clock time, so a partial
+        # latest session cannot shift which bar is excluded.
         tf_df['Time'] = tf_df.index.time
-        # In Fyers, 15:25 is the last 5m bar.
-        last_bar_time = dt_lib.time(15, 25) if pd_tf == "5min" else tf_df['Time'].max()
-        valid_wfo_bars = tf_df[tf_df['Time'] != last_bar_time].copy()
+        session_last = tf_df.groupby('Date')['Time'].transform('last')
+        valid_wfo_bars = tf_df[tf_df['Time'] != session_last].copy()
         valid_wfo_bars['y_target'] = (valid_wfo_bars['Forward_Return'] > 0).astype(int)
         
         data = {}

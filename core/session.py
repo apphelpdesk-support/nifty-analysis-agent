@@ -52,6 +52,19 @@ def session_label(idx) -> pd.Series:
     return pd.Series(pd.to_datetime(idx).date, index=idx)
 
 
+def filter_session(df: pd.DataFrame, settings: dict) -> pd.DataFrame:
+    """Keep only regular-session bars.
+
+    Drops pre-open and closing-auction rows. Raw feeds are not clean here: the
+    Fyers 5m archive carries 09:05/09:10 pre-open bars, so a 5m pass-through
+    sees 77 bars on some sessions instead of 75.
+    """
+    cfg = session_cfg(settings)
+    o_min, c_min = open_min(cfg), close_min(cfg)
+    mins = df.index.hour * 60 + df.index.minute
+    return df[(mins >= o_min) & (mins <= c_min)]
+
+
 def resample_ohlcv(df: pd.DataFrame, minutes: int, settings: dict) -> pd.DataFrame:
     """Session-aware OHLCV resample from the canonical 5m archive.
 
@@ -79,13 +92,32 @@ def resample_ohlcv(df: pd.DataFrame, minutes: int, settings: dict) -> pd.DataFra
     return agg
 
 
+def max_raw_bars(settings: dict):
+    n = settings.get("intraday", {}).get("max_raw_bars_5m")
+    return int(n) if n else None
+
+
+def cap_raw_bars(df: pd.DataFrame, settings: dict) -> pd.DataFrame:
+    """Trim the canonical 5m frame to the shared analysis window.
+
+    The cap is applied to raw 5m bars *before* resampling, so every derived
+    timeframe (5/15/30/60m) covers the same calendar span. Capping each
+    timeframe independently would silently give them different histories.
+    """
+    n = max_raw_bars(settings)
+    if n and len(df) > n:
+        return df.iloc[-n:].copy()
+    return df
+
+
 def archive_bars(name: str, minutes: int, settings: dict) -> pd.DataFrame:
-    """Load 5m canonical archive and resample to the requested timeframe."""
+    """Load 5m canonical archive, cap the raw window, resample to timeframe."""
     from core import data_intraday
 
     base = data_intraday.load_bars(name, 5, settings)
     if base.empty:
         return base
+    base = cap_raw_bars(base, settings)
     if minutes == 5:
         df = base.copy()
         df.index.name = "ts"

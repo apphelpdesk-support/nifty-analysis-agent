@@ -23,17 +23,14 @@ def archive_path(name: str, settings: dict, minutes: int = 5) -> Path:
     return settings_mod.rel(settings, "intraday_archive_dir") / f"{minutes}m" / f"{name}.csv"
 
 
-def _finalize(df: pd.DataFrame, tz: str) -> pd.DataFrame:
+def _finalize(df: pd.DataFrame, settings: dict) -> pd.DataFrame:
     if df is None or df.empty:
         return pd.DataFrame()
     df = df.copy()
     df.columns = [str(c).lower().replace(" ", "_") for c in df.columns]
-    df.index = session.to_aware(df.index, tz)
+    df.index = session.to_aware(df.index, session.session_cfg(settings)["tz"])
     keep = [c for c in ("open", "high", "low", "close", "volume") if c in df.columns]
-    df = df[keep]
-    o_min, c_min = session.open_min({"open": "09:15"}), session.close_min({"close": "15:30"})
-    mins = df.index.hour * 60 + df.index.minute
-    df = df[(mins >= o_min) & (mins <= c_min)]
+    df = session.filter_session(df[keep], settings)
     df = df[~df.index.duplicated(keep="last")].sort_index()
     return df
 
@@ -43,7 +40,7 @@ def load_bars(name: str, minutes: int, settings: dict) -> pd.DataFrame:
     if not p.exists():
         return pd.DataFrame()
     df = pd.read_csv(p, index_col=0, parse_dates=True)
-    return _finalize(df, session.session_cfg(settings)["tz"])
+    return _finalize(df, settings)
 
 
 def _save_bars(df: pd.DataFrame, name: str, settings: dict, minutes: int = 5) -> Path:
@@ -66,8 +63,7 @@ def update_from_yfinance(name: str, symbol: str, settings: dict, days: int = Non
     except Exception as exc:
         print(f"[intraday] yfinance fetch failed for {symbol}: {exc}")
         raw = pd.DataFrame()
-    tz = session.session_cfg(settings)["tz"]
-    fresh = _finalize(raw, tz)
+    fresh = _finalize(raw, settings)
     if fresh.empty:
         print(f"[intraday] no recent bars for {symbol}")
         return load_bars("nifty", 5, settings)
@@ -95,8 +91,7 @@ def import_bulk_csv(csv_path, name: str, settings: dict, minutes: int = 5) -> Pa
     if "Adj Close" in df.columns:
         df = df.drop(columns=["Adj Close"])
     df.columns = [c.lower().strip() for c in df.columns]
-    tz = session.session_cfg(settings)["tz"]
-    clean = _finalize(df, tz)
+    clean = _finalize(df, settings)
     existing = load_bars(name, 5, settings)
     combined = pd.concat([existing.reset_index(), clean.reset_index()]).drop_duplicates(subset=["ts"], keep="last")
     combined = combined.set_index("ts").sort_index()
@@ -153,8 +148,7 @@ def update_from_fyers(name: str, symbol: str, settings: dict, days: int = 5) -> 
     df["ts"] = pd.to_datetime(df["epoch"], unit="s")
     df = df.set_index("ts").drop(columns=["epoch"])
     
-    tz = session.session_cfg(settings)["tz"]
-    fresh = _finalize(df, tz)
+    fresh = _finalize(df, settings)
     
     if fresh.empty:
         print(f"[fyers] no recent bars for {symbol}")
