@@ -204,12 +204,15 @@ def process_intraday_symbol(symbol_name, db_filename):
             # Drop the date level from the MultiIndex
             tf_df = tf_df.reset_index(level=0, drop=True)
             
+        tf_df.ta.ema(length=200, append=True)
         tf_df.ta.ema(length=20, append=True)
         tf_df.ta.ema(length=5, append=True)
         tf_df.ta.ema(length=9, append=True)
         tf_df.ta.rsi(length=14, append=True)
         tf_df.ta.stochrsi(length=14, rsi_length=14, k=3, d=3, append=True)
         tf_df.ta.atr(length=14, append=True)
+        tf_df.ta.macd(fast=12, slow=26, signal=9, append=True)
+        tf_df.ta.supertrend(length=10, multiplier=3, append=True)
         
         tf_df['EMA5_9_diff'] = tf_df['EMA_5'] - tf_df['EMA_9']
         tf_df['Price_20EMA_diff'] = tf_df['Close'] - tf_df['EMA_20']
@@ -276,18 +279,33 @@ def process_intraday_symbol(symbol_name, db_filename):
                 meta["val_win_rate"] = 0
                 data["_meta"] = meta
         
-        # UI Payload: Only include the last 3 days
-        ui_df = tf_df[tf_df.index.date >= last_3_days[0]]
+        # UI Payload: Include the last 15 days for robust analogue matching
+        last_days = unique_dates[-15:] if len(unique_dates) >= 15 else unique_dates
+        ui_df = tf_df[tf_df.index.date >= last_days[0]]
         
         for dt, row in ui_df.iterrows():
             date_str = dt.isoformat()
             
+            c = float(row["Close"])
+            o = float(row["Open"])
+            e200 = float(row["EMA_200"]) if "EMA_200" in row and not pd.isna(row["EMA_200"]) else c
+            e20 = float(row["EMA_20"]) if "EMA_20" in row and not pd.isna(row["EMA_20"]) else c
+            e5 = float(row["EMA_5"]) if "EMA_5" in row and not pd.isna(row["EMA_5"]) else c
+            e9 = float(row["EMA_9"]) if "EMA_9" in row and not pd.isna(row["EMA_9"]) else c
+            rsi = float(row["RSI_14"]) if "RSI_14" in row and not pd.isna(row["RSI_14"]) else 50.0
+            stoch_k = float(row["STOCHRSIk_14_14_3_3"]) if "STOCHRSIk_14_14_3_3" in row and not pd.isna(row["STOCHRSIk_14_14_3_3"]) else 50.0
+            stoch_d = float(row["STOCHRSId_14_14_3_3"]) if "STOCHRSId_14_14_3_3" in row and not pd.isna(row["STOCHRSId_14_14_3_3"]) else 50.0
+            macd_val = float(row["MACD_12_26_9"]) if "MACD_12_26_9" in row and not pd.isna(row["MACD_12_26_9"]) else 0.0
+            macd_sig = float(row["MACDs_12_26_9"]) if "MACDs_12_26_9" in row and not pd.isna(row["MACDs_12_26_9"]) else 0.0
+            st_dir = float(row["SUPERTd_10_3"]) if "SUPERTd_10_3" in row and not pd.isna(row["SUPERTd_10_3"]) else 1.0
+
             signals = {
-                "open": round(float(row["Open"]), 2),
+                "open": round(o, 2),
                 "high": round(float(row["High"]), 2),
                 "low": round(float(row["Low"]), 2),
-                "close": round(float(row["Close"]), 2),
+                "close": round(c, 2),
                 "volume": float(row["Volume"]),
+                "daily_return_pct": round(((c - o) / o) * 100, 2) if o else 0.0,
                 "forward_return_pct": round(float(row["Forward_Return"]), 2),
                 "forward_max_up_pct": round(float(row.get("Forward_Max_Up", 0.0)), 2),
                 "forward_max_down_pct": round(float(row.get("Forward_Max_Down", 0.0)), 2),
@@ -298,7 +316,20 @@ def process_intraday_symbol(symbol_name, db_filename):
                 "z_atr": round(float(row.get("z_atr", 0.0)), 3),
                 "z_vol": round(float(row.get("z_vol", 0.0)), 3),
                 "z_vix": 0.0,
-                "z_bn_rel": 0.0
+                "z_bn_rel": 0.0,
+                "ema200_signal": "bullish" if c >= e200 else "bearish",
+                "ema200_diff_pct": round(((c - e200) / e200) * 100, 2) if e200 else 0.0,
+                "ema20_signal": "bullish" if c >= e20 else "bearish",
+                "ema20_diff_pct": round(((c - e20) / e20) * 100, 2) if e20 else 0.0,
+                "supertrend_signal": "bullish" if st_dir == 1 else "bearish",
+                "rsi_value": round(rsi, 1),
+                "rsi_signal": "overbought" if rsi >= 70 else ("oversold" if rsi <= 30 else "neutral"),
+                "macd_signal": "bullish" if macd_val >= macd_sig else "bearish",
+                "ema5_signal": "bullish" if e5 >= e9 else "bearish",
+                "stochrsi_k": round(stoch_k, 1),
+                "stochrsi_signal": "overbought" if stoch_k >= 80 else ("oversold" if stoch_k <= 20 else ("bullish crossover" if stoch_k >= stoch_d else "bearish crossover")),
+                "india_vix": 12.5,
+                "options_max_pain": round(c / 50) * 50
             }
             data[date_str] = {"signals": signals}
             

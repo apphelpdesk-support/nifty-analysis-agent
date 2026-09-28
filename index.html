@@ -1184,12 +1184,14 @@
             
             const allDates = Object.keys(dashboardData).sort();
             const currIdx = allDates.indexOf(dateStr);
-            if(currIdx < 60) return null;
+            const isIntraday = (currentMode === 'intraday');
+            if (currIdx < (isIntraday ? 5 : 60)) return null;
             
             const distances = [];
+            const loopStart = isIntraday ? 0 : 252;
             
             // Loop through all historical dates BEFORE the current date window (avoid overlap)
-            for(let i = 252; i < currIdx - 5; i++) {
+            for(let i = loopStart; i < currIdx - (isIntraday ? 2 : 5); i++) {
                 const histDate = allDates[i];
                 const histData = dashboardData[histDate];
                 if(!histData || !histData.signals) continue;
@@ -1241,24 +1243,30 @@
                 }
             }
             
-            if(distances.length < 50) return null;
+            const minMatches = isIntraday ? 5 : 50;
+            if(distances.length < minMatches) return null;
             
             // Sort by lowest distance
             distances.sort((a, b) => a.dist - b.dist);
             
-            // Deduplicate by base date to prevent overlapping intraday states dominating
-            const seenDates = new Set();
-            const dedup = [];
-            for (let d of distances) {
-                const baseDate = d.date.split('T')[0];
-                if (!seenDates.has(baseDate)) {
-                    seenDates.add(baseDate);
-                    dedup.push(d);
+            let topK;
+            if (isIntraday) {
+                // In intraday mode, each candle is a distinct bar state (no daily collapse)
+                topK = distances.slice(0, Math.min(20, distances.length));
+            } else {
+                // Deduplicate by base date to prevent overlapping intraday states dominating
+                const seenDates = new Set();
+                const dedup = [];
+                for (let d of distances) {
+                    const baseDate = d.date.split('T')[0];
+                    if (!seenDates.has(baseDate)) {
+                        seenDates.add(baseDate);
+                        dedup.push(d);
+                    }
                 }
+                topK = dedup.slice(0, 50);
             }
-            
-            // Take Top 50 unique analogues
-            const topK = dedup.slice(0, 50);
+            if (topK.length === 0) return null;
             
             const upCount = topK.filter(d => d.next_ret > 0).length;
             const probUp = (upCount / topK.length) * 100;
@@ -1669,6 +1677,8 @@
             }, 150);
         }
 window.addEventListener('DOMContentLoaded', () => {
+    const tfSelect = document.getElementById('timeframe-select');
+    if (tfSelect) tfSelect.value = currentTimeframe;
     checkMarketStatus();
     fetchLiveJSON();
     setInterval(() => fetchLiveJSON(true), 60000);
