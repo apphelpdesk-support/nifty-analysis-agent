@@ -67,7 +67,13 @@ def git_commit_and_push():
     if push_res.returncode == 0:
         log("Push successful!")
     else:
-        log(f"Push failed (will retry next cycle): {push_res.stderr.strip()}")
+        log(f"Push failed, attempting pull --rebase: {push_res.stderr.strip()}")
+        subprocess.run(["git", "pull", "--rebase", "origin", "main"], cwd=str(ROOT_DIR), capture_output=True, text=True)
+        push_res2 = subprocess.run(["git", "push", "origin", "main"], cwd=str(ROOT_DIR), capture_output=True, text=True)
+        if push_res2.returncode == 0:
+            log("Push successful after rebase!")
+        else:
+            log(f"Push retry failed (will retry next cycle): {push_res2.stderr.strip()}")
 
 def cycle():
     log("=== Starting Intraday Sync Cycle ===")
