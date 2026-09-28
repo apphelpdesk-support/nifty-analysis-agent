@@ -9,101 +9,147 @@ import itertools
 from collections import defaultdict
 
 class IntradayWFO:
-    def __init__(self, df, all_features, k=5, val_size=300, oos_size=300):
+    """Walk-Forward Optimizer for intraday bar-level feature selection.
+
+    Finalized spec: Train 252+ bars → Validation 300 bars → OOS 300 bars,
+    test 1–5 feature combinations, complexity penalty, OOS edge gate,
+    feature stability tracking, NO SIGNAL if OOS edge isn't positive.
+    """
+
+    def __init__(self, df, all_features, k=50, val_size=300, oos_size=300):
         self.df = df
         self.all_features = all_features
         self.k = k
         self.val_size = val_size
         self.oos_size = oos_size
-        
+
+        # 1–5 feature combinations (finalized spec)
         self.feature_combinations = []
-        for r in range(2, 5): # Enforce multi-indicator confluence (min 2, max 4 features)
+        for r in range(1, min(6, len(all_features) + 1)):
             self.feature_combinations.extend(list(itertools.combinations(all_features, r)))
-            
-    def _evaluate_combo(self, X_train, y_train_target, y_train_ret, X_val, y_val_target, y_val_ret, features):
-        X_tr = X_train[list(features)].values
-        X_v = X_val[list(features)].values
+
+    def _evaluate_combo(self, X_train, y_train_ret, X_eval, y_eval_ret, features):
+        """Score a feature combo: nearest-analogue prediction on eval window."""
+        feat_list = list(features)
+        X_tr = X_train[feat_list].values
+        X_ev = X_eval[feat_list].values
         y_tr_r = y_train_ret.values
-        y_v_r = y_val_ret.values
-        
-        dist = np.sum((X_v[:, np.newaxis, :] - X_tr[np.newaxis, :, :]) ** 2, axis=2)
-        
-        val_edge_sum = 0.0
-        val_trades = 0
-        val_wins = 0
-        
-        for i in range(len(X_v)):
-            nearest_idx = np.argsort(dist[i])[:self.k]
+        y_ev_r = y_eval_ret.values
+
+        # Vectorised pairwise squared-distance matrix
+        dist = np.sum((X_ev[:, np.newaxis, :] - X_tr[np.newaxis, :, :]) ** 2, axis=2)
+
+        edge_sum = 0.0
+        trades = 0
+        wins = 0
+
+        k = min(self.k, len(X_tr))
+        for i in range(len(X_ev)):
+            nearest_idx = np.argpartition(dist[i], k)[:k]
             nearest_returns = y_tr_r[nearest_idx]
-            
+
             pred_return = np.mean(nearest_returns)
-            actual_return = y_v_r[i]
-            
-            if pred_return > 0.02: # Long signal
-                val_edge_sum += actual_return
-                val_trades += 1
-                if actual_return > 0: val_wins += 1
-            elif pred_return < -0.02: # Short signal
-                val_edge_sum -= actual_return
-                val_trades += 1
-                if actual_return < 0: val_wins += 1
-                
-        complexity_penalty = len(features) * 0.0001
-        score = (val_edge_sum - complexity_penalty) if val_trades > 0 else -999.0
-        return score, val_edge_sum, val_trades, val_wins
+            actual_return = y_ev_r[i]
+
+            if pred_return > 0.02:       # Long signal
+                edge_sum += actual_return
+                trades += 1
+                if actual_return > 0:
+                    wins += 1
+            elif pred_return < -0.02:     # Short signal
+                edge_sum -= actual_return
+                trades += 1
+                if actual_return < 0:
+                    wins += 1
+
+        # Complexity penalty: penalise higher-dimensional combos
+        complexity_penalty = len(features) * 0.001
+        score = (edge_sum - complexity_penalty) if trades > 0 else -999.0
+        return score, edge_sum, trades, wins
 
     def run(self):
         total_bars = len(self.df)
-        if total_bars < self.val_size + self.oos_size + 252:
+        min_required = 252 + self.val_size + self.oos_size
+        if total_bars < min_required:
+            print(f"  WFO: not enough bars ({total_bars} < {min_required}), skipping.")
             return None
-            
+
         optimal_history = []
+        oos_edge_total = 0.0
+        oos_trades_total = 0
+        oos_wins_total = 0
         step_size = self.oos_size
-        
+
         for start_oos in range(252 + self.val_size, total_bars, step_size):
             end_oos = min(start_oos + step_size, total_bars)
             start_val = start_oos - self.val_size
-            end_val = start_oos
-            
+
+            # --- Phase 1: find best combo on Validation window ---
             X_train = self.df.iloc[:start_val]
-            y_train_target = self.df['y_target'].iloc[:start_val]
             y_train_ret = self.df['Forward_Return'].iloc[:start_val]
-            
-            X_val = self.df.iloc[start_val:end_val]
-            y_val_target = self.df['y_target'].iloc[start_val:end_val]
-            y_val_ret = self.df['Forward_Return'].iloc[start_val:end_val]
-            
-            best_score = -9999
+
+            X_val = self.df.iloc[start_val:start_oos]
+            y_val_ret = self.df['Forward_Return'].iloc[start_val:start_oos]
+
+            best_val_score = -9999
             best_combo = None
-            
+
             for combo in self.feature_combinations:
-                score, edge, trades, wins = self._evaluate_combo(
-                    X_train, y_train_target, y_train_ret,
-                    X_val, y_val_target, y_val_ret,
-                    combo
+                score, _, _, _ = self._evaluate_combo(
+                    X_train, y_train_ret, X_val, y_val_ret, combo
                 )
-                if score > best_score:
-                    best_score = score
+                if score > best_val_score:
+                    best_val_score = score
                     best_combo = combo
-                    
-            if best_combo:
-                optimal_history.append(best_combo)
-                
-        if not optimal_history:
-            return None
-            
-        latest_combo = optimal_history[-1]
-        
+
+            # Only proceed if val edge is positive
+            if best_combo is None or best_val_score <= 0:
+                continue
+
+            optimal_history.append(best_combo)
+
+            # --- Phase 2: OOS evaluation with val-selected combo ---
+            # Train for OOS includes everything up to OOS start (train + val)
+            X_train_oos = self.df.iloc[:start_oos]
+            y_train_oos_ret = self.df['Forward_Return'].iloc[:start_oos]
+
+            X_oos = self.df.iloc[start_oos:end_oos]
+            y_oos_ret = self.df['Forward_Return'].iloc[start_oos:end_oos]
+
+            _, oos_edge, oos_t, oos_w = self._evaluate_combo(
+                X_train_oos, y_train_oos_ret, X_oos, y_oos_ret, best_combo
+            )
+            oos_edge_total += oos_edge
+            oos_trades_total += oos_t
+            oos_wins_total += oos_w
+
+        # --- Feature stability across all WFO folds ---
         stability = defaultdict(int)
         for combo in optimal_history:
             for f in combo:
                 stability[f] += 1
-                
-        stability_pct = {k: round((v / len(optimal_history)) * 100) for k, v in stability.items()}
-        
+        n_folds = max(len(optimal_history), 1)
+        stability_pct = {k: round((v / n_folds) * 100) for k, v in stability.items()}
+
+        # --- NO SIGNAL gate: OOS edge must be positive ---
+        if not optimal_history or oos_edge_total <= 0:
+            return {
+                "wfo_optimal_features": [],
+                "stability": stability_pct,
+                "oos_edge": round(oos_edge_total, 4),
+                "oos_win_rate": round((oos_wins_total / oos_trades_total) * 100, 1) if oos_trades_total > 0 else 0,
+                "oos_trades": oos_trades_total,
+                "status": "NO SIGNAL"
+            }
+
+        latest_combo = optimal_history[-1]
+
         return {
             "wfo_optimal_features": list(latest_combo),
             "stability": stability_pct,
+            "oos_edge": round(oos_edge_total, 4),
+            "oos_win_rate": round((oos_wins_total / oos_trades_total) * 100, 1) if oos_trades_total > 0 else 0,
+            "oos_trades": oos_trades_total,
             "status": "ACTIVE"
         }
 
@@ -170,9 +216,10 @@ def process_intraday_symbol(symbol_name, db_filename):
 
     df = df.rename(columns={"open": "Open", "high": "High", "low": "Low", "close": "Close", "volume": "Volume"})
     
-    # Restrict to last 2000 bars (~1 month of 5m data) to keep WFO blazing fast for real-time running
-    if len(df) > 2000:
-        df = df.iloc[-2000:].copy()
+    # Keep enough bars for WFO (train 252 + val 300 + oos 300 = 852 min) plus history.
+    # 5000 bars ≈ 67 trading days of 5m data — ample for multiple WFO folds.
+    if len(df) > 5000:
+        df = df.iloc[-5000:].copy()
         
     timeframes = {
         "5": "5min",
@@ -270,14 +317,11 @@ def process_intraday_symbol(symbol_name, db_filename):
         
         # Run Intraday WFO with features that map directly to UI checkboxes
         wfo_features = ['z_rsi', 'z_stochrsi', 'z_ema_diff', 'z_price_ema', 'z_vol']
-        if len(valid_wfo_bars) > 100:
-            wfo_engine = IntradayWFO(valid_wfo_bars, wfo_features, k=5, val_size=75, oos_size=75)
+        min_wfo_bars = 252 + 300 + 300  # train + val + oos
+        if len(valid_wfo_bars) > min_wfo_bars:
+            wfo_engine = IntradayWFO(valid_wfo_bars, wfo_features, k=50, val_size=300, oos_size=300)
             meta = wfo_engine.run()
             if meta:
-                meta["oos_edge"] = round(0.0, 3) # Placeholder since it's dynamic
-                meta["oos_win_rate"] = 0
-                meta["val_edge"] = 0.0
-                meta["val_win_rate"] = 0
                 data["_meta"] = meta
         
         # UI Payload: Include the last 15 days for robust analogue matching
