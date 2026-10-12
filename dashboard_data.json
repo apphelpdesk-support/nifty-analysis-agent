@@ -183516,8 +183516,8 @@
     }
   },
   "2026-10-09": {
-    "fii": "selling",
-    "fii_value": -3568.9,
+    "fii": "buying",
+    "fii_value": null,
     "signals": {
       "close": 22520.45,
       "high": 22580.75,
@@ -183557,14 +183557,14 @@
     }
   },
   "2026-10-12": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "selling",
+    "fii_value": -1708.48,
     "signals": {
-      "close": 22363.35,
+      "close": NaN,
       "high": 22651.1,
       "low": 22304.45,
-      "daily_return_pct": -0.7,
-      "options_support": 22300,
+      "daily_return_pct": NaN,
+      "options_support": 22200,
       "options_resistance": 22600,
       "options_max_pain": 22400,
       "options_momentum": "bearish",
@@ -183576,20 +183576,20 @@
       "intermarket_divergence": "neutral",
       "ema20_signal": "bearish",
       "ema200_signal": "bearish",
-      "ema20_diff_pct": -2.31,
-      "ema200_diff_pct": -7.06,
+      "ema20_diff_pct": NaN,
+      "ema200_diff_pct": NaN,
       "ema5_signal": "bearish",
-      "rsi_value": 34.04,
-      "stochrsi_k": 57.76,
-      "stochrsi_d": 56.49,
+      "rsi_value": 36.5,
+      "stochrsi_k": 62.45,
+      "stochrsi_d": 58.05,
       "stochrsi_signal": "bullish crossover",
       "rsi_signal": "neutral",
       "macd_signal": "bearish",
       "supertrend_signal": "bearish",
-      "z_rsi": -1.274,
-      "z_stochrsi": 0.326,
-      "z_ema_diff": -0.884,
-      "z_price_ema": -1.102,
+      "z_rsi": -1.058,
+      "z_stochrsi": 0.473,
+      "z_ema_diff": -0.902,
+      "z_price_ema": 0.0,
       "z_atr": -0.086,
       "z_vol": -3.524,
       "z_vix": 0.0,
@@ -183599,15 +183599,15 @@
   },
   "_meta": {
     "wfo_optimal_features": [],
-    "val_edge": -0.0005,
+    "val_edge": 0.0033,
     "oos_edge": -0.0,
     "stability": {
-      "chk-rsi": 6.7,
+      "chk-rsi": 3.3,
       "chk-stochrsi": 0.0,
-      "chk-ema59": 6.7,
+      "chk-ema59": 3.3,
       "chk-ema20": 16.7,
       "z_atr": 23.3,
-      "chk-deltaoi": 13.3
+      "chk-deltaoi": 10.0
     },
     "status": "NO SIGNAL"
   }
