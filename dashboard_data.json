@@ -183189,7 +183189,7 @@
   },
   "2026-09-28": {
     "fii": "selling",
-    "fii_value": -5353.22,
+    "fii_value": null,
     "signals": {
       "close": 22780.25,
       "high": 23080.25,
@@ -184377,8 +184377,8 @@
     }
   },
   "2026-11-11": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "buying",
+    "fii_value": 12563.33,
     "signals": {
       "close": 25255.05,
       "high": 25424.35,
