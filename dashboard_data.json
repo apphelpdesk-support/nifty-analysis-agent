@@ -183352,8 +183352,8 @@
     }
   },
   "2026-10-05": {
-    "fii": "selling",
-    "fii_value": -4699.14,
+    "fii": "buying",
+    "fii_value": null,
     "signals": {
       "close": 22555.75,
       "high": 22621.8,
@@ -184541,8 +184541,8 @@
     }
   },
   "2026-11-17": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "buying",
+    "fii_value": 4195.38,
     "signals": {
       "close": 25387.4,
       "high": 25501.35,
@@ -184575,7 +184575,48 @@
       "z_ema_diff": 2.47,
       "z_price_ema": 2.522,
       "z_atr": 0.516,
-      "z_vol": -3.694,
+      "z_vol": -0.337,
+      "z_vix": 0.0,
+      "z_bn_rel": 0.0,
+      "analogue_match": "Similar to 21 Sep 2007 (Next day went UP)"
+    }
+  },
+  "2026-11-18": {
+    "fii": "selling",
+    "fii_value": null,
+    "signals": {
+      "close": 25227.95,
+      "high": 25390.8,
+      "low": 25141.8,
+      "daily_return_pct": -0.63,
+      "options_support": null,
+      "options_resistance": null,
+      "options_max_pain": null,
+      "options_momentum": null,
+      "india_vix": 15.0,
+      "vix_regime": "low_vol",
+      "usdinr_trend": "neutral",
+      "sp500_return_pct": 0.0,
+      "sp500_cue": "neutral",
+      "intermarket_divergence": "neutral",
+      "ema20_signal": "bullish",
+      "ema200_signal": "bullish",
+      "ema20_diff_pct": 3.71,
+      "ema200_diff_pct": 5.07,
+      "ema5_signal": "bullish",
+      "rsi_value": 73.34,
+      "stochrsi_k": 86.8,
+      "stochrsi_d": 90.09,
+      "stochrsi_signal": "overbought",
+      "rsi_signal": "overbought",
+      "macd_signal": "bullish",
+      "supertrend_signal": "bullish",
+      "z_rsi": 2.107,
+      "z_stochrsi": 1.141,
+      "z_ema_diff": 1.996,
+      "z_price_ema": 1.968,
+      "z_atr": 0.456,
+      "z_vol": -3.697,
       "z_vix": 0.0,
       "z_bn_rel": 0.0,
       "analogue_match": "Similar to 21 Sep 2007 (Next day went UP)"
@@ -184583,15 +184624,15 @@
   },
   "_meta": {
     "wfo_optimal_features": [],
-    "val_edge": 0.0394,
+    "val_edge": 0.0333,
     "oos_edge": -0.0063,
     "stability": {
-      "chk-rsi": 60.0,
+      "chk-rsi": 63.3,
       "chk-stochrsi": 6.7,
       "chk-ema59": 30.0,
       "chk-ema20": 26.7,
-      "z_atr": 33.3,
-      "chk-deltaoi": 60.0
+      "z_atr": 36.7,
+      "chk-deltaoi": 63.3
     },
     "status": "NO SIGNAL"
   }
