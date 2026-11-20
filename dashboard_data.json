@@ -183435,7 +183435,7 @@
   },
   "2026-10-07": {
     "fii": "selling",
-    "fii_value": -6121.37,
+    "fii_value": null,
     "signals": {
       "close": 22603.05,
       "high": 22717.65,
@@ -184623,8 +184623,8 @@
     }
   },
   "2026-11-19": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "buying",
+    "fii_value": 7411.41,
     "signals": {
       "close": 25514.3,
       "high": 25514.3,
@@ -184657,7 +184657,48 @@
       "z_ema_diff": 1.906,
       "z_price_ema": 2.295,
       "z_atr": 0.544,
-      "z_vol": -3.689,
+      "z_vol": -0.481,
+      "z_vix": 0.0,
+      "z_bn_rel": 0.0,
+      "analogue_match": "Similar to 21 Sep 2007 (Next day went UP)"
+    }
+  },
+  "2026-11-20": {
+    "fii": "neutral",
+    "fii_value": null,
+    "signals": {
+      "close": 25800.6,
+      "high": 25808.8,
+      "low": 25345.2,
+      "daily_return_pct": 1.12,
+      "options_support": 25700,
+      "options_resistance": 26000,
+      "options_max_pain": 25500,
+      "options_momentum": "bullish",
+      "india_vix": 15.0,
+      "vix_regime": "low_vol",
+      "usdinr_trend": "neutral",
+      "sp500_return_pct": 0.0,
+      "sp500_cue": "neutral",
+      "intermarket_divergence": "neutral",
+      "ema20_signal": "bullish",
+      "ema200_signal": "bullish",
+      "ema20_diff_pct": 5.01,
+      "ema200_diff_pct": 7.31,
+      "ema5_signal": "bullish",
+      "rsi_value": 78.59,
+      "stochrsi_k": 83.45,
+      "stochrsi_d": 84.9,
+      "stochrsi_signal": "overbought",
+      "rsi_signal": "overbought",
+      "macd_signal": "bullish",
+      "supertrend_signal": "bullish",
+      "z_rsi": 2.487,
+      "z_stochrsi": 1.022,
+      "z_ema_diff": 2.017,
+      "z_price_ema": 2.575,
+      "z_atr": 0.674,
+      "z_vol": -3.686,
       "z_vix": 0.0,
       "z_bn_rel": 0.0,
       "analogue_match": "Similar to 21 Sep 2007 (Next day went UP)"
@@ -184669,9 +184710,9 @@
     "oos_edge": -0.0022,
     "stability": {
       "chk-rsi": 66.7,
-      "chk-stochrsi": 6.7,
+      "chk-stochrsi": 10.0,
       "chk-ema59": 30.0,
-      "chk-ema20": 26.7,
+      "chk-ema20": 30.0,
       "z_atr": 40.0,
       "chk-deltaoi": 66.7
     },
