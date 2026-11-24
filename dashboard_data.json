@@ -183516,8 +183516,8 @@
     }
   },
   "2026-10-09": {
-    "fii": "selling",
-    "fii_value": -3568.9,
+    "fii": "buying",
+    "fii_value": null,
     "signals": {
       "close": 22520.45,
       "high": 22580.75,
@@ -184705,8 +184705,8 @@
     }
   },
   "2026-11-23": {
-    "fii": "neutral",
-    "fii_value": null,
+    "fii": "buying",
+    "fii_value": 5672.99,
     "signals": {
       "close": 25349.65,
       "high": 25992.6,
@@ -184739,7 +184739,7 @@
       "z_ema_diff": 1.484,
       "z_price_ema": 1.501,
       "z_atr": 0.961,
-      "z_vol": -3.689,
+      "z_vol": 1.307,
       "z_vix": 0.0,
       "z_bn_rel": 0.0,
       "analogue_match": "Similar to 21 Sep 2007 (Next day went UP)"
