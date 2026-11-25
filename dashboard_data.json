@@ -184712,10 +184712,10 @@
       "high": 25992.6,
       "low": 25343.85,
       "daily_return_pct": -1.75,
-      "options_support": 25300,
-      "options_resistance": 25400,
-      "options_max_pain": 25350,
-      "options_momentum": "bearish",
+      "options_support": null,
+      "options_resistance": null,
+      "options_max_pain": null,
+      "options_momentum": null,
       "india_vix": 15.0,
       "vix_regime": "low_vol",
       "usdinr_trend": "neutral",
@@ -184745,18 +184745,66 @@
       "analogue_match": "Similar to 21 Sep 2007 (Next day went UP)"
     }
   },
+  "2026-11-25": {
+    "fii": "buying",
+    "fii_value": null,
+    "signals": {
+      "close": 25819.25,
+      "high": 25951.65,
+      "low": 25619.0,
+      "daily_return_pct": 1.85,
+      "options_support": 25700,
+      "options_resistance": 26000,
+      "options_max_pain": 25700,
+      "options_momentum": "bullish",
+      "india_vix": 15.0,
+      "vix_regime": "low_vol",
+      "usdinr_trend": "neutral",
+      "sp500_return_pct": 0.0,
+      "sp500_cue": "neutral",
+      "intermarket_divergence": "neutral",
+      "ema20_signal": "bullish",
+      "ema200_signal": "bullish",
+      "ema20_diff_pct": 4.3,
+      "ema200_diff_pct": 7.25,
+      "ema5_signal": "bullish",
+      "rsi_value": 71.68,
+      "stochrsi_k": 42.67,
+      "stochrsi_d": 61.74,
+      "stochrsi_signal": "bearish crossover",
+      "rsi_signal": "overbought",
+      "macd_signal": "bullish",
+      "supertrend_signal": "bullish",
+      "z_rsi": 1.897,
+      "z_stochrsi": -0.235,
+      "z_ema_diff": 1.578,
+      "z_price_ema": 2.196,
+      "z_atr": 1.181,
+      "z_vol": -3.716,
+      "z_vix": 0.0,
+      "z_bn_rel": 0.0,
+      "analogue_match": "Similar to 21 Sep 2007 (Next day went UP)"
+    }
+  },
   "_meta": {
-    "wfo_optimal_features": [],
-    "val_edge": 0.0258,
-    "oos_edge": -0.0026,
+    "wfo_optimal_features": [
+      "chk-rsi",
+      "chk-ema20"
+    ],
+    "val_edge": 0.046,
+    "val_win_rate": 61.9,
+    "val_trades": 21,
+    "oos_edge": 0.0054,
+    "oos_win_rate": 44.4,
+    "oos_trades": 18,
     "stability": {
       "chk-rsi": 66.7,
       "chk-stochrsi": 13.3,
-      "chk-ema59": 30.0,
-      "chk-ema20": 33.3,
-      "z_atr": 40.0,
+      "chk-ema59": 26.7,
+      "chk-ema20": 36.7,
+      "z_atr": 43.3,
       "chk-deltaoi": 66.7
     },
-    "status": "NO SIGNAL"
+    "status": "SIGNAL"
   }
 }
